@@ -2,8 +2,8 @@
 #include "Vector3.h"
 #include "Matrix4.h"
 #include "Camera.h"
-#include "GLWidget.h"
-#include "GLRenderContext.h"
+#include "SWWidget.h"
+#include "SWRenderContext.h"
 #include "VertexData.h"
 #include "Shapes.h"
 
@@ -15,7 +15,7 @@
 
 RenderWidget0::RenderWidget0()
 {
-    RenderContext *rs = new GLRenderContext();
+    RenderContext *rs = new SWRenderContext();
     sceneManager = 0;
     tracking = false;
     sceneCreated = false;
