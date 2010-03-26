@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "SWRenderWidget.h"
+#include "GLRenderWidget.h"
 #include "SceneManager.h"
 #include "Object.h"
 using namespace RE330;

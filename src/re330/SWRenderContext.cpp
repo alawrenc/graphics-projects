@@ -27,10 +27,10 @@ void SWRenderContext::setViewport(int width, int height)
     // TODO: part 1.1
     // Compute viewport matrix based on width, height.
 
-    // D(x0, x1,y0,y1) = Matrix4( (x1 - x0) / 2, 0, 0, (x0 + x1) / 2,
-    //                            0, (y1 - y0) / 2, 0, (y0 + y1) / 2,
-    //                            0, 0, .5, .5,
-    //                            0, 0, 0, 1)
+    viewport = Matrix4( width / 2.0f, 0, 0, width / 2.0f,
+                        0, -height / 2.0f, 0, height / 2.0f,
+                        0, 0, -.5, .5,
+                        0, 0, 0, 1);
 }
 
 void SWRenderContext::beginFrame()
@@ -48,10 +48,12 @@ void SWRenderContext::setModelViewMatrix(const Matrix4 &m)
 {
     // TODO: part 1.1
     // Set modelview matrix.
+    modelview = m;
 }
 
 void SWRenderContext::setProjectionMatrix(const Matrix4 &m)
 {
+    projection = m;
     // TODO: part 1.1
     // Set projection matrix.
 }
@@ -87,7 +89,8 @@ void SWRenderContext::render(Object *object)
     {
         const VertexElement *element = vertexDeclaration.getElement(j);
 
-        const VertexBuffer& vertexBuffer = vertexBufferBinding.getBuffer(element->getBufferIndex());
+        const VertexBuffer& vertexBuffer =
+            vertexBufferBinding.getBuffer(element->getBufferIndex());
         unsigned char* buf = vertexBuffer.getBuffer();
 
         int vertexStride = static_cast<int>(element->getStride());
@@ -121,7 +124,7 @@ void SWRenderContext::render(Object *object)
 
     int *iPtr = vertexData.getIndexBuffer();
 
-    for(int i=0; i<vertexData.getIndexCount(); i++)
+    for(int i=0; i < vertexData.getIndexCount(); i++)
     {
         // Local index of current triangle vertex
         int k = i%3;
@@ -181,6 +184,19 @@ void SWRenderContext::rasterizeTriangle(float p[3][4], float n[3][3], float c[3]
     // Implement triangle rasterization here.
     // Use viewport*projection*modelview matrix to project vertices to screen.
     // You can draw pixels in the output image using image->setPixel(...);
+    QRgb value;
+    value = qRgb(255, 255, 255);
+    int x, y = 0;
+    for (int vertex = 0; vertex < 4; vertex++)
+    {
+        Vector4 values(p[vertex]);
+        values = viewport * projection * (modelview * values);
+
+        x = values[0]/values[3];
+        y = values[1]/values[3];
+
+        image->setPixel(x, y, value);
+    }
 }
 
 void SWRenderContext::setWidget(SWWidget *swWidget)

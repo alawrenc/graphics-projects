@@ -21,7 +21,10 @@ namespace RE330
     public:
         friend std::ostream& operator<< (std::ostream &out, Frustum &f);
 
-        Frustum() :	p(2,0,0,0, 0,2,0,0, 0,0,-1.02,-2.02, 0,0,-1.f,0.f),
+        Frustum() :	p( 2,0,0,0,
+                       0,2,0,0,
+                       0,0,-1.02,-2.02,
+                       0,0,-1.f,0.f),
             near(1), far(101), aspect(1), fov(M_PI/4) {};
 
         const Matrix4 &getProjectionMatrix() const { return p; }
@@ -56,7 +59,11 @@ namespace RE330
         // Change the projection matrix in one fell swoop
         void createProjectionMatrix(float n, float f, float r, float t)
         {
-            near = n; far = f; aspect = r; fov = t; updateProjectionMatrix();
+            near = n;
+            far = f;
+            aspect = r;
+            fov = t;
+            updateProjectionMatrix();
         }
     };
 

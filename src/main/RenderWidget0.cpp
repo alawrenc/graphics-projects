@@ -4,6 +4,8 @@
 #include "Camera.h"
 #include "SWWidget.h"
 #include "SWRenderContext.h"
+#include "GLWidget.h"
+#include "GLRenderContext.h"
 #include "VertexData.h"
 #include "Shapes.h"
 
