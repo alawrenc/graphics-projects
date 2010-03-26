@@ -24,9 +24,8 @@ void SWRenderContext::init()
 
 void SWRenderContext::setViewport(int width, int height)
 {
-    // TODO: part 1.1
+    // part 1.1
     // Compute viewport matrix based on width, height.
-
     viewport = Matrix4( width / 2.0f, 0, 0, width / 2.0f,
                         0, -height / 2.0f, 0, height / 2.0f,
                         0, 0, -.5, .5,
@@ -46,16 +45,16 @@ void SWRenderContext::endFrame()
 
 void SWRenderContext::setModelViewMatrix(const Matrix4 &m)
 {
-    // TODO: part 1.1
+    // part 1.1
     // Set modelview matrix.
     modelview = m;
 }
 
 void SWRenderContext::setProjectionMatrix(const Matrix4 &m)
 {
-    projection = m;
-    // TODO: part 1.1
+    //part 1.1
     // Set projection matrix.
+    projection = m;
 }
 
 void SWRenderContext::render(Object *object)
@@ -91,6 +90,7 @@ void SWRenderContext::render(Object *object)
 
         const VertexBuffer& vertexBuffer =
             vertexBufferBinding.getBuffer(element->getBufferIndex());
+
         unsigned char* buf = vertexBuffer.getBuffer();
 
         int vertexStride = static_cast<int>(element->getStride());
@@ -180,7 +180,7 @@ void SWRenderContext::render(Object *object)
 
 void SWRenderContext::rasterizeTriangle(float p[3][4], float n[3][3], float c[3][4])
 {
-    // TODO: part 1.2
+    // part 1.2
     // Implement triangle rasterization here.
     // Use viewport*projection*modelview matrix to project vertices to screen.
     // You can draw pixels in the output image using image->setPixel(...);
