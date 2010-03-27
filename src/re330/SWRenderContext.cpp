@@ -99,21 +99,21 @@ void SWRenderContext::render(Object *object)
 
         switch(element->getSemantic())
         {
-            case VES_POSITION :
-                pPtr = buf+offset;
-                pStr = vertexStride;
-                pSze = vertexSize;
-                break;
-            case VES_NORMAL :
-                nPtr = buf+offset;
-                nStr = vertexStride;
-                nSze = 3;	// always
-                break;
-            case VES_DIFFUSE :
-                cPtr = buf+offset;
-                cStr = vertexStride;
-                cSze = vertexSize;
-                break;
+        case VES_POSITION :
+            pPtr = buf+offset;
+            pStr = vertexStride;
+            pSze = vertexSize;
+            break;
+        case VES_NORMAL :
+            nPtr = buf+offset;
+            nStr = vertexStride;
+            nSze = 3;	// always
+            break;
+        case VES_DIFFUSE :
+            cPtr = buf+offset;
+            cStr = vertexStride;
+            cSze = vertexSize;
+            break;
         }
     }
 
@@ -184,6 +184,7 @@ void SWRenderContext::rasterizeTriangle(float p[3][4], float n[3][3], float c[3]
     // Implement triangle rasterization here.
     // Use viewport*projection*modelview matrix to project vertices to screen.
     // You can draw pixels in the output image using image->setPixel(...);
+    
     QRgb value;
     value = qRgb(255, 255, 255);
     int x, y = 0;
