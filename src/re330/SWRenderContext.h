@@ -6,6 +6,7 @@
 #include "RenderContext.h"
 #include "VertexDeclaration.h"
 #include "Matrix4.h"
+#include <map>
 
 namespace RE330 {
 
@@ -47,8 +48,10 @@ namespace RE330 {
         Matrix4 modelview;
         Matrix4 viewport;
         Matrix4 total;
+        float ** zbuffer;
 
         void rasterizeTriangle(float p[3][4], float n[3][3], float c[3][4]);
+        void setPixel(int x, int y, QRgb c, float z);
     };
 
 }

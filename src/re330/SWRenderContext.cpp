@@ -1,7 +1,11 @@
 #include "SWRenderContext.h"
 #include "SWWidget.h"
-
 using namespace RE330;
+
+#include <math.h>
+#include <limits>
+#include <stdexcept>
+using namespace std;
 
 SWRenderContext* SWRenderContext::getSingletonPtr(void)
 {
@@ -35,6 +39,14 @@ void SWRenderContext::setViewport(int width, int height)
 void SWRenderContext::beginFrame()
 {
     image->fill(qRgb(0,0,0));
+    int height = image->height();
+    int width = image->width();
+    zbuffer = new float*[width];
+    for(int i = 0; i < width; i++)
+    {
+        *(zbuffer + i) = new float[height];
+    }
+
 }
 
 void SWRenderContext::endFrame()
@@ -84,7 +96,7 @@ void SWRenderContext::render(Object *object)
     cPtr = 0;
 
     // Set up arrays
-    for(int j=0; j<vertexDeclaration.getElementCount(); j++)
+    for(int j = 0; j < vertexDeclaration.getElementCount(); j++)
     {
         const VertexElement *element = vertexDeclaration.getElement(j);
 
@@ -182,21 +194,129 @@ void SWRenderContext::rasterizeTriangle(float p[3][4], float n[3][3], float c[3]
 {
     // part 1.2
     // Implement triangle rasterization here.
-    // Use viewport*projection*modelview matrix to project vertices to screen.
-    // You can draw pixels in the output image using image->setPixel(...);
-    
-    QRgb value;
-    value = qRgb(255, 255, 255);
-    int x, y = 0;
-    for (int vertex = 0; vertex < 4; vertex++)
+    bool PART_1 = false;
+    int NUM_TRIANGLE_VERTS = 3;
+    QRgb value = qRgb(255, 255, 255);
+
+    if(PART_1)
     {
-        Vector4 values(p[vertex]);
-        values = viewport * projection * (modelview * values);
 
-        x = values[0]/values[3];
-        y = values[1]/values[3];
+        float x, y, w = 0;
+        for (int vertex = 0; vertex <= NUM_TRIANGLE_VERTS; vertex++)
+        {
+            Vector4 values(p[vertex]);
 
-        image->setPixel(x, y, value);
+            // Use viewport*projection*modelview matrix to project to screen.
+            values = viewport * projection * (modelview * values);
+
+            w = values[3];
+            x = floor(values[0] / w);
+            y = floor(values[1] / w);
+
+            //set pixel on screen
+            image->setPixel(x, y, value);
+        }
+    }
+    else //PART_2
+    {
+        Vector4 verts[] = { Vector4(p[0]), Vector4(p[1]), Vector4(p[2])  };
+
+        //setup for computing min/max values in for loop
+        float minX, minY = numeric_limits<float>::max();;
+        float maxX, maxY = 0.0f;
+
+        // compute a bounding box around triangle
+        for(int vertex = 0; vertex <= NUM_TRIANGLE_VERTS; vertex++)
+        {
+            float x, y, z, w = 0.0f;
+            // convert vertices to pixel coordinates
+            verts[vertex] = viewport * projection * (modelview * verts[vertex]);
+
+            // normalize to w
+            w = verts[vertex][3];
+            x = floor(verts[vertex][0] / w);
+            y = floor(verts[vertex][1] / w);
+            z = verts[vertex][2] / w;
+
+            verts[vertex] = Vector4(x, y, z, w);
+
+            // update min/max values
+            minX = std::min(verts[vertex][0], minX);
+            maxX = std::max(verts[vertex][0], maxX);
+            minY = std::min(verts[vertex][1], minY);
+            maxY = std::max(verts[vertex][1], maxY);
+        }
+
+        // trim minX, minY to 0
+        minY = max(0.0f, minY);
+        minX = max(0.0f, minX);
+
+        // trim maxX to image width (-1 needed since it's 0 based)
+        maxX = min((float)image->width() - 1, maxX);
+
+        // trim maxY to image height
+        maxY = min((float)image->height() - 1, maxY);
+
+        // values for finding barycentric coordinates
+        float a_x = verts[0][0];
+        float a_y = verts[0][1];
+        float a_z = verts[0][2];
+        float b_x = verts[1][0];
+        float b_y = verts[1][1];
+        float b_z = verts[1][2];
+        float c_x = verts[2][0];
+        float c_y = verts[2][1];
+        float c_z = verts[2][2];
+        float detT = (c_x - a_x) * (b_y - a_y) - (b_x -a_x) * (c_y - a_y);
+
+        // step through all pixels in bounding box
+        for (int col = minY; col <= maxY; col++)
+        {
+            float alpha, beta, gamma = 0.0f;
+            float x, y, z = 0.0f;
+            for (int row = minX; row <= maxX; row++)
+            {
+                x = col + .5;
+                y = row + .5;
+                // compute barycentric coordinates for center of each pixel
+                beta = ((a_y - c_y) * (x - a_x) +
+                        (c_x - a_x) * (y - a_y)) / detT;
+                gamma = ((b_y - a_y) * (x - a_x) +
+                         (a_x - b_x) * (y - a_y)) / detT;
+                alpha = 1 - beta - gamma;
+
+                // determine if coordinate is in triangle
+                if ( (0 < alpha && alpha < 1) &&
+                     (0 < beta && beta < 1) &&
+                     (0 < gamma && gamma < 1) )
+                {
+                    // for(int i = 0; i<3; i++)
+                    // {
+                    //     for (int j = 0; j<4; j++)
+                    //     {
+                    //         std::cout <<" "<< c[i][j] << std::endl;
+                    //     }
+                    // }
+                    // std::cout << "" << std::endl;
+                    //image->setPixel(row, col, value);
+                    //TO-DO: linerally interpolate z value
+                    float color_1 = 255*(c[0][0] +
+                                     beta * (c[1][0] - c[0][0]) +
+                                     gamma * (c[2][0]) - c[0][0]);
+                    float color_2 = 255*(c[0][1] +
+                                     beta * (c[1][1] - c[0][1]) +
+                                     gamma * (c[2][1]) - c[0][1]);
+                    float color_3 = 255*(c[0][2] +
+                                     beta * (c[1][2] - c[0][2]) +
+                                     gamma * (c[2][2]) - c[0][2]);
+
+                    z = a_z + beta * (b_z - a_z) + gamma * (c_z - a_z);
+                    value = qRgb(color_1, color_2, color_3);
+                    setPixel(row, col, value, z);
+                }
+            }
+        }
+
     }
 }
 
@@ -204,4 +324,22 @@ void SWRenderContext::setWidget(SWWidget *swWidget)
 {
     mswWidget = swWidget;
     image = mswWidget->getImage();
+}
+
+void SWRenderContext::setPixel(int x, int y, QRgb c, float z)
+{
+    if(zbuffer[x][y])
+    {
+        //std::cout << zbuffer[x][y] << std::endl;
+        if(z > zbuffer[x][y])
+        {
+            zbuffer[x][y] = z;
+            image->setPixel(x, y, c);
+        }
+    }
+    else
+    {
+        zbuffer[x][y] = z;
+        image->setPixel(x, y, c);
+    }
 }

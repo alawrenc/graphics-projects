@@ -6,20 +6,20 @@
 #include <Vector3.h>
 #include <iostream>
 
-namespace RE330 
+namespace RE330
 {
-	class RE330_EXPORT Vector4
-	{
-	private:
-		float x, y, z, w;
+    class RE330_EXPORT Vector4
+    {
+    private:
+        float x, y, z, w;
     public:
         friend std::ostream& operator<< (std::ostream &out, Vector4 &v);
 
         // Constructors and assignment
         Vector4() : x(0), y(0), z(0), w(0) {}
-        Vector4(float a, float b, float c, float d) 
+        Vector4(float a, float b, float c, float d)
             : x(a), y(b), z(c), w(d) {}
-        Vector4(float *k) 
+        Vector4(float *k)
             : x(k[0]), y(k[1]), z(k[2]), w(k[3]) {}
         // Make a Vector4 from a Vector3 and a fourth float
         Vector4(const Vector3 k, const float h)
@@ -97,9 +97,9 @@ namespace RE330
         }
         // Equality test
         bool operator== (const Vector4& k) const {
-            return ((x - k[0] < EPSILON) && 
-                    (y - k[1] < EPSILON) && 
-                    (z - k[2] < EPSILON) && 
+            return ((x - k[0] < EPSILON) &&
+                    (y - k[1] < EPSILON) &&
+                    (z - k[2] < EPSILON) &&
                     (w - k[3] < EPSILON));
         }
         // Inequality test
@@ -116,13 +116,13 @@ namespace RE330
             if (len() == 0) return (*this);
             return (*this) /= len();
         }
-	};
+    };
 
     inline std::ostream& operator<< (std::ostream &out, Vector4 &v) {
         out << "Vector4"
             << "(" << v.x
             << "," << v.y
-            << "," << v.z 
+            << "," << v.z
             << "," << v.w << ")";
         return out;
     }
@@ -130,4 +130,3 @@ namespace RE330
 }
 
 #endif
-
