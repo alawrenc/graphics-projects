@@ -21,8 +21,8 @@ namespace RE330
         Vector3(const float a, const float b, const float c) :
             x(a), y(b), z(c) {}
 
-        Vector3(const float *k) : x(k[0]), y(k[1]), z(k[2]) {
-            std:: cout << *this; }
+        Vector3(const float *k) : x(k[0]), y(k[1]), z(k[2]) {}
+            //std:: cout << *this; }
 
         float operator[] (int i) const { return (&x)[i]; }
 

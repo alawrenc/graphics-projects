@@ -6,7 +6,6 @@
 #include "RenderContext.h"
 #include "VertexDeclaration.h"
 #include "Matrix4.h"
-#include <map>
 
 namespace RE330 {
 
@@ -44,6 +43,13 @@ namespace RE330 {
         SWWidget *mswWidget;
         QImage *image;
 
+        static const int NUM_TRIANGLE_VERTS = 3;
+        static const bool PART_1 = false;
+        static const bool LINEAR = false;
+        static const bool BASIC = true;
+
+        static const int TILE_DIVISIONS = 3;
+
         Matrix4 projection;
         Matrix4 modelview;
         Matrix4 viewport;
@@ -52,6 +58,24 @@ namespace RE330 {
 
         void rasterizeTriangle(float p[3][4], float n[3][3], float c[3][4]);
         void setPixel(int x, int y, QRgb c, float z);
+        void projectVertices(float p[3][4]);
+        void basicRasterize(Vector4 v[3], float c[3][4],
+                            float minX, float maxX,
+                            float minY, float maxY);
+        void hierarchyRasterize(Vector4 verts[3], float c[3][4],
+                                float minX, float maxX,
+                                float minY, float maxY);
+        QRgb linearColor(float c[3][4], float beta, float gamma);
+        QRgb perspectiveColor(Vector4 verts[3], float c[3][4],
+                              float alpha, float beta, float gamma);
+        bool triVertInTile(Vector4 verts[3],
+                           int leftX, int rightX,
+                           int bottomY, int topY);
+        bool tileVertInTri(Vector4 verts[3],
+                           int leftX, int rightX,
+                           int bottomY, int topY);
+        bool edgesIntersect();
+        float* findBaryCoord(Vector4 verts[3], float x, float y);
     };
 
 }

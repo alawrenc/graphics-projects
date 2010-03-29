@@ -45,6 +45,10 @@ void SWRenderContext::beginFrame()
     for(int i = 0; i < width; i++)
     {
         *(zbuffer + i) = new float[height];
+        for (int j = 0; j < height; j++)
+        {
+            zbuffer[i][j] = -1.0f;
+        }
     }
 
 }
@@ -194,32 +198,29 @@ void SWRenderContext::rasterizeTriangle(float p[3][4], float n[3][3], float c[3]
 {
     // part 1.2
     // Implement triangle rasterization here.
-    bool PART_1 = false;
-    int NUM_TRIANGLE_VERTS = 3;
-    QRgb value = qRgb(255, 255, 255);
-
     if(PART_1)
     {
-
-        float x, y, w = 0;
-        for (int vertex = 0; vertex <= NUM_TRIANGLE_VERTS; vertex++)
-        {
-            Vector4 values(p[vertex]);
-
-            // Use viewport*projection*modelview matrix to project to screen.
-            values = viewport * projection * (modelview * values);
-
-            w = values[3];
-            x = floor(values[0] / w);
-            y = floor(values[1] / w);
-
-            //set pixel on screen
-            image->setPixel(x, y, value);
-        }
+        projectVertices(p);
     }
     else //PART_2
     {
         Vector4 verts[] = { Vector4(p[0]), Vector4(p[1]), Vector4(p[2])  };
+
+        for(int vertex = 0; vertex <= NUM_TRIANGLE_VERTS; vertex++)
+        {
+            float x, y, z, w = 0.0f;
+            // convert vertices to pixel coordinates
+            verts[vertex] = viewport * projection * modelview * verts[vertex];
+
+            // normalize to w
+            // does this need to happen before viewport transform?
+            w = verts[vertex][3];
+            x = floor(verts[vertex][0] / w);
+            y = floor(verts[vertex][1] / w);
+            z = verts[vertex][2] / w;
+
+            verts[vertex] = Vector4(x, y, z, w);
+        }
 
         //setup for computing min/max values in for loop
         float minX, minY = numeric_limits<float>::max();;
@@ -228,18 +229,6 @@ void SWRenderContext::rasterizeTriangle(float p[3][4], float n[3][3], float c[3]
         // compute a bounding box around triangle
         for(int vertex = 0; vertex <= NUM_TRIANGLE_VERTS; vertex++)
         {
-            float x, y, z, w = 0.0f;
-            // convert vertices to pixel coordinates
-            verts[vertex] = viewport * projection * (modelview * verts[vertex]);
-
-            // normalize to w
-            w = verts[vertex][3];
-            x = floor(verts[vertex][0] / w);
-            y = floor(verts[vertex][1] / w);
-            z = verts[vertex][2] / w;
-
-            verts[vertex] = Vector4(x, y, z, w);
-
             // update min/max values
             minX = std::min(verts[vertex][0], minX);
             maxX = std::max(verts[vertex][0], maxX);
@@ -256,67 +245,14 @@ void SWRenderContext::rasterizeTriangle(float p[3][4], float n[3][3], float c[3]
 
         // trim maxY to image height
         maxY = min((float)image->height() - 1, maxY);
-
-        // values for finding barycentric coordinates
-        float a_x = verts[0][0];
-        float a_y = verts[0][1];
-        float a_z = verts[0][2];
-        float b_x = verts[1][0];
-        float b_y = verts[1][1];
-        float b_z = verts[1][2];
-        float c_x = verts[2][0];
-        float c_y = verts[2][1];
-        float c_z = verts[2][2];
-        float detT = (c_x - a_x) * (b_y - a_y) - (b_x -a_x) * (c_y - a_y);
-
-        // step through all pixels in bounding box
-        for (int col = minY; col <= maxY; col++)
+        if (BASIC)
         {
-            float alpha, beta, gamma = 0.0f;
-            float x, y, z = 0.0f;
-            for (int row = minX; row <= maxX; row++)
-            {
-                x = col + .5;
-                y = row + .5;
-                // compute barycentric coordinates for center of each pixel
-                beta = ((a_y - c_y) * (x - a_x) +
-                        (c_x - a_x) * (y - a_y)) / detT;
-                gamma = ((b_y - a_y) * (x - a_x) +
-                         (a_x - b_x) * (y - a_y)) / detT;
-                alpha = 1 - beta - gamma;
-
-                // determine if coordinate is in triangle
-                if ( (0 < alpha && alpha < 1) &&
-                     (0 < beta && beta < 1) &&
-                     (0 < gamma && gamma < 1) )
-                {
-                    // for(int i = 0; i<3; i++)
-                    // {
-                    //     for (int j = 0; j<4; j++)
-                    //     {
-                    //         std::cout <<" "<< c[i][j] << std::endl;
-                    //     }
-                    // }
-                    // std::cout << "" << std::endl;
-                    //image->setPixel(row, col, value);
-                    //TO-DO: linerally interpolate z value
-                    float color_1 = 255*(c[0][0] +
-                                     beta * (c[1][0] - c[0][0]) +
-                                     gamma * (c[2][0]) - c[0][0]);
-                    float color_2 = 255*(c[0][1] +
-                                     beta * (c[1][1] - c[0][1]) +
-                                     gamma * (c[2][1]) - c[0][1]);
-                    float color_3 = 255*(c[0][2] +
-                                     beta * (c[1][2] - c[0][2]) +
-                                     gamma * (c[2][2]) - c[0][2]);
-
-                    z = a_z + beta * (b_z - a_z) + gamma * (c_z - a_z);
-                    value = qRgb(color_1, color_2, color_3);
-                    setPixel(row, col, value, z);
-                }
-            }
+            basicRasterize(verts, c, minX, maxX, minY, maxY);
         }
-
+        else
+        {
+            hierarchyRasterize(verts, c, minX, maxX, minY, maxY);
+        }
     }
 }
 
@@ -328,18 +264,321 @@ void SWRenderContext::setWidget(SWWidget *swWidget)
 
 void SWRenderContext::setPixel(int x, int y, QRgb c, float z)
 {
-    if(zbuffer[x][y])
+    if(zbuffer[x][y] == -1.0f)
     {
-        //std::cout << zbuffer[x][y] << std::endl;
+        zbuffer[x][y] = z;
+        image->setPixel(x, y, c);
+    }
+    else
+    {
         if(z > zbuffer[x][y])
         {
             zbuffer[x][y] = z;
             image->setPixel(x, y, c);
         }
     }
-    else
+}
+
+void SWRenderContext::projectVertices(float p[3][4])
+{
+    float x, y, w = 0;
+    QRgb value = qRgb(255, 255, 255);
+    for (int vertex = 0; vertex <= NUM_TRIANGLE_VERTS; vertex++)
     {
-        zbuffer[x][y] = z;
-        image->setPixel(x, y, c);
+        Vector4 values(p[vertex]);
+
+        // Use viewport*projection*modelview matrix to project to screen.
+        values = viewport * projection * (modelview * values);
+
+        w = values[3];
+        x = floor(values[0] / w);
+        y = floor(values[1] / w);
+
+        //set pixel on screen
+        image->setPixel(x, y, value);
     }
+}
+
+void SWRenderContext::basicRasterize(Vector4 verts[3], float c[3][4],
+                                     float minX, float maxX,
+                                     float minY, float maxY)
+{
+    QRgb value = qRgb(255, 255, 255);
+
+    // step through all pixels in bounding box
+    for (int col = minX; col < maxX; col++)
+    {
+        float x, y, z = 0.0f;
+        for (int row = minY; row < maxY; row++)
+        {
+            x = col + .5;
+            y = row + .5;
+            // compute barycentric coordinates for each pixel
+            float * baryCoord = findBaryCoord(verts, x, y);
+            float alpha = baryCoord[0];
+            float beta = baryCoord[1];
+            float gamma = baryCoord[2];
+
+            // determine if coordinate is in triangle
+            if ( (0 < alpha && alpha < 1) &&
+                 (0 < beta && beta < 1) &&
+                 (0 < gamma && gamma < 1) )
+            {
+                float a_z = verts[0][2];
+                float b_z = verts[1][2];
+                float c_z = verts[2][2];
+
+                // linerally interpolate z value
+                z = a_z + beta * (b_z - a_z) + gamma * (c_z - a_z);
+
+                if(LINEAR)
+                {
+                    value = linearColor(c, beta, gamma);
+                }
+                else //perspective correct
+                {
+                    value = perspectiveColor(verts, c, alpha, beta, gamma);
+                }
+                setPixel(row, col, value, z);
+                delete[] baryCoord;
+            }
+        }
+    }
+}
+
+void SWRenderContext::hierarchyRasterize( Vector4 verts[3], float c[3][4],
+                                          float minX, float maxX,
+                                          float minY, float maxY )
+{
+    int colStep = (maxX - minX) / TILE_DIVISIONS;
+    int rowStep = (maxY - minY) / TILE_DIVISIONS;
+
+    for (int boxCol = 0; boxCol < TILE_DIVISIONS; boxCol++)
+    {
+        int leftX = boxCol * colStep;
+        int rightX = leftX + colStep;
+
+        for (int boxRow = 0; boxRow < TILE_DIVISIONS; boxRow++)
+        {
+            int bottomY = boxRow * rowStep;
+            int topY = bottomY + rowStep;
+            if( triVertInTile(verts, leftX, rightX, bottomY, topY) ||
+                tileVertInTri(verts, leftX, rightX, bottomY, topY) ||
+                edgesIntersect() )
+            {
+                QRgb value = qRgb(255, 255, 255);
+                // step through all pixels in bounding box
+                for (int col = leftX; col < rightX; col++)
+                {
+                    float x, y, z = 0.0f;
+                    for (int row = bottomY; row < topY; row++)
+                    {
+                        // offset to the center of the pixel
+                        x = col + .5;
+                        y = row + .5;
+
+                        // compute barycentric coordinates for each pixel
+                        float * baryCoord = findBaryCoord(verts, x, y);
+                        float alpha = baryCoord[0];
+                        float beta = baryCoord[1];
+                        float gamma = baryCoord[2];
+
+                        // determine if coordinate is in triangle
+                        if ( (0 < alpha && alpha < 1) &&
+                             (0 < beta && beta < 1) &&
+                             (0 < gamma && gamma < 1) )
+                        {
+                            float a_z = verts[0][2];
+                            float b_z = verts[1][2];
+                            float c_z = verts[2][2];
+
+                            // linerally interpolate z value
+                            z = a_z + beta * (b_z - a_z) + gamma * (c_z - a_z);
+
+                            if(LINEAR)
+                            {
+                                value = linearColor(c, beta, gamma);
+                            }
+                            else //perspective correct
+                            {
+                                value = perspectiveColor(verts, c, alpha, beta, gamma);
+                            }
+
+                            setPixel(row, col, value, z);
+                            delete[] baryCoord;
+                        }
+                    }
+                }
+            }
+        }
+    }
+// Check if any of the triangle's vertices are inside the rectangle
+//     (e.g., compare the (x,y) coordinates with the min/max (x,y) coordinates of the rectangle)
+// Check if any of the rectangle's vertices are inside the triangle
+//     (e.g., use barycentric coordinates)
+//  Check if any of the triangle's edges intersects any of the rectangle's edges.
+}
+
+QRgb SWRenderContext::linearColor(float c[3][4], float beta, float gamma)
+{
+    // linerally interpolate color values
+    float color_1 = 255 * (c[0][0] +
+                           beta * (c[1][0] - c[0][0]) +
+                           gamma * (c[2][0]) - c[0][0]);
+    float color_2 = 255 * (c[0][1] +
+                           beta * (c[1][1] - c[0][1]) +
+                           gamma * (c[2][1]) - c[0][1]);
+    float color_3 = 255 * (c[0][2] +
+                           beta * (c[1][2] - c[0][2]) +
+                           gamma * (c[2][2]) - c[0][2]);
+
+    return qRgb(color_1, color_2, color_3);
+}
+
+QRgb SWRenderContext::perspectiveColor(Vector4 verts[3], float c[3][4],
+                                       float alpha, float beta, float gamma)
+{
+    float a_w = verts[0][3];
+    float b_w = verts[1][3];
+    float c_w = verts[2][3];
+
+    float w_inverse = (alpha / a_w +
+                       beta / b_w +
+                       gamma / c_w);
+
+    float color_1 = 255 * (( alpha * c[0][0] / a_w +
+                             beta * c[1][0] / b_w +
+                             gamma * c[2][0] / c_w) /
+                           w_inverse);
+
+    float color_2 = 255 * (( alpha * c[0][1] / a_w +
+                             beta * c[1][1] / b_w +
+                             gamma * c[2][1] / c_w) /
+                           w_inverse );
+
+    float color_3 = 255 * (( alpha * c[0][2] / a_w +
+                             beta * c[1][2] / b_w +
+                             gamma * c[2][2] / c_w) /
+                           w_inverse );
+
+    return qRgb(color_1, color_2, color_3);
+}
+
+bool SWRenderContext::triVertInTile(Vector4 verts[3],
+                                    int leftX, int rightX,
+                                    int bottomY, int topY)
+{
+    // - Check if any of the triangle's vertices are inside the rectangle
+    //     (e.g., compare the (x,y) coordinates with the min/max (x,y)
+    //         coordinates of the rectangle)
+        for(int v = 0; v < NUM_TRIANGLE_VERTS; v++)
+        {
+            float x = verts[v][0];
+            float y = verts[v][1];
+            if (x > leftX && x < rightX &&
+                y > bottomY && y < topY)
+            {
+                return true;
+            }
+        }
+    return false;
+
+}
+
+bool SWRenderContext::tileVertInTri(Vector4 verts[3],
+                                    int leftX, int rightX,
+                                    int bottomY, int topY)
+{
+
+    // values for finding barycentric coordinates
+    float a_x = verts[0][0];
+    float a_y = verts[0][1];
+    float b_x = verts[1][0];
+    float b_y = verts[1][1];
+    float c_x = verts[2][0];
+    float c_y = verts[2][1];
+
+    float detT = (c_x - a_x) * (b_y - a_y) - (b_x - a_x) * (c_y - a_y);
+
+    float alpha, beta, gamma = 0.0f;
+
+    // compute barycentric coordinates for lower left vertex
+    float b_bottomY = (c_x - a_x) * (bottomY - a_y);
+    float b_leftX = (a_y - c_y) * (leftX - a_x);
+    beta = (b_leftX + b_bottomY) / detT;
+
+    float g_bottomY = (a_x - b_x) * (bottomY - a_y);
+    float g_leftX = (b_y - a_y) * (leftX - a_x);
+    gamma = (g_leftX + g_bottomY) / detT;
+    alpha = 1 - beta - gamma;
+
+    // determine if coordinate is in triangle
+    if ( (0 < alpha && alpha < 1) &&
+         (0 < beta && beta < 1) &&
+         (0 < gamma && gamma < 1) )
+    {
+        return true;
+    }
+
+    // compute barycentric coordinates for lower right vertex
+    float b_rightX = (a_y - c_y) * (rightX - a_x);
+    beta = (b_rightX + b_bottomY) / detT;
+
+    float g_rightX = (b_y - a_y) * (rightX - a_x);
+    gamma = (g_rightX + g_bottomY) / detT;
+    alpha = 1 - beta - gamma;
+
+    // determine if coordinate is in triangle
+    if ( (0 < alpha && alpha < 1) &&
+         (0 < beta && beta < 1) &&
+         (0 < gamma && gamma < 1) )
+    {
+        return true;
+    }
+
+    //compute barycentric coordinates for upper-left vertex
+    float b_topY =  (c_x - a_x) * (topY - a_y);
+    float g_topY = (a_x - b_x) * (topY - a_y);
+    beta = (b_leftX + b_topY) / detT;
+    gamma = (g_leftX + g_topY) / detT;
+    alpha = 1 - beta - gamma;
+
+    // determine if coordinate is in triangle
+    if ( (0 < alpha && alpha < 1) &&
+         (0 < beta && beta < 1) &&
+         (0 < gamma && gamma < 1) )
+    {
+        return true;
+    }
+    return false;
+}
+
+bool SWRenderContext::edgesIntersect()
+{
+    return false;
+}
+
+float* SWRenderContext::findBaryCoord(Vector4 verts[3], float x, float y)
+{
+    float a_x = verts[0][0];
+    float a_y = verts[0][1];
+    float b_x = verts[1][0];
+    float b_y = verts[1][1];
+    float c_x = verts[2][0];
+    float c_y = verts[2][1];
+    float detT = (c_x - a_x) * (b_y - a_y) - (b_x - a_x) * (c_y - a_y);
+
+    float alpha, beta, gamma = 0.0f;
+    beta = ((a_y - c_y) * (x - a_x) +
+            (c_x - a_x) * (y - a_y)) / detT;
+    gamma = ((b_y - a_y) * (x - a_x) +
+             (a_x - b_x) * (y - a_y)) / detT;
+    alpha = 1 - beta - gamma;
+
+    float * coord = new float[3];
+    coord[0] = alpha;
+    coord[1] = beta;
+    coord[2] = gamma;
+
+    return coord;
 }
