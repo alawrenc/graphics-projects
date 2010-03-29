@@ -26,6 +26,21 @@ Object * Shapes::readObject(SceneManager* sm, std::string filename)
     return objIn;
 }
 
+Object * Shapes::createSheet(SceneManager* sm)
+{
+    Object* sheet = sm->createObject();
+    float sheet_v [] = { -10,-10,10, 10,-10,10, 10,10,10, -10,10,10 };
+    float sheet_c [] = { 1,0,0, 1,0,0, 1,1,1, 1,1,1 };
+    int sheet_i [] = { 0,2,3, 0,1,2 };
+    int nVerts = 4;
+    int nIndices = 6;
+
+    setupObject(sheet, nVerts, nIndices, sheet_v, sheet_c, sheet_i);
+
+    return sheet;
+
+}
+
 Object * Shapes::createHouse(SceneManager* sm)
 {
     Object* house = sm->createObject();

@@ -88,7 +88,8 @@ void RenderWidget0::setupCamera()
 
 void RenderWidget0::setupObjects()
 {
-    objects[HOUSE] = Shapes::createHouse(sceneManager);
+    objects["sheet"] = Shapes::createSheet(sceneManager);
+    // objects[HOUSE] = Shapes::createHouse(sceneManager);
     //objects["bunny"] = Shapes::readObject(sceneManager, "bunny.obj");
 }
 

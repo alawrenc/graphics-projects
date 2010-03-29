@@ -18,6 +18,8 @@ namespace RE330
          */
         static Object *readObject(SceneManager* sm, std::string filename);
 
+        static Object *createSheet(SceneManager* sm);
+
         static Object *createHouse(SceneManager* sm);
 
         static Object *createSphere(SceneManager* sm,
