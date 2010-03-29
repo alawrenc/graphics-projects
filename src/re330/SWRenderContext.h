@@ -75,7 +75,9 @@ namespace RE330 {
                            int leftX, int rightX,
                            int bottomY, int topY);
         bool edgesIntersect();
-        float* findBaryCoord(Vector4 verts[3], float x, float y);
+        void findBaryCoord(Vector4 verts[3],
+                           float x, float y,
+                           float coord[3] );
     };
 
 }

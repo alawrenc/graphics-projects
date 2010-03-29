@@ -34,6 +34,9 @@ void SWRenderContext::setViewport(int width, int height)
                         0, -height / 2.0f, 0, height / 2.0f,
                         0, 0, -.5, .5,
                         0, 0, 0, 1);
+
+    //update total matrix
+    total = viewport * projection * modelview;
 }
 
 void SWRenderContext::beginFrame()
@@ -45,10 +48,6 @@ void SWRenderContext::beginFrame()
     for(int i = 0; i < width; i++)
     {
         *(zbuffer + i) = new float[height];
-        for (int j = 0; j < height; j++)
-        {
-            zbuffer[i][j] = -1.0f;
-        }
     }
 
 }
@@ -57,6 +56,7 @@ void SWRenderContext::endFrame()
 {
     mswWidget->setPixmap(QPixmap::fromImage(*image));
     mswWidget->repaint();
+    int width = image->width();
 }
 
 void SWRenderContext::setModelViewMatrix(const Matrix4 &m)
@@ -64,6 +64,9 @@ void SWRenderContext::setModelViewMatrix(const Matrix4 &m)
     // part 1.1
     // Set modelview matrix.
     modelview = m;
+
+    //update total matrix
+    total = viewport * projection * modelview;
 }
 
 void SWRenderContext::setProjectionMatrix(const Matrix4 &m)
@@ -71,6 +74,9 @@ void SWRenderContext::setProjectionMatrix(const Matrix4 &m)
     //part 1.1
     // Set projection matrix.
     projection = m;
+
+    //update total matrix
+    total = viewport * projection * modelview;
 }
 
 void SWRenderContext::render(Object *object)
@@ -208,10 +214,10 @@ void SWRenderContext::rasterizeTriangle(float p[3][4], float n[3][3], float c[3]
 
         for(int vertex = 0; vertex <= NUM_TRIANGLE_VERTS; vertex++)
         {
-            float x, y, z, w = 0.0f;
             // convert vertices to pixel coordinates
-            verts[vertex] = viewport * projection * modelview * verts[vertex];
+            verts[vertex] = total * verts[vertex];
 
+            float x, y, z, w = 0.0f;
             // normalize to w
             // does this need to happen before viewport transform?
             w = verts[vertex][3];
@@ -288,7 +294,7 @@ void SWRenderContext::projectVertices(float p[3][4])
         Vector4 values(p[vertex]);
 
         // Use viewport*projection*modelview matrix to project to screen.
-        values = viewport * projection * (modelview * values);
+        values = total * values;
 
         w = values[3];
         x = floor(values[0] / w);
@@ -314,7 +320,8 @@ void SWRenderContext::basicRasterize(Vector4 verts[3], float c[3][4],
             x = col + .5;
             y = row + .5;
             // compute barycentric coordinates for each pixel
-            float * baryCoord = findBaryCoord(verts, x, y);
+            float baryCoord[3];
+            findBaryCoord(verts, x, y, baryCoord);
             float alpha = baryCoord[0];
             float beta = baryCoord[1];
             float gamma = baryCoord[2];
@@ -339,8 +346,7 @@ void SWRenderContext::basicRasterize(Vector4 verts[3], float c[3][4],
                 {
                     value = perspectiveColor(verts, c, alpha, beta, gamma);
                 }
-                setPixel(row, col, value, z);
-                delete[] baryCoord;
+                setPixel(col, row, value, z);
             }
         }
     }
@@ -378,7 +384,8 @@ void SWRenderContext::hierarchyRasterize( Vector4 verts[3], float c[3][4],
                         y = row + .5;
 
                         // compute barycentric coordinates for each pixel
-                        float * baryCoord = findBaryCoord(verts, x, y);
+                        float baryCoord[3];
+                        findBaryCoord(verts, x, y, baryCoord);
                         float alpha = baryCoord[0];
                         float beta = baryCoord[1];
                         float gamma = baryCoord[2];
@@ -404,8 +411,7 @@ void SWRenderContext::hierarchyRasterize( Vector4 verts[3], float c[3][4],
                                 value = perspectiveColor(verts, c, alpha, beta, gamma);
                             }
 
-                            setPixel(row, col, value, z);
-                            delete[] baryCoord;
+                            setPixel(col, row, value, z);
                         }
                     }
                 }
@@ -558,7 +564,9 @@ bool SWRenderContext::edgesIntersect()
     return false;
 }
 
-float* SWRenderContext::findBaryCoord(Vector4 verts[3], float x, float y)
+void SWRenderContext::findBaryCoord(Vector4 verts[3],
+                                      float x, float y,
+                                      float coord[3])
 {
     float a_x = verts[0][0];
     float a_y = verts[0][1];
@@ -575,10 +583,7 @@ float* SWRenderContext::findBaryCoord(Vector4 verts[3], float x, float y)
              (a_x - b_x) * (y - a_y)) / detT;
     alpha = 1 - beta - gamma;
 
-    float * coord = new float[3];
     coord[0] = alpha;
     coord[1] = beta;
     coord[2] = gamma;
-
-    return coord;
 }
