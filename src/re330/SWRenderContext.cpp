@@ -327,6 +327,7 @@ void SWRenderContext::basicRasterize(Vector4 verts[3], float c[3][4],
             float gamma = baryCoord[2];
 
             // determine if coordinate is in triangle
+            // TODO: determine if left/top and allow
             if ( (0 < alpha && alpha < 1) &&
                  (0 < beta && beta < 1) &&
                  (0 < gamma && gamma < 1) )
@@ -340,7 +341,7 @@ void SWRenderContext::basicRasterize(Vector4 verts[3], float c[3][4],
 
                 if(LINEAR)
                 {
-                    value = linearColor(c, beta, gamma);
+                    value = linearColor(c, alpha, beta, gamma);
                 }
                 else //perspective correct
                 {
@@ -372,49 +373,7 @@ void SWRenderContext::hierarchyRasterize( Vector4 verts[3], float c[3][4],
                 tileVertInTri(verts, leftX, rightX, bottomY, topY) ||
                 edgesIntersect() )
             {
-                QRgb value = qRgb(255, 255, 255);
-                // step through all pixels in bounding box
-                for (int col = leftX; col < rightX; col++)
-                {
-                    float x, y, z = 0.0f;
-                    for (int row = bottomY; row < topY; row++)
-                    {
-                        // offset to the center of the pixel
-                        x = col + .5;
-                        y = row + .5;
-
-                        // compute barycentric coordinates for each pixel
-                        float baryCoord[3];
-                        findBaryCoord(verts, x, y, baryCoord);
-                        float alpha = baryCoord[0];
-                        float beta = baryCoord[1];
-                        float gamma = baryCoord[2];
-
-                        // determine if coordinate is in triangle
-                        if ( (0 < alpha && alpha < 1) &&
-                             (0 < beta && beta < 1) &&
-                             (0 < gamma && gamma < 1) )
-                        {
-                            float a_z = verts[0][2];
-                            float b_z = verts[1][2];
-                            float c_z = verts[2][2];
-
-                            // linerally interpolate z value
-                            z = a_z + beta * (b_z - a_z) + gamma * (c_z - a_z);
-
-                            if(LINEAR)
-                            {
-                                value = linearColor(c, beta, gamma);
-                            }
-                            else //perspective correct
-                            {
-                                value = perspectiveColor(verts, c, alpha, beta, gamma);
-                            }
-
-                            setPixel(col, row, value, z);
-                        }
-                    }
-                }
+                basicRasterize(verts, c, leftX, rightX, bottomY, topY);
             }
         }
     }
@@ -425,16 +384,17 @@ void SWRenderContext::hierarchyRasterize( Vector4 verts[3], float c[3][4],
 //  Check if any of the triangle's edges intersects any of the rectangle's edges.
 }
 
-QRgb SWRenderContext::linearColor(float c[3][4], float beta, float gamma)
+QRgb SWRenderContext::linearColor(float c[3][4],
+                                  float alpha,float beta, float gamma)
 {
     // linerally interpolate color values
-    float color_1 = 255 * (c[0][0] +
+    float color_1 = 255 * (alpha * c[0][0] +
                            beta * (c[1][0] - c[0][0]) +
                            gamma * (c[2][0]) - c[0][0]);
-    float color_2 = 255 * (c[0][1] +
+    float color_2 = 255 * (alpha * c[0][1] +
                            beta * (c[1][1] - c[0][1]) +
                            gamma * (c[2][1]) - c[0][1]);
-    float color_3 = 255 * (c[0][2] +
+    float color_3 = 255 * (alpha * c[0][2] +
                            beta * (c[1][2] - c[0][2]) +
                            gamma * (c[2][2]) - c[0][2]);
 
@@ -488,14 +448,12 @@ bool SWRenderContext::triVertInTile(Vector4 verts[3],
             }
         }
     return false;
-
 }
 
 bool SWRenderContext::tileVertInTri(Vector4 verts[3],
                                     int leftX, int rightX,
                                     int bottomY, int topY)
 {
-
     // values for finding barycentric coordinates
     float a_x = verts[0][0];
     float a_y = verts[0][1];

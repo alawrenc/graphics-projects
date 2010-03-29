@@ -46,7 +46,7 @@ namespace RE330 {
         static const int NUM_TRIANGLE_VERTS = 3;
         static const bool PART_1 = false;
         static const bool LINEAR = false;
-        static const bool BASIC = true;
+        static const bool BASIC = false;
 
         static const int TILE_DIVISIONS = 3;
 
@@ -65,7 +65,7 @@ namespace RE330 {
         void hierarchyRasterize(Vector4 verts[3], float c[3][4],
                                 float minX, float maxX,
                                 float minY, float maxY);
-        QRgb linearColor(float c[3][4], float beta, float gamma);
+        QRgb linearColor(float c[3][4], float alpha, float beta, float gamma);
         QRgb perspectiveColor(Vector4 verts[3], float c[3][4],
                               float alpha, float beta, float gamma);
         bool triVertInTile(Vector4 verts[3],
