@@ -6,6 +6,7 @@
 #include "RenderContext.h"
 #include "VertexDeclaration.h"
 #include "Matrix4.h"
+#include <QTime>
 
 namespace RE330 {
 
@@ -42,13 +43,14 @@ namespace RE330 {
     private:
         SWWidget *mswWidget;
         QImage *image;
+        QTime timer;
 
         static const int NUM_TRIANGLE_VERTS = 3;
         static const bool PART_1 = false;
-        static const bool LINEAR = false;
+        static const bool LINEAR = true;
         static const bool BASIC = false;
 
-        static const int TILE_DIVISIONS = 3;
+        int frameCounter;
 
         Matrix4 projection;
         Matrix4 modelview;
@@ -59,7 +61,7 @@ namespace RE330 {
         void rasterizeTriangle(float p[3][4], float n[3][3], float c[3][4]);
         void setPixel(int x, int y, QRgb c, float z);
         void projectVertices(float p[3][4]);
-        void basicRasterize(Vector4 v[3], float c[3][4],
+        void basicRasterize(Vector4 verts[3], float c[3][4],
                             float minX, float maxX,
                             float minY, float maxY);
         void hierarchyRasterize(Vector4 verts[3], float c[3][4],
@@ -74,10 +76,17 @@ namespace RE330 {
         bool tileVertInTri(Vector4 verts[3],
                            int leftX, int rightX,
                            int bottomY, int topY);
-        bool edgesIntersect();
+        bool edgesIntersect(Vector4 verts[3],
+                            float leftX, float rightX,
+                            float bottomY, float topY);
         void findBaryCoord(Vector4 verts[3],
                            float x, float y,
                            float coord[3] );
+        bool coordInTri(Vector4 verts[3],
+                        float alpha, float beta, float gamma);
+        bool segmentsIntersect(float x1, float y1, float x2, float y2,
+                               float x3, float y3, float x4, float y4);
+
     };
 
 }

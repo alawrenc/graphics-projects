@@ -22,6 +22,8 @@ namespace RE330
 
         static Object *createHouse(SceneManager* sm);
 
+        static Object *createQuadHouses(SceneManager* sm);
+
         static Object *createSphere(SceneManager* sm,
                                     float height, int slices, int points,
                                     const int num_colors,

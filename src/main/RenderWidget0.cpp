@@ -75,7 +75,7 @@ void RenderWidget0::setupCamera()
     {
         // Second camera test setting
         camera->createViewMatrix(
-            Vector4(-10,40,40,1),
+            Vector4(-10,10,40,1),
             Vector4(-5,0,0,1),
             Vector4(0,1,0,0));
     }
@@ -88,8 +88,9 @@ void RenderWidget0::setupCamera()
 
 void RenderWidget0::setupObjects()
 {
-    objects["sheet"] = Shapes::createSheet(sceneManager);
-    // objects[HOUSE] = Shapes::createHouse(sceneManager);
+    // objects[HOUSE] = Shapes::createQuadHouses(sceneManager);
+    //objects["sheet"] = Shapes::createSheet(sceneManager);
+    objects[HOUSE] = Shapes::createHouse(sceneManager);
     //objects["bunny"] = Shapes::readObject(sceneManager, "bunny.obj");
 }
 
@@ -108,6 +109,9 @@ void RenderWidget0::resizeRenderWidgetEvent(const QSize &s)
 
 void RenderWidget0::timerEvent(QTimerEvent *t)
 {
+    Matrix4 m(cos(0.01),-sin(0.01),0,0, sin(0.01),cos(0.01),0,0, 0,0,1,0, 0,0,0,1);
+	Matrix4 m2(1,0,0,0, 0,cos(0.01), -sin(0.01),0, 0,sin(0.01),cos(0.01),0, 0,0,0,1);
+	objects[HOUSE]->setTransformation(m2*m*objects[HOUSE]->getTransformation());
     updateScene();
 }
 
