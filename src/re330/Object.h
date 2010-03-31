@@ -4,6 +4,7 @@
 #include "RE330_global.h"
 #include "VertexData.h"
 #include "Matrix4.h"
+#include "Material.h"
 
 namespace RE330
 {
@@ -18,6 +19,8 @@ namespace RE330
         inline void setTransformation(const Matrix4 &t) { mTransformation = t; }
 
         inline Matrix4 getTransformation() const { return mTransformation; }
+
+        inline void setMaterial(const Material &m) { objectMaterial = m; }
 
         void printTransformation()
         {
@@ -36,9 +39,15 @@ namespace RE330
 
     protected:
 
-        Object() { mTransformation = Matrix4::IDENTITY; }
+        Object()
+        {
+            mTransformation = Matrix4::IDENTITY;
+            objectMaterial = Material();
+        }
 
         Matrix4 mTransformation;
+
+        Material objectMaterial;
 
         friend class SceneManager;
     };
