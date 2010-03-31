@@ -20,6 +20,12 @@ SceneManager::~SceneManager()
         mObjectList.pop_front();
         delete o;
     }
+    while(mLightList.size() > 0)
+    {
+        Light *l = mLightList.front();
+        mLightList.pop_front();
+        delete l;
+    }
 }
 
 Object* SceneManager::createObject()
@@ -28,6 +34,19 @@ Object* SceneManager::createObject()
     mObjectList.push_back(o);
 
     return o;
+}
+
+Light* SceneManager::createLight()
+{
+    if (mLightList.size() >=8)
+    {
+        std::cout << "tried to add too many light sources!" << std::endl;
+        throw;
+    }
+    Light *l = new Light();
+    mLightList.push_back(l);
+
+    return l;
 }
 
 Camera* SceneManager::createCamera()

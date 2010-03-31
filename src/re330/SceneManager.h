@@ -4,6 +4,7 @@
 #include "RE330_global.h"
 #include "Camera.h"
 #include "Object.h"
+#include "Light.h"
 #include "RenderContext.h"
 #include <list>
 #include <stdlib.h>
@@ -31,6 +32,8 @@ namespace RE330
         */
         Object *createObject();
 
+        Light *createLight();
+
         /** This method needs to be called in the renderSceneEvent
             event handler of the RenderWidget.
         @remarks
@@ -44,6 +47,7 @@ namespace RE330
     private:
         Camera *mCamera;
         std::list<Object*> mObjectList;
+        std::list<Light*> mLightList;
     };
 
 }
