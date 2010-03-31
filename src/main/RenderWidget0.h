@@ -6,12 +6,12 @@
 #include "GLRenderWidget.h"
 #include "SceneManager.h"
 #include "Object.h"
+
 using namespace RE330;
 
-#include <map>
 using namespace std;
 
-class RenderWidget0 : public SWRenderWidget
+class RenderWidget0 : public GLRenderWidget
 {
 
 public:

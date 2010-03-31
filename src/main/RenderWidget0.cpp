@@ -8,7 +8,7 @@
 #include "GLRenderContext.h"
 #include "VertexData.h"
 #include "Shapes.h"
-
+#include "Shader.h"
 #include <stdio.h>
 #include <iostream>
 
@@ -17,7 +17,7 @@
 
 RenderWidget0::RenderWidget0()
 {
-    RenderContext *rs = new SWRenderContext();
+    RenderContext *rs = new GLRenderContext();
     sceneManager = 0;
     tracking = false;
     sceneCreated = false;
@@ -42,6 +42,11 @@ void RenderWidget0::initSceneEvent()
 
     //create and position and objects in scene
     setupObjects();
+
+    // add own shader
+    Shader *shader = new Shader("src/Shaders/simple.vert",
+                                "src/Shaders/simple.frag");
+    shader->use();
 
     // Trigger timer event every 5ms.
     timerId = startTimer(5);
