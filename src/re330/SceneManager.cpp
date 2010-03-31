@@ -66,6 +66,9 @@ void SceneManager::renderScene()
         renderContext->setProjectionMatrix(mCamera->getProjectionMatrix());
         Matrix4 v = mCamera->getViewMatrix();
 
+        renderContext->setModelViewMatrix(Matrix4::IDENTITY);
+        renderContext->setLights();
+
         // Iterate through list of objects
         std::list<Object *>::const_iterator iter;
         for (iter=mObjectList.begin(); iter!=mObjectList.end(); iter++)
