@@ -67,7 +67,7 @@ void SceneManager::renderScene()
         Matrix4 v = mCamera->getViewMatrix();
 
         renderContext->setModelViewMatrix(Matrix4::IDENTITY);
-        renderContext->setLights();
+        renderContext->setLights(mLightList);
 
         // Iterate through list of objects
         std::list<Object *>::const_iterator iter;

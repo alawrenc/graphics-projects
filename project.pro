@@ -30,6 +30,7 @@ HEADERS += src/main/MainWidget.h \
            src/re330/Light.h \
            src/re330/Material.h \
            src/re330/Shader.h \
+           src/re330/Texture.h \
            src/re330/Matrix4.h \
            src/re330/Node.h \
            src/re330/Object.h \
@@ -39,9 +40,6 @@ HEADERS += src/main/MainWidget.h \
            src/re330/SceneManager.h \
            src/re330/Shapes.h \
            src/re330/Singleton.h \
-           src/re330/SWRenderContext.h \
-           src/re330/SWRenderWidget.h \
-           src/re330/SWWidget.h \
            src/re330/Vector3.h \
            src/re330/Vector4.h \
            src/re330/VertexData.h \
@@ -58,13 +56,11 @@ SOURCES += src/main/main.cpp \
            src/re330/Light.cpp \
            src/re330/Material.cpp \
            src/re330/Shader.cpp \
+           src/re330/Texture.cpp \
            src/re330/Matrix4.cpp \
            src/re330/Camera.cpp \
            src/re330/Frustum.cpp \
            src/re330/RenderContext.cpp \
-           src/re330/SWRenderContext.cpp \
-           src/re330/SWRenderWidget.cpp \
-           src/re330/SWWidget.cpp \
            src/re330/SceneManager.cpp \
            src/re330/Shapes.cpp \
            src/re330/VertexData.cpp \

@@ -2,8 +2,6 @@
 #include "Vector3.h"
 #include "Matrix4.h"
 #include "Camera.h"
-#include "SWWidget.h"
-#include "SWRenderContext.h"
 #include "GLWidget.h"
 #include "GLRenderContext.h"
 #include "VertexData.h"

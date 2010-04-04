@@ -8,6 +8,7 @@
 #include "RenderContext.h"
 #include "VertexDeclaration.h"
 #include "Light.h"
+#include "Material.h"
 
 namespace RE330
 {
@@ -21,6 +22,8 @@ namespace RE330
     class RE330_EXPORT GLRenderContext : public RenderContext
     {
     public:
+        // GLRenderContext();
+        // ~GLRenderContext();
         void init();
         void setViewport(int width, int height);
         void beginFrame();

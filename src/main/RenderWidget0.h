@@ -2,13 +2,13 @@
 #define RenderWidget0_H
 
 #include <QWidget>
-#include "SWRenderWidget.h"
 #include "GLRenderWidget.h"
 #include "SceneManager.h"
 #include "Object.h"
 
 using namespace RE330;
 
+#include <string.h>
 using namespace std;
 
 class RenderWidget0 : public GLRenderWidget
@@ -50,10 +50,10 @@ private:
     Camera *camera;
 
     // allows more managed storage of objects
-    map <string, Object(*)> objects;
+    std::map <string, Object(*)> objects;
 
     // allows easy updating of all objects in scene
-    map <string, Object(*)>::iterator it;
+    std::map <string, Object(*)>::iterator it;
 
     Object *object;
     int timerId;
