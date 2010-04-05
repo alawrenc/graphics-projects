@@ -27,10 +27,10 @@ namespace RE330
         virtual void setModelViewMatrix(const Matrix4 &m) = 0;
         virtual void setProjectionMatrix(const Matrix4 &m) = 0;
         virtual void render(Object *object) = 0;
-        virtual void setLights(const std::list<Light*> &lightList);
+        virtual void setLights(const std::list<Light*> &lightList) = 0;
 
     private:
-        virtual void setMaterial(Material *material);
+        virtual void setMaterial(Material *material) = 0;
     };
 
 }
