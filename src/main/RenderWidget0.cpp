@@ -45,6 +45,10 @@ void RenderWidget0::initSceneEvent()
     Shader *shader = new Shader("src/Shaders/diffuse_shading.vert",
                                 "src/Shaders/diffuse_shading.frag");
     shader->use();
+    Light * light1 = sceneManager->createLight();
+    light1->setType(Light::DIRECTIONAL);
+    light1->setDiffuseColor(Vector3(255,0,255));
+    light1->setPosition(light1->getPosition() * -1.0);
 
     // Trigger timer event every 5ms.
     timerId = startTimer(5);
