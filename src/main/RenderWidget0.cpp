@@ -42,8 +42,8 @@ void RenderWidget0::initSceneEvent()
     setupObjects();
 
     // add own shader
-    Shader *shader = new Shader("src/Shaders/simple.vert",
-                                "src/Shaders/simple.frag");
+    Shader *shader = new Shader("src/Shaders/diffuse_shading.vert",
+                                "src/Shaders/diffuse_shading.frag");
     shader->use();
 
     // Trigger timer event every 5ms.
@@ -70,7 +70,7 @@ void RenderWidget0::setupCamera()
     {
         // First camera test setting
         camera->createViewMatrix(
-            Vector4(0,0,40,1),
+            Vector4(0,0,5,1),
             Vector4(0,0,0,1),
             Vector4(0,1,0,0));
     }
@@ -93,8 +93,8 @@ void RenderWidget0::setupObjects()
 {
     // objects[HOUSE] = Shapes::createQuadHouses(sceneManager);
     //objects["sheet"] = Shapes::createSheet(sceneManager);
-    objects[HOUSE] = Shapes::createHouse(sceneManager);
-    //objects["bunny"] = Shapes::readObject(sceneManager, "bunny.obj");
+    //objects[HOUSE] = Shapes::createHouse(sceneManager);
+    objects["teapot"] = Shapes::readObject(sceneManager, "teapot.obj");
 }
 
 void RenderWidget0::renderSceneEvent()
@@ -112,9 +112,9 @@ void RenderWidget0::resizeRenderWidgetEvent(const QSize &s)
 
 void RenderWidget0::timerEvent(QTimerEvent *t)
 {
-    Matrix4 m(cos(0.01),-sin(0.01),0,0, sin(0.01),cos(0.01),0,0, 0,0,1,0, 0,0,0,1);
-	Matrix4 m2(1,0,0,0, 0,cos(0.01), -sin(0.01),0, 0,sin(0.01),cos(0.01),0, 0,0,0,1);
-	objects[HOUSE]->setTransformation(m2*m*objects[HOUSE]->getTransformation());
+    // Matrix4 m(cos(0.01),-sin(0.01),0,0, sin(0.01),cos(0.01),0,0, 0,0,1,0, 0,0,0,1);
+	// Matrix4 m2(1,0,0,0, 0,cos(0.01), -sin(0.01),0, 0,sin(0.01),cos(0.01),0, 0,0,0,1);
+	// objects[HOUSE]->setTransformation(m2*m*objects[HOUSE]->getTransformation());
     updateScene();
 }
 
