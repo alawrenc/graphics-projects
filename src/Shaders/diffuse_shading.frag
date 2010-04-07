@@ -25,8 +25,11 @@ void main()
                     * gl_FrontMaterial.specular);
 
   vec4 diffuseColor = gl_LightSource[0].diffuse *
-    max( dot(normalN, lightDirN), 0.0) *
+    dot(lightDirN, normalN) *
     gl_FrontMaterial.diffuse;
 
-  gl_FragColor = diffuseColor + specColor;
+  vec4 ambientColor = gl_LightSource[0].ambient * gl_FrontMaterial.ambient;
+  vec4 globalAmbientColor = gl_LightModel.ambient * gl_FrontMaterial.ambient;
+
+  gl_FragColor = diffuseColor + specColor + globalAmbientColor + ambientColor;
 }
