@@ -155,6 +155,7 @@ void GLRenderContext::setLights(const std::list<Light*> &lightList)
     {
         // Lighting
         glEnable(GL_LIGHTING);
+        std::cout << "here" << std::endl;
 
         int i=0;
         for (iter=lightList.begin(); iter!=lightList.end() && i<8; iter++, i++)
@@ -220,6 +221,7 @@ void GLRenderContext::setMaterial(Material *m)
 {
     if(m!=0)
     {
+        glDisable(GL_COLOR_MATERIAL);
         float diffuse[4];
         diffuse[0] = m->getDiffuse()[0];
         diffuse[1] = m->getDiffuse()[1];

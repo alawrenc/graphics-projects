@@ -21,7 +21,7 @@ Object * Shapes::readObject(SceneManager* sm, std::string filename)
     Object* objIn = sm->createObject();
 
     // display read in object
-    setupObject(objIn, nVerts, nIndices, vertices, normals, indices);
+    setupObject(objIn, nVerts, nIndices, vertices, NULL, indices);
 
     return objIn;
 }

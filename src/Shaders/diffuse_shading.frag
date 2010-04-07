@@ -20,11 +20,13 @@ void main()
   vec4 globalAmbientColor = gl_LightModel.ambient * gl_FrontMaterial.ambient;
   vec4 color = globalAmbientColor;
 
+
+  //for loop not very useful. we need to vary this by light source type
   for(int i = 0; i < 2; i++)
     {
       lightDirN = normalize(vec3(gl_LightSource[i].position));
       reflectDirN = normalize(reflect(-lightDirN, normalN));
-      float phong = dot(reflectDirN, eyeDirN);
+      float phong = max(dot(reflectDirN, eyeDirN), 0.0);
 
       vec4 specColor = (pow(phong, gl_FrontMaterial.shininess)
                         * gl_LightSource[i].specular
