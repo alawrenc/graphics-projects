@@ -8,28 +8,34 @@
 // result is multiplied with the vertex color, which is
 // accessed through a pre-defined varying variable.
 
-varying vec3 normal, lightDir, eyeDir, reflectDir;
+varying vec3 normal, eyeDir;
 
 void main()
 {
   vec3 normalN, lightDirN, eyeDirN, reflectDirN;
 
   normalN = normalize(normal);
-  lightDirN = normalize(lightDir);
   eyeDirN = normalize(eyeDir);
-  reflectDirN = normalize(reflectDir);
 
-  float phong = dot(reflectDirN, eyeDirN);
-  vec4 specColor = (pow(phong, gl_FrontMaterial.shininess)
-                    * gl_LightSource[0].specular
-                    * gl_FrontMaterial.specular);
-
-  vec4 diffuseColor = gl_LightSource[0].diffuse *
-    dot(lightDirN, normalN) *
-    gl_FrontMaterial.diffuse;
-
-  vec4 ambientColor = gl_LightSource[0].ambient * gl_FrontMaterial.ambient;
   vec4 globalAmbientColor = gl_LightModel.ambient * gl_FrontMaterial.ambient;
+  vec4 color = globalAmbientColor;
 
-  gl_FragColor = diffuseColor + specColor + globalAmbientColor + ambientColor;
+  for(int i = 0; i < 2; i++)
+    {
+      lightDirN = normalize(vec3(gl_LightSource[i].position));
+      reflectDirN = normalize(reflect(-lightDirN, normalN));
+      float phong = dot(reflectDirN, eyeDirN);
+
+      vec4 specColor = (pow(phong, gl_FrontMaterial.shininess)
+                        * gl_LightSource[i].specular
+                        * gl_FrontMaterial.specular);
+
+      vec4 diffuseColor = (gl_LightSource[i].diffuse * gl_FrontMaterial.diffuse
+                           * max(dot(lightDirN, normalN), 0.0));
+
+      vec4 ambientColor = gl_LightSource[i].ambient * gl_FrontMaterial.ambient;
+
+      color = color + specColor + diffuseColor + ambientColor;
+    }
+  gl_FragColor = color;
 }

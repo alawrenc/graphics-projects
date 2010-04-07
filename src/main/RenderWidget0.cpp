@@ -46,9 +46,10 @@ void RenderWidget0::initSceneEvent()
                                 "src/Shaders/diffuse_shading.frag");
     shader->use();
     Light * light1 = sceneManager->createLight();
-    light1->setType(Light::DIRECTIONAL);
-    light1->setDiffuseColor(Vector3(255,0,255));
-    light1->setPosition(light1->getPosition() * -1.0);
+    light1->setType(Light::POINT);
+    light1->setDiffuseColor(Vector3(1,0,1));
+    light1->setPosition(Vector3(0,0,5));
+    light1->setDirection(Vector3(0,0,0));
 
     // Trigger timer event every 5ms.
     timerId = startTimer(5);
@@ -82,7 +83,7 @@ void RenderWidget0::setupCamera()
     {
         // Second camera test setting
         camera->createViewMatrix(
-            Vector4(-10,10,40,1),
+            Vector4(-10,10,5,1),
             Vector4(-5,0,0,1),
             Vector4(0,1,0,0));
     }
@@ -98,7 +99,8 @@ void RenderWidget0::setupObjects()
     // objects[HOUSE] = Shapes::createQuadHouses(sceneManager);
     //objects["sheet"] = Shapes::createSheet(sceneManager);
     //objects[HOUSE] = Shapes::createHouse(sceneManager);
-    objects["teapot"] = Shapes::readObject(sceneManager, "teapot.obj");
+    objects["bunny"] = Shapes::readObject(sceneManager, "bunny.obj");
+    objects["bunny"]->getMaterial()->setShininess(0.9);
 }
 
 void RenderWidget0::renderSceneEvent()
