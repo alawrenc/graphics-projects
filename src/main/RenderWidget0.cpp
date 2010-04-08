@@ -9,6 +9,8 @@
 #include "Shader.h"
 #include <stdio.h>
 #include <iostream>
+#include "Light.h"
+#include "Material.h"
 
 #include <QtOpenGL>
 
@@ -34,6 +36,36 @@ RenderWidget0::~RenderWidget0()
 void RenderWidget0::initSceneEvent()
 {
     sceneManager = new SceneManager();
+    
+    Light *l1 = sceneManager->createLight();
+    //l1->setPosition(Vector3(0,0,5));
+    //l1->setDirection(Vector3(2,0,0));
+    l1->setType(Light::DIRECTIONAL);
+    //l1->setSpotDirection(Vector3(2,0,0)); //not necessary (no affect)
+    l1->setDiffuseColor(Vector3(1,0,1));
+    l1->setSpecularColor(Vector3(0,0,1));
+    l1->setAmbientColor(Vector3(1,0,1));
+    Light *l2 = sceneManager->createLight();
+    l2->setPosition(Vector3(0,0,5));  
+    //l2->setDirection(Vector3(-2,0,0));   //not necessary (no affect)
+    l2->setType(Light::POINT);
+    //l2->setSpotDirection(Vector3(-2,0,0));  //not necessary (no affect)
+    l2->setDiffuseColor(Vector3(1,0,1));
+    l2->setSpecularColor(Vector3(0,0,1));
+    l2->setAmbientColor(Vector3(1,0,1));
+    Light *l3 = sceneManager->createLight();
+    l3->setPosition(Vector3(0,0,5));
+    l3->setDirection(Vector3(-2,0,0));    
+    l3->setType(Light::SPOT);
+    l3->setSpotDirection(Vector3(-2,0,0));
+    l3->setSpotExponent(3.0);
+    l3->setSpotCutoff(4.0);
+    l3->setDiffuseColor(Vector3(1,0,1));
+    l3->setSpecularColor(Vector3(0,0,1));
+    l3->setAmbientColor(Vector3(1,0,1));
+    
+    
+    
 
     //create and position the camera
     setupCamera();
@@ -94,7 +126,20 @@ void RenderWidget0::setupObjects()
     // objects[HOUSE] = Shapes::createQuadHouses(sceneManager);
     //objects["sheet"] = Shapes::createSheet(sceneManager);
     //objects[HOUSE] = Shapes::createHouse(sceneManager);
+    objects["bunny"] = Shapes::readObject(sceneManager, "bunny.obj");
+    objects["bunny"]->setTransformation(Matrix4::translate(1.5,0,0));
+    Material *bunnyM = new Material();
+    bunnyM->setDiffuse(Vector3(0.5,0.5,0));
+    bunnyM->setSpecular(Vector3(0.5,0.5,0));
+    bunnyM->setAmbient(Vector3(0.5,0.5,0));
+    objects["bunny"]->setMaterial(*bunnyM);
     objects["teapot"] = Shapes::readObject(sceneManager, "teapot.obj");
+    objects["teapot"]->setTransformation(Matrix4::translate(-1.5,0,0));
+    Material *teapotM = new Material();
+    teapotM->setDiffuse(Vector3(0.5,0,0.5));
+    teapotM->setSpecular(Vector3(0.5,0,0.5));
+    teapotM->setAmbient(Vector3(0.5,0,0.5));
+    objects["teapot"]->setMaterial(*teapotM);
 }
 
 void RenderWidget0::renderSceneEvent()
