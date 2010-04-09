@@ -68,6 +68,9 @@ namespace RE330
 
         static void setupObject(Object* obj, int nVerts, int nIndices,
                                 float* v, float* c, float* normals, int* i);
+
+	static void setupObjectTexture(Object* obj, int nVerts, int nIndices,
+				       float* v, float* c, float* normals, float* t, int* i);
     };
 
 }

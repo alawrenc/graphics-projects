@@ -96,9 +96,39 @@ void RenderWidget0::setupObjects()
     //objects["sheet"] = Shapes::createSheet(sceneManager);
     //objects[HOUSE] = Shapes::createHouse(sceneManager);
 
-    // add own shader
-    Shader *coffeeShader = new Shader("src/Shaders/diffuse_shading.vert",
-                                "src/Shaders/diffuse_shading.frag");
+    //textured objects: box and sphere
+    //box
+    float boxColors[1][3];
+    boxColors[1][0] = 0.5;
+    boxColors[1][1] = 0.5;
+    boxColors[1][2] = 0.5;
+    objects["box"] = Shapes::createBox(sceneManager, 1, 1, 1, 1,
+                                       boxColors, false);
+    objects["box"]->setTransformation(Matrix4::translate(0,1.75,0));
+
+    Material *boxMaterial = new Material();
+    QImage *boxTexImg = new QImage("Flanel-Pattern05.png", "PNG");
+    Texture *boxTexture = new Texture(boxTexImg);
+    boxMaterial->setTexture(boxTexture);
+
+    Shader *boxShader = new Shader("src/Shaders/texture2D.vert",
+                                    "src/Shaders/texture2D.frag");
+    boxMaterial->setShader(boxShader);
+    objects["box"]->setMaterial(*boxMaterial);
+
+    //sheet
+    objects["sheet"] = Shapes::createSheet(sceneManager);
+
+    Material *sheetMaterial = new Material();
+    QImage *sheetTexImg = new QImage("wood_pole_texture.png", "PNG");
+    Texture *sheetTexture = new Texture(sheetTexImg);
+    sheetMaterial->setTexture(sheetTexture);
+
+    // Shader *sheetShader = new Shader("src/Shaders/texture2D.vert",
+    //                                "src/Shaders/texture2D.frag");
+    // sheetMaterial->setShader(sheetShader);
+
+    objects["sheet"]->setMaterial(*sheetMaterial);
 
     //shading objects: coffeepot and teapot
     //coffeepot
@@ -111,12 +141,13 @@ void RenderWidget0::setupObjects()
     coffeepotMaterial->setAmbient(Vector3(1., 1., 1.));
     coffeepotMaterial->setShininess(32.0);
     objects["coffeepot"]->setMaterial(*coffeepotMaterial);
+
+    Shader *coffeeShader = new Shader("src/Shaders/diffuse_shading.vert",
+                                      "src/Shaders/diffuse_shading.frag");
     coffeepotMaterial->setShader(coffeeShader);
 
-    //teapot
-    Shader *teaShader = new Shader("src/Shaders/diffuse_shading.vert",
-                                   "src/Shaders/diffuse_shading.frag");
 
+    //teapot
     objects["teapot"] = Shapes::readObject(sceneManager, "teapot.obj");
     objects["teapot"]->setTransformation(Matrix4::translate(-1.5,0,0));
 
@@ -126,40 +157,10 @@ void RenderWidget0::setupObjects()
     teapotMaterial->setAmbient(Vector3(0.3, 0.3, 0.3));
     teapotMaterial->setShininess(256.0);
     objects["teapot"]->setMaterial(*teapotMaterial);
-    teapotMaterial->setShader(teaShader);
 
-    //textured objects: box and sphere
-    Shader *textureShader = new Shader("src/Shaders/texture2D.vert",
-                                       "src/Shaders/texture2D.frag");
-    //box
-    float boxColors[1][3];
-    boxColors[1][0] = 0.5;
-    boxColors[1][1] = 0.5;
-    boxColors[1][2] = 0.5;
-    objects["box"] = Shapes::createBox(sceneManager, 1, 1, 1, 1,
-                                       boxColors, false);
-    objects["box"]->setTransformation(Matrix4::translate(0,1.75,0));
-
-    Material *boxMaterial = new Material();
-    QImage *boxTexImg = new QImage("Flanel-Pattern05.PNG", "PNG");
-    Texture *boxTexture = new Texture(boxTexImg);
-    boxMaterial->setTexture(boxTexture);
-    boxMaterial->setShader(textureShader);
-
-    //sphere
-    float sphereColors[1][3];
-    sphereColors[1][0] = 0.5;
-    sphereColors[1][1] = 0.5;
-    sphereColors[1][2] = 0.5;
-    objects["sphere"] = Shapes::createSphere(sceneManager, 0.75, 20, 20,  1,
-                                             sphereColors, false);
-    objects["sphere"]->setTransformation(Matrix4::translate(0,-2,0));
-
-    Material *sphereMaterial = new Material();
-    QImage *sphereTexImg = new QImage("Plaid-Pattern08.PNG", "PNG");
-    Texture *sphereTexture = new Texture(sphereTexImg);
-    sphereMaterial->setTexture(sphereTexture);
-    sphereMaterial->setShader(textureShader);
+    Shader *teaShader = new Shader("src/Shaders/diffuse_shading.vert",
+                                   "src/Shaders/diffuse_shading.frag");
+    teapotMaterial->setShader(teaShader);
 }
 
 // always called after setupcamera so it can get info from it
