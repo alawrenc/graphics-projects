@@ -11,6 +11,7 @@
 #include <iostream>
 #include "Light.h"
 #include "Material.h"
+#include "Texture.h"
 
 #include <QtOpenGL>
 
@@ -126,20 +127,68 @@ void RenderWidget0::setupObjects()
     // objects[HOUSE] = Shapes::createQuadHouses(sceneManager);
     //objects["sheet"] = Shapes::createSheet(sceneManager);
     //objects[HOUSE] = Shapes::createHouse(sceneManager);
+
+    //shading objects: bunny and teapot
+    //bunny
     objects["bunny"] = Shapes::readObject(sceneManager, "bunny.obj");
     objects["bunny"]->setTransformation(Matrix4::translate(1.5,0,0));
-    Material *bunnyM = new Material();
-    bunnyM->setDiffuse(Vector3(0.5,0.5,0));
-    bunnyM->setSpecular(Vector3(0.5,0.5,0));
-    bunnyM->setAmbient(Vector3(0.5,0.5,0));
-    objects["bunny"]->setMaterial(*bunnyM);
+
+    Material *bunnyMaterial = new Material();
+    bunnyMaterial->setDiffuse(Vector3(0.5,0.5,0));
+    bunnyMaterial->setSpecular(Vector3(0.5,0.5,0));
+    bunnyMaterial->setAmbient(Vector3(0.5,0.5,0));
+    bunnyMaterial->setShininess(1.0);
+    objects["bunny"]->setMaterial(*bunnyMaterial);			      
+
+    //teapot
+
     objects["teapot"] = Shapes::readObject(sceneManager, "teapot.obj");
     objects["teapot"]->setTransformation(Matrix4::translate(-1.5,0,0));
-    Material *teapotM = new Material();
-    teapotM->setDiffuse(Vector3(0.5,0,0.5));
-    teapotM->setSpecular(Vector3(0.5,0,0.5));
-    teapotM->setAmbient(Vector3(0.5,0,0.5));
-    objects["teapot"]->setMaterial(*teapotM);
+
+    Material *teapotMaterial = new Material();
+    teapotMaterial->setDiffuse(Vector3(0.5,0,0.5));
+    teapotMaterial->setSpecular(Vector3(0.5,0,0.5));
+    teapotMaterial->setAmbient(Vector3(0.5,0,0.5));
+    //teapotMaterial->setShininess(1.0);
+    objects["teapot"]->setMaterial(*teapotMaterial);
+
+    //textured objects: box and sphere
+    Shader *textureShader = new Shader("src/Shaders/texture2D.vert",
+				       "src/Shaders/texture2D.frag");
+
+    //box
+    float boxColors[1][3];
+    boxColors[1][0] = 0.5;
+    boxColors[1][1] = 0.5;
+    boxColors[1][2] = 0.5;
+    objects["box"] = Shapes::createBox(sceneManager, 1, 1, 1, 1, 
+				       boxColors, false);
+    objects["box"]->setTransformation(Matrix4::translate(0,1.75,0));
+
+    Material *boxMaterial = new Material();
+    QImage *boxTexImg = new QImage("Flanel-Pattern05.PNG", "PNG");
+    Texture *boxTexture = new Texture(boxTexImg);
+    boxMaterial->setTexture(boxTexture);
+    boxMaterial->setShader(textureShader);
+    
+    
+
+
+    //sphere
+    float sphereColors[1][3];
+    sphereColors[1][0] = 0.5;
+    sphereColors[1][1] = 0.5;
+    sphereColors[1][2] = 0.5;
+    objects["sphere"] = Shapes::createSphere(sceneManager, 0.75, 20, 20,  1, 
+					     sphereColors, false);
+    objects["sphere"]->setTransformation(Matrix4::translate(0,-2,0));
+
+    Material *sphereMaterial = new Material();
+    QImage *sphereTexImg = new QImage("Plaid-Pattern08.PNG", "PNG");
+    Texture *sphereTexture = new Texture(sphereTexImg);
+    sphereMaterial->setTexture(sphereTexture);
+    sphereMaterial->setShader(textureShader);
+    
 }
 
 void RenderWidget0::renderSceneEvent()

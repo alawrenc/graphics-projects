@@ -22,6 +22,8 @@ namespace RE330
 
         inline void setMaterial(const Material &m) { objectMaterial = m; }
 
+	inline Material* getMaterial() { return &objectMaterial; }
+
         void printTransformation()
         {
             printf("(%f %f %f %f)\n", mTransformation[0], mTransformation[1],

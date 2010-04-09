@@ -45,6 +45,7 @@ void GLRenderContext::setViewport(int width, int height)
 void GLRenderContext::beginFrame()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClearColor(1.0,1.0,1.0,1.0);
 }
 
 void GLRenderContext::endFrame()
@@ -67,6 +68,7 @@ void GLRenderContext::setProjectionMatrix(const Matrix4 &m)
 
 void GLRenderContext::render(Object *object)
 {
+    setMaterial(object->getMaterial());
     VertexData& vertexData = object->vertexData;
     VertexDeclaration& vertexDeclaration = vertexData.vertexDeclaration;
     VertexBufferBinding& vertexBufferBinding = vertexData.vertexBufferBinding;
@@ -216,8 +218,10 @@ void GLRenderContext::setLights(const std::list<Light*> &lightList)
 
 void GLRenderContext::setMaterial(Material *m)
 {
+    
     if(m!=0)
     {
+        
         float diffuse[4];
         diffuse[0] = m->getDiffuse()[0];
         diffuse[1] = m->getDiffuse()[1];
@@ -244,6 +248,7 @@ void GLRenderContext::setMaterial(Material *m)
         Texture *tex = m->getTexture();
         if(tex!=0)
         {
+	    std::cout<<"test"<< std::endl;
             glEnable(GL_TEXTURE_2D);
             glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
             glBindTexture(GL_TEXTURE_2D, tex->getId());
