@@ -29,13 +29,15 @@ Object * Shapes::readObject(SceneManager* sm, std::string filename)
 Object * Shapes::createSheet(SceneManager* sm)
 {
     Object* sheet = sm->createObject();
-    float sheet_v [] = { -10,-10,20, -10,-10,-20, 10,-10,-20, 10,-10,20 };
+    float sheet_v [] = { -2,-2,2, -2,-2,-2, 2,-2,-2, 2,-2,2};
     float sheet_c [] = { 1,0,0, 1,1,1, 1,1,1, 1,0,0 };
-    int sheet_i [] = { 0,1,2, 0,2,3 };
+    int sheet_i [] = { 0,2,1, 0,3,2 };
     int nVerts = 4;
     int nIndices = 6;
 
-    setupObject(sheet, nVerts, nIndices, sheet_v, sheet_c, NULL, sheet_i);
+    float textCoords[] = {0,0, 0,1, 1,1, 1,0};
+
+    setupObjectTexture(sheet, nVerts, nIndices, sheet_v, NULL, NULL, textCoords, sheet_i);
 
     return sheet;
 
@@ -132,7 +134,11 @@ Object* Shapes::createBox(SceneManager* sm, float height, float width,
     int* box_i = boxIndices(num_colors, random_colors);
     int nVerts = 8 * num_colors;
     int nIndices = 3 * 12;
-    setupObject(box, nVerts, nIndices, box_v, box_c, NULL, box_i);
+    float textCoords[] = {1,1, 0,1, 1,1, 0,1,
+			  1,0, 0,0, 1,0, 0,0,
+			 };
+    //setupObject(box, nVerts, nIndices, box_v, box_c, NULL, box_i);
+    setupObjectTexture(box, nVerts, nIndices, box_v, box_c, NULL, textCoords, box_i);
     return box;
 }
 
@@ -466,6 +472,39 @@ void Shapes::setupObject(Object* obj, int nVerts, int nIndices,
     if(c) delete[] c;
     delete[] v;
     delete[] i;
+}
+
+void Shapes::setupObjectTexture(Object* obj, int nVerts, int nIndices,
+				float* v, float* c, float* n, float* t, int* i)
+{
+    VertexData& vd = obj->vertexData;
+    // Specify the elements of the vertex data:
+    // - one element for vertex positions
+    vd.vertexDeclaration.addElement(0, 0, 3, 3*sizeof(float),
+                                    RE330::VES_POSITION);
+    vd.createVertexBuffer(0, nVerts*3*sizeof(float), (unsigned char*)v);
+
+    // - one element for vertex colors
+    if (c != NULL)
+    {
+        vd.vertexDeclaration.addElement(1, 0, 3, 3*sizeof(int),
+                                        RE330::VES_DIFFUSE);
+        vd.createVertexBuffer(1, nVerts*3*sizeof(float), (unsigned char*)c);
+    }
+    if (n != NULL)
+    {
+        vd.vertexDeclaration.addElement(1, 0, 3, 3*sizeof(float),
+                                                RE330::VES_NORMAL);
+        vd.createVertexBuffer(1, nVerts*3*sizeof(float),
+                                      (unsigned char*)n);
+    }
+    
+    vd.vertexDeclaration.addElement(2, 0, 2, 2*sizeof(float),
+                                    RE330::VES_TEXTURE_COORDINATES);
+    vd.createVertexBuffer(2, nVerts*2*sizeof(float), (unsigned char*)t);
+    
+    // Create the buffers and load the data
+    vd.createIndexBuffer(nIndices, i);
 }
 
 

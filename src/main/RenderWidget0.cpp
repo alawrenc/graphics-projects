@@ -38,14 +38,15 @@ void RenderWidget0::initSceneEvent()
 {
     sceneManager = new SceneManager();
 
+
     Light *l1 = sceneManager->createLight();
     l1->setDirection(Vector3(0,-1,0));
     l1->setType(Light::DIRECTIONAL);
-    //l1->setSpotDirection(Vector3(2,0,0)); //not necessary (no affect)
-    l1->setDiffuseColor(Vector3(1,1,1));
-    l1->setSpecularColor(Vector3(1,1,1));
-    //l1->setAmbientColor(Vector3(1,0,1));
 
+    l1->setDiffuseColor(Vector3(1,0,1));
+    l1->setSpecularColor(Vector3(1,0,1));
+    l1->setAmbientColor(Vector3(1,0,1));
+    /*
     Light *l2 = sceneManager->createLight();
     //l2->setPosition(Vector3(0,0,5));
     //l2->setDirection(Vector3(-2,0,0));
@@ -64,8 +65,12 @@ void RenderWidget0::initSceneEvent()
     l3->setDiffuseColor(Vector3(0,0,0));
     l3->setSpecularColor(Vector3(0,0,0));
     //l3->setAmbientColor(Vector3(0,0,1));
-
-
+    l3->setDiffuseColor(Vector3(1,0,1));
+    l3->setSpecularColor(Vector3(0,0,1));
+    l3->setAmbientColor(Vector3(1,0,1));
+    */
+    
+    
 
 
     //create and position the camera
@@ -155,7 +160,7 @@ void RenderWidget0::setupObjects()
     //textured objects: box and sphere
     Shader *textureShader = new Shader("src/Shaders/texture2D.vert",
                                        "src/Shaders/texture2D.frag");
-
+    
     //box
     float boxColors[1][3];
     boxColors[1][0] = 0.5;
@@ -166,29 +171,26 @@ void RenderWidget0::setupObjects()
     objects["box"]->setTransformation(Matrix4::translate(0,1.75,0));
 
     Material *boxMaterial = new Material();
-    QImage *boxTexImg = new QImage("Flanel-Pattern05.PNG", "PNG");
+    QImage *boxTexImg = new QImage("Flanel-Pattern01.PNG", "PNG");
     Texture *boxTexture = new Texture(boxTexImg);
     boxMaterial->setTexture(boxTexture);
     boxMaterial->setShader(textureShader);
 
+    objects["box"]->setMaterial(*boxMaterial);
+    
+    //sheet
+    objects["sheet"] = Shapes::createSheet(sceneManager);
+    //objects["sheet"]->setTransformation(Matrix4::translate(0,-2,0));
+    
+    Material *sheetMaterial = new Material();
+    QImage *sheetTexImg = new QImage("wood_pole_texture.png", "PNG");
+    Texture *sheetTexture = new Texture(sheetTexImg);
+    sheetMaterial->setTexture(sheetTexture);
+    sheetMaterial->setShader(textureShader);
 
-
-
-    //sphere
-    float sphereColors[1][3];
-    sphereColors[1][0] = 0.5;
-    sphereColors[1][1] = 0.5;
-    sphereColors[1][2] = 0.5;
-    objects["sphere"] = Shapes::createSphere(sceneManager, 0.75, 20, 20,  1,
-                                             sphereColors, false);
-    objects["sphere"]->setTransformation(Matrix4::translate(0,-2,0));
-
-    Material *sphereMaterial = new Material();
-    QImage *sphereTexImg = new QImage("Plaid-Pattern08.PNG", "PNG");
-    Texture *sphereTexture = new Texture(sphereTexImg);
-    sphereMaterial->setTexture(sphereTexture);
-    sphereMaterial->setShader(textureShader);
-
+    objects["sheet"]->setMaterial(*sheetMaterial);
+    
+    
 }
 
 void RenderWidget0::renderSceneEvent()

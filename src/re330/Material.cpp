@@ -59,6 +59,7 @@ Texture *Material::getTexture() const
 
 void Material::setShader(Shader *shader)
 {
+  
 	mShader = shader;
 }
 
