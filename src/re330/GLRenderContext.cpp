@@ -218,7 +218,6 @@ void GLRenderContext::setLights(const std::list<Light*> &lightList)
 
 void GLRenderContext::setMaterial(Material *m)
 {
-    
     if(m!=0)
     {
         
@@ -248,7 +247,6 @@ void GLRenderContext::setMaterial(Material *m)
         Texture *tex = m->getTexture();
         if(tex!=0)
         {
-	    std::cout<<"test"<< std::endl;
             glEnable(GL_TEXTURE_2D);
             glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
             glBindTexture(GL_TEXTURE_2D, tex->getId());

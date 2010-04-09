@@ -20,6 +20,8 @@ namespace RE330
 
         inline Matrix4 getTransformation() const { return mTransformation; }
 
+        inline Material* getMaterial() { return &objectMaterial; }
+
         inline void setMaterial(const Material &m) { objectMaterial = m; }
 
 	inline Material* getMaterial() { return &objectMaterial; }
