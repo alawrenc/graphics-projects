@@ -37,15 +37,14 @@ RenderWidget0::~RenderWidget0()
 void RenderWidget0::initSceneEvent()
 {
     sceneManager = new SceneManager();
-
-    //create and position lights in scene
-    setupLights();
-
     //create and position the camera
     setupCamera();
 
     //create and position and objects in scene
     setupObjects();
+    //create and position lights in scene
+    setupLights();
+
 
     // Trigger timer event every 5ms.
     timerId = startTimer(5);
@@ -124,10 +123,10 @@ void RenderWidget0::setupObjects()
     Texture *sheetTexture = new Texture(sheetTexImg);
     sheetMaterial->setTexture(sheetTexture);
 
-    // Shader *sheetShader = new Shader("src/Shaders/texture2D.vert",
-    //                                "src/Shaders/texture2D.frag");
-    // sheetMaterial->setShader(sheetShader);
-
+    Shader *sheetShader = new Shader("src/Shaders/texture2D.vert",
+                                     "src/Shaders/texture2D.frag");
+    sheetMaterial->setShader(sheetShader);
+    
     objects["sheet"]->setMaterial(*sheetMaterial);
 
     //shading objects: coffeepot and teapot
@@ -160,7 +159,7 @@ void RenderWidget0::setupObjects()
 
     Shader *teaShader = new Shader("src/Shaders/diffuse_shading.vert",
                                    "src/Shaders/diffuse_shading.frag");
-    teapotMaterial->setShader(teaShader);
+    teapotMaterial->setShader(teaShader);
 }
 
 // always called after setupcamera so it can get info from it
@@ -347,4 +346,4 @@ void RenderWidget0::stopAnimation()
         killTimer(timerId);
         timerId = 0;
     }
-}
+} 

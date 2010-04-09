@@ -220,7 +220,7 @@ void GLRenderContext::setMaterial(Material *m)
 {
     if(m!=0)
     {
-        
+
         float diffuse[4];
         diffuse[0] = m->getDiffuse()[0];
         diffuse[1] = m->getDiffuse()[1];
