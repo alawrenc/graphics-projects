@@ -1,43 +1,65 @@
-// Fragment shader for per-pixel diffuse shading. The
-// teapot is a good object to test this shader, since
-// the .obj file includes surface normals.
+/* // Fragment shader for per-pixel diffuse shading. The */
+/* // teapot is a good object to test this shader, since */
+/* // the .obj file includes surface normals. */
 
-// The shader computes the dot product between the unit
-// surface normal and light direction, which were
-// passed as varying inputs from the vertex shader. The
-// result is multiplied with the vertex color, which is
-// accessed through a pre-defined varying variable.
+/* // The shader computes the dot product between the unit */
+/* // surface normal and light direction, which were */
+/* // passed as varying inputs from the vertex shader. The */
+/* // result is multiplied with the vertex color, which is */
+/* // accessed through a pre-defined varying variable. */
 
-varying vec3 normal, eyeDir;
+varying vec3 normal, eyeDir, LDirect, reflectDirDirect, LPoint, reflectDirPoint, reflectDirSpot, LSpot;
+
+varying vec4 globalAmbientColor, ambientColorDirect, clPointSpec, clPointDiff, ambientColorPoint, ambientColorSpot, clSpotSpec, clSpotDiff;
 
 void main()
 {
-  vec3 normalN, lightDirN, eyeDirN, reflectDirN;
+        vec3 normalN = normalize(normal);
+        vec3 eyeDirN = normalize(eyeDir);
 
-  normalN = normalize(normal);
-  eyeDirN = normalize(eyeDir);
+        //directional light. phong model
+        vec3 LDirectN = normalize(LDirect);
+        vec3 reflectDirDirectN = normalize(reflectDirDirect);
 
-  vec4 globalAmbientColor = gl_LightModel.ambient * gl_FrontMaterial.ambient;
-  vec4 color = globalAmbientColor;
+        float phongDirect = max(dot(reflectDirDirectN, eyeDirN), 0.0);
 
+        vec4 directSpec = gl_LightSource[0].specular * gl_FrontMaterial.specular;
+        vec4 directDiffuse = gl_LightSource[0].diffuse * gl_FrontMaterial.diffuse;
 
-  //for loop not very useful. we need to vary this by light source type
-  for(int i = 0; i < 2; i++)
-    {
-      lightDirN = normalize(vec3(gl_LightSource[i].position));
-      reflectDirN = normalize(reflect(-lightDirN, normalN));
-      float phong = max(dot(reflectDirN, eyeDirN), 0.0);
+        vec4 specColorDirect = directSpec * pow(phongDirect, gl_FrontMaterial.shininess);
 
-      vec4 specColor = (pow(phong, gl_FrontMaterial.shininess)
-                        * gl_LightSource[i].specular
-                        * gl_FrontMaterial.specular);
+        vec4 diffuseColorDirect = directDiffuse * max(dot(LDirectN, normalN), 0.0);
 
-      vec4 diffuseColor = (gl_LightSource[i].diffuse * gl_FrontMaterial.diffuse
-                           * max(dot(lightDirN, normalN), 0.0));
+        //point light. phong model
+        vec3 LPointN = normalize(LPoint);
+        vec3 reflectDirPointN = normalize(reflectDirPoint);
 
-      vec4 ambientColor = gl_LightSource[i].ambient * gl_FrontMaterial.ambient;
+        float phongPoint = max(dot(reflectDirPointN, eyeDirN), 0.0);
 
-      color = color + specColor + diffuseColor + ambientColor;
-    }
-  gl_FragColor = color;
+        vec4 pointSpec = clPointSpec * gl_FrontMaterial.specular;
+        vec4 pointDiffuse = clPointDiff * gl_FrontMaterial.diffuse;
+
+        //cSpec = ks.spec * cl.spec * pow((dot(ReflectDir, eyeDir),phong)
+        vec4 specColorPoint = pointSpec * pow(phongPoint,
+                                              gl_FrontMaterial.shininess);
+        //
+        vec4 diffuseColorPoint = pointDiffuse * max(dot(LPointN, normalN), 0.0);
+
+        //spot light. phong model
+        vec3 LSpotN = normalize(LSpot);
+        vec3 reflectDirSpotN = normalize(reflectDirSpot);
+
+        float phongSpot = max(dot(reflectDirSpotN, eyeDirN), 0.0);
+        vec4 spotSpec = clSpotSpec * gl_FrontMaterial.specular;
+        vec4 spotDiffuse = clSpotDiff * gl_FrontMaterial.diffuse ;
+
+        /* //cSpec = ks.spec * cl.spec * pow((dot(ReflectDir, eyeDir),phong) */
+        vec4 specColorSpot = spotSpec * pow(phongSpot, gl_FrontMaterial.shininess);
+
+        vec4 diffuseColorSpot = spotDiffuse * max(dot(LSpotN, normalN), 0.0);
+
+        gl_FragColor = (specColorDirect + diffuseColorDirect + ambientColorDirect +
+                        specColorPoint + diffuseColorPoint + ambientColorPoint +
+                        specColorSpot + diffuseColorSpot + ambientColorSpot +
+                        globalAmbientColor);
 }

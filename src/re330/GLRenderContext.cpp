@@ -155,7 +155,6 @@ void GLRenderContext::setLights(const std::list<Light*> &lightList)
     {
         // Lighting
         glEnable(GL_LIGHTING);
-        std::cout << "here" << std::endl;
 
         int i=0;
         for (iter=lightList.begin(); iter!=lightList.end() && i<8; iter++, i++)
