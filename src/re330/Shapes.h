@@ -67,7 +67,7 @@ namespace RE330
         static int* boxIndices(const int num_colors, bool random_colors);
 
         static void setupObject(Object* obj, int nVerts, int nIndices,
-                                float* v, float* c, int* i);
+                                float* v, float* c, float* normals, int* i);
     };
 
 }

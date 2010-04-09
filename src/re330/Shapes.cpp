@@ -21,7 +21,7 @@ Object * Shapes::readObject(SceneManager* sm, std::string filename)
     Object* objIn = sm->createObject();
 
     // display read in object
-    setupObject(objIn, nVerts, nIndices, vertices, NULL, indices);
+    setupObject(objIn, nVerts, nIndices, vertices, NULL, normals, indices);
 
     return objIn;
 }
@@ -35,7 +35,7 @@ Object * Shapes::createSheet(SceneManager* sm)
     int nVerts = 4;
     int nIndices = 6;
 
-    setupObject(sheet, nVerts, nIndices, sheet_v, sheet_c, sheet_i);
+    setupObject(sheet, nVerts, nIndices, sheet_v, sheet_c, NULL, sheet_i);
 
     return sheet;
 
@@ -89,7 +89,7 @@ Object * Shapes::createHouse(SceneManager* sm)
     int nVerts = 42;
     int nIndices = 60;
 
-    setupObject(house, nVerts, nIndices, house_v, house_c, house_i);
+    setupObject(house, nVerts, nIndices, house_v, house_c, NULL, house_i);
 
     return house;
 }
@@ -104,7 +104,7 @@ Object* Shapes::createSphere(SceneManager* sm, float height, int slices,
     int* sphere_i = sphereIndices(slices, points, num_colors, random_colors);
     int nVerts = (slices + 1) * points * num_colors;
     int nIndices = slices * points * 2 * 3;
-    setupObject(sphere, nVerts, nIndices, sphere_v, sphere_c, sphere_i);
+    setupObject(sphere, nVerts, nIndices, sphere_v, sphere_c, NULL, sphere_i);
     return sphere;
 }
 
@@ -118,7 +118,7 @@ Object* Shapes::createCone(SceneManager* sm, float height, float base_radius,
     int* cone_i = coneIndices(base_points, num_colors, random_colors);
     int nVerts = (1 + base_points) * num_colors;
     int nIndices = 3 * base_points;
-    setupObject(cone, nVerts, nIndices, cone_v, cone_c, cone_i);
+    setupObject(cone, nVerts, nIndices, cone_v, cone_c, NULL, cone_i);
     return cone;
 }
 
@@ -132,7 +132,7 @@ Object* Shapes::createBox(SceneManager* sm, float height, float width,
     int* box_i = boxIndices(num_colors, random_colors);
     int nVerts = 8 * num_colors;
     int nIndices = 3 * 12;
-    setupObject(box, nVerts, nIndices, box_v, box_c, box_i);
+    setupObject(box, nVerts, nIndices, box_v, box_c, NULL, box_i);
     return box;
 }
 
@@ -436,7 +436,7 @@ int* Shapes::boxIndices(const int num_colors, bool random_colors)
 }
 
 void Shapes::setupObject(Object* obj, int nVerts, int nIndices,
-                         float* v, float* c, int* i)
+                         float* v, float* c, float* n, int* i)
 {
     VertexData& vd = obj->vertexData;
     // Specify the elements of the vertex data:
@@ -451,6 +451,14 @@ void Shapes::setupObject(Object* obj, int nVerts, int nIndices,
                                         RE330::VES_DIFFUSE);
         vd.createVertexBuffer(1, nVerts*3*sizeof(float), (unsigned char*)c);
     }
+    if(n != NULL)
+    {
+        vd.vertexDeclaration.addElement(1, 0, 3, 3*sizeof(float),
+                                                RE330::VES_NORMAL);
+        vd.createVertexBuffer(1, nVerts*3*sizeof(float),
+                                      (unsigned char*)n);
+    }
+
     // Create the buffers and load the data
     vd.createIndexBuffer(nIndices, i);
 }
@@ -617,7 +625,7 @@ Object * Shapes::createQuadHouses(SceneManager* sm)
     int nVerts = 42 + (24 + 14) * 3;
     int nIndices = 60 + (36 + 18) * 3;
 
-    setupObject(houses, nVerts, nIndices, vertices, colors, indices);
+    setupObject(houses, nVerts, nIndices, vertices, colors, NULL,  indices);
 
     return houses;
 

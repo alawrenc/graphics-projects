@@ -24,10 +24,9 @@ void main()
         float phongDirect = max(dot(reflectDirDirectN, eyeDirN), 0.0);
 
         vec4 directSpec = gl_LightSource[0].specular * gl_FrontMaterial.specular;
-        vec4 directDiffuse = gl_LightSource[0].diffuse * gl_FrontMaterial.diffuse;
-
         vec4 specColorDirect = directSpec * pow(phongDirect, gl_FrontMaterial.shininess);
 
+        vec4 directDiffuse = gl_LightSource[0].diffuse * gl_FrontMaterial.diffuse;
         vec4 diffuseColorDirect = directDiffuse * max(dot(LDirectN, normalN), 0.0);
 
         //point light. phong model
@@ -36,13 +35,12 @@ void main()
 
         float phongPoint = max(dot(reflectDirPointN, eyeDirN), 0.0);
 
-        vec4 pointSpec = clPointSpec * gl_FrontMaterial.specular;
-        vec4 pointDiffuse = clPointDiff * gl_FrontMaterial.diffuse;
-
         //cSpec = ks.spec * cl.spec * pow((dot(ReflectDir, eyeDir),phong)
+        vec4 pointSpec = clPointSpec * gl_FrontMaterial.specular;
         vec4 specColorPoint = pointSpec * pow(phongPoint,
                                               gl_FrontMaterial.shininess);
         //
+        vec4 pointDiffuse = clPointDiff * gl_FrontMaterial.diffuse;
         vec4 diffuseColorPoint = pointDiffuse * max(dot(LPointN, normalN), 0.0);
 
         //spot light. phong model
@@ -50,12 +48,12 @@ void main()
         vec3 reflectDirSpotN = normalize(reflectDirSpot);
 
         float phongSpot = max(dot(reflectDirSpotN, eyeDirN), 0.0);
-        vec4 spotSpec = clSpotSpec * gl_FrontMaterial.specular;
-        vec4 spotDiffuse = clSpotDiff * gl_FrontMaterial.diffuse ;
 
         /* //cSpec = ks.spec * cl.spec * pow((dot(ReflectDir, eyeDir),phong) */
+        vec4 spotSpec = clSpotSpec * gl_FrontMaterial.specular;
         vec4 specColorSpot = spotSpec * pow(phongSpot, gl_FrontMaterial.shininess);
 
+        vec4 spotDiffuse = clSpotDiff * gl_FrontMaterial.diffuse ;
         vec4 diffuseColorSpot = spotDiffuse * max(dot(LSpotN, normalN), 0.0);
 
         gl_FragColor = (specColorDirect + diffuseColorDirect + ambientColorDirect +
