@@ -37,36 +37,36 @@ RenderWidget0::~RenderWidget0()
 void RenderWidget0::initSceneEvent()
 {
     sceneManager = new SceneManager();
-    
+
     Light *l1 = sceneManager->createLight();
-    //l1->setPosition(Vector3(0,0,5));
-    //l1->setDirection(Vector3(2,0,0));
+    l1->setDirection(Vector3(0,-1,0));
     l1->setType(Light::DIRECTIONAL);
     //l1->setSpotDirection(Vector3(2,0,0)); //not necessary (no affect)
-    l1->setDiffuseColor(Vector3(1,0,1));
-    l1->setSpecularColor(Vector3(0,0,1));
-    l1->setAmbientColor(Vector3(1,0,1));
+    l1->setDiffuseColor(Vector3(1,1,1));
+    l1->setSpecularColor(Vector3(1,1,1));
+    //l1->setAmbientColor(Vector3(1,0,1));
+
     Light *l2 = sceneManager->createLight();
-    l2->setPosition(Vector3(0,0,5));  
-    //l2->setDirection(Vector3(-2,0,0));   //not necessary (no affect)
+    //l2->setPosition(Vector3(0,0,5));
+    //l2->setDirection(Vector3(-2,0,0));
     l2->setType(Light::POINT);
-    //l2->setSpotDirection(Vector3(-2,0,0));  //not necessary (no affect)
-    l2->setDiffuseColor(Vector3(1,0,1));
-    l2->setSpecularColor(Vector3(0,0,1));
-    l2->setAmbientColor(Vector3(1,0,1));
+    l2->setDiffuseColor(Vector3(0,0,0));
+    l2->setSpecularColor(Vector3(1,1,1));
+    //l2->setAmbientColor(Vector3(1,1,0));
+
     Light *l3 = sceneManager->createLight();
-    l3->setPosition(Vector3(0,0,5));
-    l3->setDirection(Vector3(-2,0,0));    
+    //l3->setPosition(Vector3(0,0,5));
+    //l3->setDirection(Vector3(-2,0,0));
     l3->setType(Light::SPOT);
     l3->setSpotDirection(Vector3(-2,0,0));
     l3->setSpotExponent(3.0);
     l3->setSpotCutoff(4.0);
-    l3->setDiffuseColor(Vector3(1,0,1));
-    l3->setSpecularColor(Vector3(0,0,1));
-    l3->setAmbientColor(Vector3(1,0,1));
-    
-    
-    
+    l3->setDiffuseColor(Vector3(0,0,0));
+    l3->setSpecularColor(Vector3(0,0,0));
+    //l3->setAmbientColor(Vector3(0,0,1));
+
+
+
 
     //create and position the camera
     setupCamera();
@@ -128,17 +128,17 @@ void RenderWidget0::setupObjects()
     //objects["sheet"] = Shapes::createSheet(sceneManager);
     //objects[HOUSE] = Shapes::createHouse(sceneManager);
 
-    //shading objects: bunny and teapot
-    //bunny
-    objects["bunny"] = Shapes::readObject(sceneManager, "bunny.obj");
-    objects["bunny"]->setTransformation(Matrix4::translate(1.5,0,0));
+    //shading objects: coffeepot and teapot
+    //coffeepot
+    objects["coffeepot"] = Shapes::readObject(sceneManager, "teapot.obj");
+    objects["coffeepot"]->setTransformation(Matrix4::translate(1.5,0,0));
 
-    Material *bunnyMaterial = new Material();
-    bunnyMaterial->setDiffuse(Vector3(0.5,0.5,0));
-    bunnyMaterial->setSpecular(Vector3(0.5,0.5,0));
-    bunnyMaterial->setAmbient(Vector3(0.5,0.5,0));
-    bunnyMaterial->setShininess(1.0);
-    objects["bunny"]->setMaterial(*bunnyMaterial);			      
+    Material *coffeepotMaterial = new Material();
+    coffeepotMaterial->setDiffuse(Vector3(0.5,0.5,0));
+    coffeepotMaterial->setSpecular(Vector3(0.5,0.5,0));
+    coffeepotMaterial->setAmbient(Vector3(0.5,0.5,0));
+    coffeepotMaterial->setShininess(32.0);
+    objects["coffeepot"]->setMaterial(*coffeepotMaterial);
 
     //teapot
 
@@ -149,20 +149,20 @@ void RenderWidget0::setupObjects()
     teapotMaterial->setDiffuse(Vector3(0.5,0,0.5));
     teapotMaterial->setSpecular(Vector3(0.5,0,0.5));
     teapotMaterial->setAmbient(Vector3(0.5,0,0.5));
-    //teapotMaterial->setShininess(1.0);
+    teapotMaterial->setShininess(256.0);
     objects["teapot"]->setMaterial(*teapotMaterial);
 
     //textured objects: box and sphere
     Shader *textureShader = new Shader("src/Shaders/texture2D.vert",
-				       "src/Shaders/texture2D.frag");
+                                       "src/Shaders/texture2D.frag");
 
     //box
     float boxColors[1][3];
     boxColors[1][0] = 0.5;
     boxColors[1][1] = 0.5;
     boxColors[1][2] = 0.5;
-    objects["box"] = Shapes::createBox(sceneManager, 1, 1, 1, 1, 
-				       boxColors, false);
+    objects["box"] = Shapes::createBox(sceneManager, 1, 1, 1, 1,
+                                       boxColors, false);
     objects["box"]->setTransformation(Matrix4::translate(0,1.75,0));
 
     Material *boxMaterial = new Material();
@@ -170,8 +170,8 @@ void RenderWidget0::setupObjects()
     Texture *boxTexture = new Texture(boxTexImg);
     boxMaterial->setTexture(boxTexture);
     boxMaterial->setShader(textureShader);
-    
-    
+
+
 
 
     //sphere
@@ -179,8 +179,8 @@ void RenderWidget0::setupObjects()
     sphereColors[1][0] = 0.5;
     sphereColors[1][1] = 0.5;
     sphereColors[1][2] = 0.5;
-    objects["sphere"] = Shapes::createSphere(sceneManager, 0.75, 20, 20,  1, 
-					     sphereColors, false);
+    objects["sphere"] = Shapes::createSphere(sceneManager, 0.75, 20, 20,  1,
+                                             sphereColors, false);
     objects["sphere"]->setTransformation(Matrix4::translate(0,-2,0));
 
     Material *sphereMaterial = new Material();
@@ -188,7 +188,7 @@ void RenderWidget0::setupObjects()
     Texture *sphereTexture = new Texture(sphereTexImg);
     sphereMaterial->setTexture(sphereTexture);
     sphereMaterial->setShader(textureShader);
-    
+
 }
 
 void RenderWidget0::renderSceneEvent()
@@ -207,8 +207,8 @@ void RenderWidget0::resizeRenderWidgetEvent(const QSize &s)
 void RenderWidget0::timerEvent(QTimerEvent *t)
 {
     // Matrix4 m(cos(0.01),-sin(0.01),0,0, sin(0.01),cos(0.01),0,0, 0,0,1,0, 0,0,0,1);
-	// Matrix4 m2(1,0,0,0, 0,cos(0.01), -sin(0.01),0, 0,sin(0.01),cos(0.01),0, 0,0,0,1);
-	// objects[HOUSE]->setTransformation(m2*m*objects[HOUSE]->getTransformation());
+        // Matrix4 m2(1,0,0,0, 0,cos(0.01), -sin(0.01),0, 0,sin(0.01),cos(0.01),0, 0,0,0,1);
+        // objects[HOUSE]->setTransformation(m2*m*objects[HOUSE]->getTransformation());
     updateScene();
 }
 
