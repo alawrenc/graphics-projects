@@ -44,6 +44,7 @@ protected:
     void toDecimal(int num_colors, float color_list[][3]);
     void setupCamera();
     void setupObjects();
+    void setupLights();
 
 private:
     SceneManager *sceneManager;

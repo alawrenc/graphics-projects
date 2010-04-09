@@ -38,46 +38,14 @@ void RenderWidget0::initSceneEvent()
 {
     sceneManager = new SceneManager();
 
-    Light *l1 = sceneManager->createLight();
-    l1->setDirection(Vector3(0,-1,0));
-    l1->setType(Light::DIRECTIONAL);
-    //l1->setSpotDirection(Vector3(2,0,0)); //not necessary (no affect)
-    l1->setDiffuseColor(Vector3(1,1,1));
-    l1->setSpecularColor(Vector3(1,1,1));
-    //l1->setAmbientColor(Vector3(1,0,1));
-
-    Light *l2 = sceneManager->createLight();
-    //l2->setPosition(Vector3(0,0,5));
-    //l2->setDirection(Vector3(-2,0,0));
-    l2->setType(Light::POINT);
-    l2->setDiffuseColor(Vector3(0,0,0));
-    l2->setSpecularColor(Vector3(1,1,1));
-    //l2->setAmbientColor(Vector3(1,1,0));
-
-    Light *l3 = sceneManager->createLight();
-    //l3->setPosition(Vector3(0,0,5));
-    //l3->setDirection(Vector3(-2,0,0));
-    l3->setType(Light::SPOT);
-    l3->setSpotDirection(Vector3(-2,0,0));
-    l3->setSpotExponent(3.0);
-    l3->setSpotCutoff(4.0);
-    l3->setDiffuseColor(Vector3(0,0,0));
-    l3->setSpecularColor(Vector3(0,0,0));
-    //l3->setAmbientColor(Vector3(0,0,1));
-
-
-
+    //create and position lights in scene
+    setupLights();
 
     //create and position the camera
     setupCamera();
 
     //create and position and objects in scene
     setupObjects();
-
-    // add own shader
-    Shader *shader = new Shader("src/Shaders/diffuse_shading.vert",
-                                "src/Shaders/diffuse_shading.frag");
-    shader->use();
 
     // Trigger timer event every 5ms.
     timerId = startTimer(5);
@@ -128,34 +96,41 @@ void RenderWidget0::setupObjects()
     //objects["sheet"] = Shapes::createSheet(sceneManager);
     //objects[HOUSE] = Shapes::createHouse(sceneManager);
 
+    // add own shader
+    Shader *coffeeShader = new Shader("src/Shaders/diffuse_shading.vert",
+                                "src/Shaders/diffuse_shading.frag");
+
     //shading objects: coffeepot and teapot
     //coffeepot
     objects["coffeepot"] = Shapes::readObject(sceneManager, "teapot.obj");
     objects["coffeepot"]->setTransformation(Matrix4::translate(1.5,0,0));
 
     Material *coffeepotMaterial = new Material();
-    coffeepotMaterial->setDiffuse(Vector3(0.5,0.5,0));
-    coffeepotMaterial->setSpecular(Vector3(0.5,0.5,0));
-    coffeepotMaterial->setAmbient(Vector3(0.5,0.5,0));
+    coffeepotMaterial->setDiffuse(Vector3(1., 1., 1.));
+    coffeepotMaterial->setSpecular(Vector3(1., 1., 1.));
+    coffeepotMaterial->setAmbient(Vector3(1., 1., 1.));
     coffeepotMaterial->setShininess(32.0);
     objects["coffeepot"]->setMaterial(*coffeepotMaterial);
+    coffeepotMaterial->setShader(coffeeShader);
 
     //teapot
+    Shader *teaShader = new Shader("src/Shaders/diffuse_shading.vert",
+                                   "src/Shaders/diffuse_shading.frag");
 
     objects["teapot"] = Shapes::readObject(sceneManager, "teapot.obj");
     objects["teapot"]->setTransformation(Matrix4::translate(-1.5,0,0));
 
     Material *teapotMaterial = new Material();
-    teapotMaterial->setDiffuse(Vector3(0.5,0,0.5));
-    teapotMaterial->setSpecular(Vector3(0.5,0,0.5));
-    teapotMaterial->setAmbient(Vector3(0.5,0,0.5));
+    teapotMaterial->setDiffuse(Vector3(0.2, 0.2, 0.2));
+    teapotMaterial->setSpecular(Vector3(0.5, 0.5, 0.5));
+    teapotMaterial->setAmbient(Vector3(0.3, 0.3, 0.3));
     teapotMaterial->setShininess(256.0);
     objects["teapot"]->setMaterial(*teapotMaterial);
+    teapotMaterial->setShader(teaShader);
 
     //textured objects: box and sphere
     Shader *textureShader = new Shader("src/Shaders/texture2D.vert",
                                        "src/Shaders/texture2D.frag");
-
     //box
     float boxColors[1][3];
     boxColors[1][0] = 0.5;
@@ -171,9 +146,6 @@ void RenderWidget0::setupObjects()
     boxMaterial->setTexture(boxTexture);
     boxMaterial->setShader(textureShader);
 
-
-
-
     //sphere
     float sphereColors[1][3];
     sphereColors[1][0] = 0.5;
@@ -188,7 +160,37 @@ void RenderWidget0::setupObjects()
     Texture *sphereTexture = new Texture(sphereTexImg);
     sphereMaterial->setTexture(sphereTexture);
     sphereMaterial->setShader(textureShader);
+}
 
+// always called after setupcamera so it can get info from it
+void RenderWidget0::setupLights()
+{
+    //faint, overhead, yellow light
+    Light *l1 = sceneManager->createLight();
+    l1->setPosition(Vector3(0,-10,0));
+    l1->setDirection(Vector3(0,1,0));
+    l1->setType(Light::DIRECTIONAL);
+    l1->setDiffuseColor(Vector3(.5,.5,0));
+    l1->setSpecularColor(Vector3(0,0,0));
+    l1->setAmbientColor(Vector3(.1,.1,.1));
+
+    //blue point left from the left
+    Light *l2 = sceneManager->createLight();
+    l2->setPosition(Vector3(-10,0,0));
+    l2->setDirection(Vector3(1,0,0));
+    l2->setType(Light::POINT);
+    l2->setDiffuseColor(Vector3(0,0,0));
+    l2->setSpecularColor(Vector3(0,0,5));
+
+    //green spot from lower right
+    Light *l3 = sceneManager->createLight();
+    l3->setType(Light::SPOT);
+    l3->setPosition(Vector3(5,-10,0));
+    l3->setSpotDirection(Vector3(0, 1, 0));
+    l3->setSpotExponent(24.0);
+    l3->setSpotCutoff(40.0);
+    l3->setDiffuseColor(Vector3(0,0,0));
+    l3->setSpecularColor(Vector3(0,10,0));
 }
 
 void RenderWidget0::renderSceneEvent()
