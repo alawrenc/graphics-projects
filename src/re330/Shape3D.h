@@ -17,7 +17,13 @@ namespace RE330
         Shape3D();
 
         void updateMatrix();
-        void draw(Matrix4 m, RenderContext rc, Camera c);
+        void draw(Matrix4 m, RenderContext rc, Camera c)
+            {
+                //setModelView(C);
+                //setMaterial(myMaterial);
+                //render(myObject);
+}
+            }
 
     private:
         Object * object;

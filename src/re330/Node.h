@@ -12,14 +12,32 @@ namespace RE330
 
     public:
 
-        Node();
+        Node(): parent(NULL), localToWorldTransfrom(Matrix4()) {}
 
-        virtual void updateMatrix();
-        Node getParent();
+        void updateMatrix()
+            {
+                if(parent)
+                {
+                    localToWorldTransform = (parent.localToWorldTransform *
+                                             localToWorldTransform);
+                }
+            }
+
+        Node * getParent()
+            {
+                return parent;
+            }
+
+        void setParent(*Node)
+            {
+                parent = Node;
+            }
+
         virtual void draw(Matrix4 m, RenderContext rc, Camera c);
 
-    private:
+    protected:
         Matrix4 localToWorldTransform;
+        private * Node parent;
     };
 
 }
