@@ -21,8 +21,6 @@ namespace RE330
 
             }
 
-        virtual void draw(Matrix4 m, const RenderContext& rc, Camera c) = 0;
-
         // return copy of list to prevent modification
         std::list<Node*> getChildren()
             {

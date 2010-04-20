@@ -14,7 +14,6 @@ namespace RE330
     public:
         Leaf();
 
-        void updateMatrix();
         virtual void draw(Matrix4 m, RenderContext rc, Camera c) = 0;
 
         void updateLocalToWorldTransform(Matrix4 m)
