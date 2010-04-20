@@ -4,7 +4,7 @@
 using namespace RE330;
 
 SceneManager::SceneManager()
-    : mCamera(0)
+    : mCamera(0), rootNode(new Node())
 {
 }
 
@@ -13,6 +13,10 @@ SceneManager::~SceneManager()
     if(mCamera)
     {
         delete mCamera;
+    }
+    if(rootNode)
+    {
+        delete rootNode;
     }
     while(mObjectList.size() > 0)
     {

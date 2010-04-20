@@ -1,3 +1,10 @@
+#ifndef __NodeGroup_h__
+#define __NodeGroup_h__
+
+#include "Node.h"
+#include "GLRenderContext.h"
+#include <list>
+
 namespace RE330
 {
     class NodeGroup : public Node
@@ -5,12 +12,12 @@ namespace RE330
     public:
         NodeGroup();
 
-        virtual void draw(Matrix4 m, RenderContext rc, Camera c);
+        virtual void draw(Matrix4 m, GLRenderContext rc, Camera c) = 0;
 
         // return copy of list to prevent modification
-        list getChildren()
+        std::list getChildren()
             {
-                list<Node> copy = list<Node>(children);
+                std::list<Node> copy = std::list<Node>(children);
                 return copy;
             }
 
@@ -44,7 +51,8 @@ namespace RE330
             }
 
     protected:
-        list<Node> children;
-        list<Node>::iterator it;
+        std::list<Node> children;
+        std::list<Node>::iterator it;
     }
 }
+#endif

@@ -15,7 +15,7 @@ namespace RE330
         Leaf();
 
         void updateMatrix();
-        virtual void draw(Matrix4 m, RenderContext rc, Camera c);
+        virtual void draw(Matrix4 m, RenderContext rc, Camera c) = 0;
     }
 }
 

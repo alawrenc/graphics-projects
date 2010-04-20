@@ -19,9 +19,9 @@ namespace RE330
         void updateMatrix();
         void draw(Matrix4 m, RenderContext rc, Camera c)
             {
-                //setModelView(C);
+                setModelView(m);
                 //setMaterial(myMaterial);
-                //render(myObject);
+                rc.render(object);
 }
             }
 

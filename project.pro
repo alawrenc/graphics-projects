@@ -32,14 +32,18 @@ HEADERS += src/main/MainWidget.h \
            src/re330/Shader.h \
            src/re330/Texture.h \
            src/re330/Matrix4.h \
+           src/re330/Leaf.h \
            src/re330/Node.h \
+           src/re330/NodeGroup.h \
            src/re330/Object.h \
            src/re330/RE330_global.h \
            src/re330/RenderContext.h \
            src/re330/RenderWidget.h \
            src/re330/SceneManager.h \
            src/re330/Shapes.h \
+           src/re330/Shape3D.h \
            src/re330/Singleton.h \
+           src/re330/TransformGroup.h \
            src/re330/Vector3.h \
            src/re330/Vector4.h \
            src/re330/VertexData.h \

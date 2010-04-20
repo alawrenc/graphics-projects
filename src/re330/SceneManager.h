@@ -6,6 +6,7 @@
 #include "Object.h"
 #include "Light.h"
 #include "RenderContext.h"
+#include "TransformGroup.h"
 #include <list>
 #include <stdlib.h>
 #include <time.h>
@@ -46,6 +47,7 @@ namespace RE330
 
     private:
         Camera *mCamera;
+        TransformGroup* rootNode;
         std::list<Object*> mObjectList;
         std::list<Light*> mLightList;
     };

@@ -3,7 +3,7 @@
 
 #include "Matrix4.h"
 #include "Camera.h"
-#include "RenderContext.h"
+#include "GLRenderContext.h"
 
 namespace RE330
 {
@@ -11,14 +11,14 @@ namespace RE330
     {
 
     public:
-
-        Node(): parent(NULL), localToWorldTransfrom(Matrix4()) {}
+        // initializes to identity matrix
+        Node(): parent(NULL), localToWorldTransform(Matrix4()) {}
 
         void updateMatrix()
             {
                 if(parent)
                 {
-                    localToWorldTransform = (parent.localToWorldTransform *
+                    localToWorldTransform = ((*parent).localToWorldTransform *
                                              localToWorldTransform);
                 }
             }
@@ -28,16 +28,16 @@ namespace RE330
                 return parent;
             }
 
-        void setParent(*Node)
+        void setParent( Node * node)
             {
-                parent = Node;
+                parent = node;
             }
 
-        virtual void draw(Matrix4 m, RenderContext rc, Camera c);
+        virtual void draw(Matrix4 m, GLRenderContext rc, Camera c) = 0;
 
     protected:
+        Node * parent;
         Matrix4 localToWorldTransform;
-        private * Node parent;
     };
 
 }
