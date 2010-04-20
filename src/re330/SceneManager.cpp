@@ -1,10 +1,11 @@
 #include "SceneManager.h"
 #include "RenderContext.h"
+#include "TransformGroup.h"
 
 using namespace RE330;
 
 SceneManager::SceneManager()
-    : mCamera(0), rootNode(new Node())
+    : mCamera(0)
 {
 }
 

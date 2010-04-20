@@ -3,7 +3,7 @@
 
 #include "Matrix4.h"
 #include "Camera.h"
-#include "GLRenderContext.h"
+#include "RenderContext.h"
 
 namespace RE330
 {
@@ -33,7 +33,7 @@ namespace RE330
                 parent = node;
             }
 
-        virtual void draw(Matrix4 m, GLRenderContext rc, Camera c) = 0;
+        virtual void draw(Matrix4 m, RenderContext& rc, Camera c) = 0;
 
     protected:
         Node * parent;

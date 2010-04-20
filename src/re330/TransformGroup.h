@@ -6,7 +6,7 @@
 //Computer-to-world transform
 
 #include "NodeGroup.h"
-#include "GLRenderContext.h"
+#include "RenderContext.h"
 
 namespace RE330
 {
@@ -16,10 +16,10 @@ namespace RE330
     public:
         TransformGroup();
 
-        void draw(Matrix4 m, GLRenderContext rc, Camera c)
+        void draw(Matrix4 m, const RenderContext& rc, Camera c)
             {
                 //C_new = C*M;
-                Node* end = children.end();
+                end = children.end();
                 for (it = children.begin(); it != end; it ++)
                 {
                     draw(m, rc, c);
@@ -29,8 +29,9 @@ namespace RE330
 
         void updateMatrix()
             {
-                ;
+
             }
-    }
+    };
 }
+
 #endif
