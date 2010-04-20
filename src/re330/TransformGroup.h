@@ -7,6 +7,7 @@
 
 #include "NodeGroup.h"
 #include "RenderContext.h"
+#include "Matrix4.h"
 
 namespace RE330
 {
@@ -15,6 +16,7 @@ namespace RE330
 
     public:
         TransformGroup();
+        TransformGroup(Matrix4 transform): local(transform) {}
 
         void draw(Matrix4 m, const RenderContext& rc, Camera c)
             {
@@ -22,15 +24,41 @@ namespace RE330
                 end = children.end();
                 for (it = children.begin(); it != end; it ++)
                 {
-                    draw(m, rc, c);
+                    draw(m*local, rc, c);
                 }
 
             }
 
-        void updateMatrix()
+        Matrix4 getLocalTransform()
             {
-
+                return Matrix4(local);
             }
+
+        void setLocalTransform(Matrix4 m)
+            {
+                local = m;
+                updateLocalToWorldTransform(local);
+            }
+
+        void updateLocalToWorldTransform(Matrix4 m)
+            {
+                // update my localToWorldTransform
+                localToWorldTransform = m * local;
+                // update all children with my new transform
+                updateChildren();
+            }
+
+    protected:
+        Matrix4 local;
+        void updateChildren()
+            {
+                end = children.end();
+                for (it = children.begin(); it != end; it ++)
+                {
+                    updateLocalToWorldTransform(localToWorldTransform);
+                }
+            }
+
     };
 }
 

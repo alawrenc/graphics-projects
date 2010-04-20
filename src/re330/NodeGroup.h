@@ -11,6 +11,15 @@ namespace RE330
     {
     public:
         NodeGroup();
+        ~NodeGroup()
+            {
+                end = children.end();
+                for (it = children.begin(); it != end; it ++)
+                {
+                    delete *it;
+                }
+
+            }
 
         virtual void draw(Matrix4 m, const RenderContext& rc, Camera c) = 0;
 
@@ -33,7 +42,7 @@ namespace RE330
             {
                 children.push_back(child);
                 child->setParent(this);
-                child->updateMatrix();
+                child->updateLocalToWorldTransform(localToWorldTransform);
             }
 
         void removeChild(Node * child)

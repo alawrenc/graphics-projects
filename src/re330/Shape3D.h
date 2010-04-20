@@ -15,7 +15,10 @@ namespace RE330
 
     public:
         Shape3D();
-
+        Shape3D(Object * o)
+            {
+                object = o;
+            }
         void updateMatrix();
         void draw(Matrix4 m, RenderContext rc, Camera c)
             {

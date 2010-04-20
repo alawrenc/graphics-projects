@@ -16,6 +16,11 @@ namespace RE330
 
         void updateMatrix();
         virtual void draw(Matrix4 m, RenderContext rc, Camera c) = 0;
+
+        void updateLocalToWorldTransform(Matrix4 m)
+            {
+                localToWorldTransform = m;
+            }
     }
 }
 
