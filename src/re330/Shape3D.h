@@ -14,7 +14,6 @@ namespace RE330
     {
 
     public:
-        Shape3D();
         Shape3D(Object * o)
             {
                 object = o;
@@ -22,16 +21,16 @@ namespace RE330
 
         void draw(Matrix4 m, RenderContext &rc, Camera c)
             {
-                setModelView(m);
+                rc.setModelView(m);
                 //setMaterial(myMaterial);
                 rc.render(object);
-}
             }
+
 
     private:
         Object * object;
-
-    }
+    };
 }
+
 
 #endif
