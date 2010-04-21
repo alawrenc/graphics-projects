@@ -33,6 +33,10 @@ SceneManager::~SceneManager()
     }
 }
 
+void SceneManager::setRootNode(Node *n) {
+	rootNode = n;
+}
+
 Object* SceneManager::createObject()
 {
     Object *o = new Object();
@@ -73,17 +77,8 @@ void SceneManager::renderScene()
 
         renderContext->setModelViewMatrix(Matrix4::IDENTITY);
         renderContext->setLights(mLightList);
-
-        // Iterate through list of objects
-        std::list<Object *>::const_iterator iter;
-        for (iter=mObjectList.begin(); iter!=mObjectList.end(); iter++)
-        {
-            Object *o = (*iter);
-            Matrix4 m = o->getTransformation();
-
-            renderContext->setModelViewMatrix(v*m);
-            renderContext->render(o);
-        }
+		
+		rootNode->draw(Matrix4(), *renderContext, *mCamera);
 
         renderContext->endFrame();
     }

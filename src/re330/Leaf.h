@@ -12,7 +12,7 @@ namespace RE330
     class Leaf : public Node
     {
     public:
-        Leaf();
+        Leaf() {}
 
         virtual void draw(Matrix4 m, RenderContext &rc, Camera c) = 0;
 
@@ -20,7 +20,7 @@ namespace RE330
             {
                 localToWorldTransform = m;
             }
-    }
+    };
 }
 
 #endif

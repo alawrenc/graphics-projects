@@ -15,16 +15,15 @@ namespace RE330
     {
 
     public:
-        TransformGroup();
         TransformGroup(Matrix4 transform): local(transform) {}
 
-        void draw(Matrix4 m, const RenderContext& rc, Camera c)
+        void draw(Matrix4 m, RenderContext& rc, Camera c)
             {
                 //C_new = C*M;
                 end = children.end();
                 for (it = children.begin(); it != end; it ++)
                 {
-                    draw(m*local, rc, c);
+                    (*it)->draw(m*local, rc, c);
                 }
 
             }
@@ -55,7 +54,7 @@ namespace RE330
                 end = children.end();
                 for (it = children.begin(); it != end; it ++)
                 {
-                    updateLocalToWorldTransform(localToWorldTransform);
+                    (*it)->updateLocalToWorldTransform(localToWorldTransform);
                 }
             }
 

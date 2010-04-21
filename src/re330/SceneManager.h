@@ -31,6 +31,8 @@ namespace RE330
         /** This method creates an object and adds it to the list of object
             stored in the scene manager.
         */
+		void setRootNode(Node *n);
+		
         Object *createObject();
 
         Light *createLight();
@@ -47,7 +49,7 @@ namespace RE330
 
     private:
         Camera *mCamera;
-        TransformGroup* rootNode;
+        Node* rootNode;
         std::list<Object*> mObjectList;
         std::list<Light*> mLightList;
     };

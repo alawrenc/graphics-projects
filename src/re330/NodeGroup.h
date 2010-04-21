@@ -10,7 +10,7 @@ namespace RE330
     class NodeGroup : public Node
     {
     public:
-        NodeGroup();
+        NodeGroup() {}
         ~NodeGroup()
             {
                 end = children.end();

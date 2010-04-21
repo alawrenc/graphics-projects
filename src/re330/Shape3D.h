@@ -21,8 +21,9 @@ namespace RE330
 
         void draw(Matrix4 m, RenderContext &rc, Camera c)
             {
-                rc.setModelView(m);
-                //setMaterial(myMaterial);
+				std::cout << "test" << std::endl;
+                rc.setModelViewMatrix(m);
+                object->setMaterial(*(object->getMaterial()));
                 rc.render(object);
             }
 
