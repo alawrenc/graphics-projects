@@ -77,7 +77,7 @@ void SceneManager::renderScene()
         renderContext->setModelViewMatrix(Matrix4::IDENTITY);
         renderContext->setLights(mLightList);
 
-		rootNode->draw(Matrix4(), *renderContext, *mCamera);
+		rootNode->draw(Matrix4::IDENTITY, *renderContext, *mCamera);
 
         renderContext->endFrame();
     }

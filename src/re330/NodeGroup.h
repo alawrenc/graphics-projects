@@ -40,7 +40,6 @@ namespace RE330
             {
                 children.push_back(child);
                 child->setParent(this);
-                child->updateLocalToWorldTransform(localToWorldTransform);
             }
 
         void removeChild(Node * child)

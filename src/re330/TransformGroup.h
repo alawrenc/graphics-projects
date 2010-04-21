@@ -19,7 +19,7 @@ namespace RE330
 
         void draw(Matrix4 m, RenderContext& rc, Camera c)
             {
-                //C_new = C*M;
+                localToWorldTransform = m*local;
                 end = children.end();
                 for (it = children.begin(); it != end; it ++)
                 {
@@ -36,37 +36,10 @@ namespace RE330
         void setLocalTransform(Matrix4 m)
             {
                 local = m;
-                if (parent)
-                {
-                    updateLocalToWorldTransform(
-                        parent->getLocalToWorldTransform());
-                }
-                else
-                {
-                    updateLocalToWorldTransform(Matrix4::IDENTITY);
-                }
-            }
-
-        void updateLocalToWorldTransform(Matrix4 m)
-            {
-                // update my localToWorldTransform using parent's
-                // localtoworldtransform
-                localToWorldTransform = m * local;
-                // update all children with my new transform
-                updateChildren();
             }
 
     protected:
         Matrix4 local;
-        void updateChildren()
-            {
-                end = children.end();
-                for (it = children.begin(); it != end; it ++)
-                {
-                    (*it)->updateLocalToWorldTransform(localToWorldTransform);
-                }
-            }
-
     };
 }
 

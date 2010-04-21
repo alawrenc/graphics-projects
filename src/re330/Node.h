@@ -26,7 +26,6 @@ namespace RE330
             }
 
         virtual void draw(Matrix4 m, RenderContext& rc, Camera c) = 0;
-        virtual void updateLocalToWorldTransform(Matrix4 m) = 0;
         Matrix4 getLocalToWorldTransform()
             {
                 return Matrix4(localToWorldTransform);
