@@ -12,7 +12,7 @@ namespace RE330
 
     public:
         // initializes to identity matrix
-        Node(): parent(NULL), localToWorldTransform(Matrix4()) {}
+        Node(): parent(NULL), localToWorldTransform(Matrix4::IDENTITY) {}
         ~Node(){ }
 
         Node * getParent()
@@ -27,6 +27,11 @@ namespace RE330
 
         virtual void draw(Matrix4 m, RenderContext& rc, Camera c) = 0;
         virtual void updateLocalToWorldTransform(Matrix4 m) = 0;
+        Matrix4 getLocalToWorldTransform()
+            {
+                return Matrix4(localToWorldTransform);
+            }
+
     protected:
         Node * parent;
         Matrix4 localToWorldTransform;

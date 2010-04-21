@@ -73,11 +73,10 @@ void SceneManager::renderScene()
         renderContext->beginFrame();
 
         renderContext->setProjectionMatrix(mCamera->getProjectionMatrix());
-        Matrix4 v = mCamera->getViewMatrix();
 
         renderContext->setModelViewMatrix(Matrix4::IDENTITY);
         renderContext->setLights(mLightList);
-		
+
 		rootNode->draw(Matrix4(), *renderContext, *mCamera);
 
         renderContext->endFrame();

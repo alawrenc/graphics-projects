@@ -32,7 +32,7 @@ namespace RE330
             stored in the scene manager.
         */
 		void setRootNode(Node *n);
-		
+
         Object *createObject();
 
         Light *createLight();

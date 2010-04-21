@@ -23,7 +23,7 @@ namespace RE330
                 end = children.end();
                 for (it = children.begin(); it != end; it ++)
                 {
-                    (*it)->draw(m*local, rc, c);
+                    (*it)->draw(localToWorldTransform, rc, c);
                 }
 
             }
@@ -36,12 +36,21 @@ namespace RE330
         void setLocalTransform(Matrix4 m)
             {
                 local = m;
-                updateLocalToWorldTransform(local);
+                if (parent)
+                {
+                    updateLocalToWorldTransform(
+                        parent->getLocalToWorldTransform());
+                }
+                else
+                {
+                    updateLocalToWorldTransform(Matrix4::IDENTITY);
+                }
             }
 
         void updateLocalToWorldTransform(Matrix4 m)
             {
-                // update my localToWorldTransform
+                // update my localToWorldTransform using parent's
+                // localtoworldtransform
                 localToWorldTransform = m * local;
                 // update all children with my new transform
                 updateChildren();
