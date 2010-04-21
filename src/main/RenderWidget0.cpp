@@ -131,7 +131,7 @@ void RenderWidget0::setupRobot()
 //Shapes::createSphere(sceneManager, HEAD_DIAMETER, 1, 5, 1,
                       //                     robotColors, false);
     Shape3D *head = new Shape3D(objects["head"]);
-    objects["head"]->setTransformation(Matrix4::translate(0,1.5,0));
+    headGroup->setLocalTransform(Matrix4::translate(0,1.5,0));
 
     headGroup->addChildNode(head);
 
@@ -499,15 +499,9 @@ void RenderWidget0::mouseMoveEvent(QMouseEvent *e)
             // Prep the trackball rotation matrix
             Matrix4 trackRotation = Matrix4::rotateA(start*stop,
                                                      acos(start^stop));
+            TransformGroup * root = sceneManager->getRootNode();
+            root->setLocalTransform(trackRotation * root->getLocalTransform());
 
-            // rotates all objects in scene via iteration
-            for (it = objects.begin(); it != objects.end(); it++ )
-            {
-                // dereferencing 'it' returns pair from objects map
-                // second value of pair is ptr to object
-                (*it).second->setTransformation(trackRotation *
-                                                (*it).second->getTransformation());
-            }
             // Update the (now old) mouse position
             track_start = e->pos();
         }

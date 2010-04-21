@@ -33,7 +33,7 @@ SceneManager::~SceneManager()
     }
 }
 
-void SceneManager::setRootNode(Node *n) {
+void SceneManager::setRootNode(TransformGroup *n) {
 	rootNode = n;
 }
 
