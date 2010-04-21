@@ -130,33 +130,33 @@ void RenderWidget0::setupRobot()
     testColor[0][2] = 0.5;
 	
     //robot
-    TransformGroup *robot = new TransformGroup(Matrix4::translate(5,0,0));
+    robot = new TransformGroup(Matrix4::translate(5,0,0));
     sceneManager->setRootNode(robot);
 
     //torso
     Object *torsoObj = Shapes::createBox(sceneManager,
                                          TORSO_HEIGHT, TORSO_WIDTH, TORSO_DEPTH,
                                          1,robotColors, false);
-    Shape3D *torso = new Shape3D(torsoObj);
+    torso = new Shape3D(torsoObj);
 
     robot->addChildNode(torso);
 
     //head group
 
-    TransformGroup *headGroup = new TransformGroup(Matrix4::translate(0,2.0,0));
+    headGroup = new TransformGroup(Matrix4::translate(0,2.0,0));
 
     //head
     Object *headObj = Shapes::createSphere(sceneManager, 
 										   HEAD_DIAMETER, 100, 100,
 										   1, robotColors, false);
-    Shape3D *head = new Shape3D(headObj);
+    head = new Shape3D(headObj);
 
     headGroup->addChildNode(head);
 
     robot->addChildNode(headGroup);
 
     //eyes
-    TransformGroup *eyesGroup = new TransformGroup(Matrix4::translate(0,0.25,0.75));
+    eyesGroup = new TransformGroup(Matrix4::translate(0,0.25,0.75));
 	//left eye from robot prespective
     Object *leftEyeObj = Shapes::createSphere(sceneManager, EYE_DIAMETER, 100, 100,
 											  1, eyeColor, false);
@@ -164,8 +164,8 @@ void RenderWidget0::setupRobot()
     Object *rightEyeObj = Shapes::createSphere(sceneManager, EYE_DIAMETER, 100, 100,
 											   1, eyeColor, false);
     rightEyeObj->setTransformation(Matrix4::translate(-EYE_OFFSET,0,0));
-    Shape3D *leftEye = new Shape3D(leftEyeObj);
-    Shape3D *rightEye = new Shape3D(rightEyeObj);
+    leftEye = new Shape3D(leftEyeObj);
+    rightEye = new Shape3D(rightEyeObj);
     eyesGroup->addChildNode(leftEye);
     eyesGroup->addChildNode(rightEye);
 
@@ -174,43 +174,43 @@ void RenderWidget0::setupRobot()
     robot->addChildNode(headGroup);
 	
     //left arm
-    TransformGroup *leftArm = new TransformGroup(Matrix4::translate(TORSO_WIDTH/2,
+    leftArm = new TransformGroup(Matrix4::translate(TORSO_WIDTH/2,
                                                                    TORSO_HEIGHT/2,
                                                                    0));
     Object *leftShoulderObj = Shapes::createSphere(sceneManager, 
 												   JOINT_SIZE, 100, 100,
 												   1, robotColors, false);
-    Shape3D *leftShoulder = new Shape3D(leftShoulderObj);
+    leftShoulder = new Shape3D(leftShoulderObj);
 	
     Object *leftBicepObj = Shapes::createBox(sceneManager, 
 											 BICEPS_LENGTH, BICEPS_SIZE, BICEPS_SIZE,
 											 1, robotColors, false);
 	leftBicepObj->setTransformation(Matrix4::rotateZ(PI/4)*
 								   Matrix4::translate(0,-BICEPS_LENGTH/2,0));
-    Shape3D *leftBicep = new Shape3D(leftBicepObj);
+    leftBicep = new Shape3D(leftBicepObj);
 	
     leftArm->addChildNode(leftShoulder);
     leftArm->addChildNode(leftBicep);
 	
-    TransformGroup *leftLowerArm = new TransformGroup(Matrix4::translate(BICEPS_LENGTH*cos(PI/4),
+    leftLowerArm = new TransformGroup(Matrix4::translate(BICEPS_LENGTH*cos(PI/4),
 																		 -BICEPS_LENGTH*sin(PI/4),
 																		 0));
     Object *leftElbowObj = Shapes::createSphere(sceneManager, 
 												JOINT_SIZE, 100, 100,
 												1, robotColors, false);
-    Shape3D *leftElbow = new Shape3D(leftElbowObj);
+    leftElbow = new Shape3D(leftElbowObj);
     Object *leftForearmObj = Shapes::createBox(sceneManager, 
 											   BICEPS_LENGTH, 0.3, 0.3,
 											   1, robotColors, false);
 	leftForearmObj->setTransformation(Matrix4::rotateZ(PI*3/4)*
 									  Matrix4::translate(0,-BICEPS_LENGTH/2,0));
-    Shape3D *leftForearm = new Shape3D(leftForearmObj);
+    leftForearm = new Shape3D(leftForearmObj);
     Object *leftHandObj = Shapes::createSphere(sceneManager, 
 											   HAND_SIZE, 100, 100,
 											   1, robotColors, false);
 	leftHandObj->setTransformation(Matrix4::rotateZ(PI*3/4)*
 								   Matrix4::translate(0,-BICEPS_LENGTH,0));
-    Shape3D *leftHand = new Shape3D(leftHandObj);
+    leftHand = new Shape3D(leftHandObj);
 
     leftLowerArm->addChildNode(leftElbow);
     leftLowerArm->addChildNode(leftForearm);
@@ -221,43 +221,43 @@ void RenderWidget0::setupRobot()
     robot->addChildNode(leftArm);
 	
 	//right arm
-	TransformGroup *rightArm = new TransformGroup(Matrix4::translate(-TORSO_WIDTH/2,
+	rightArm = new TransformGroup(Matrix4::translate(-TORSO_WIDTH/2,
 																	TORSO_HEIGHT/2,
 																	0));
 	Object *rightShoulderObj = Shapes::createSphere(sceneManager, 
 												   JOINT_SIZE, 100, 100,
 												   1, robotColors, false);
-	Shape3D *rightShoulder = new Shape3D(rightShoulderObj);
+	rightShoulder = new Shape3D(rightShoulderObj);
 	
 	Object *rightBicepObj = Shapes::createBox(sceneManager, 
 											 BICEPS_LENGTH, BICEPS_SIZE, BICEPS_SIZE,
 											 1, robotColors, false);
 	rightBicepObj->setTransformation(Matrix4::rotateZ(-PI/4)*
 									Matrix4::translate(0,-BICEPS_LENGTH/2,0));
-	Shape3D *rightBicep = new Shape3D(rightBicepObj);
+	rightBicep = new Shape3D(rightBicepObj);
 	
 	rightArm->addChildNode(rightShoulder);
 	rightArm->addChildNode(rightBicep);
 	
-	TransformGroup *rightLowerArm = new TransformGroup(Matrix4::translate(-BICEPS_LENGTH*cos(PI/4),
+	rightLowerArm = new TransformGroup(Matrix4::translate(-BICEPS_LENGTH*cos(PI/4),
 																		  -BICEPS_LENGTH*sin(PI/4),
 																		  0));
 	Object *rightElbowObj = Shapes::createSphere(sceneManager, 
 												JOINT_SIZE, 100, 100,
 												1, robotColors, false);
-	Shape3D *rightElbow = new Shape3D(rightElbowObj);
+	rightElbow = new Shape3D(rightElbowObj);
 	Object *rightForearmObj = Shapes::createBox(sceneManager, 
 												BICEPS_LENGTH, 0.3, 0.3,
 												1, robotColors, false);
 	rightForearmObj->setTransformation(Matrix4::rotateZ(-PI*3/4)*
 									   Matrix4::translate(0,-BICEPS_LENGTH/2,0));
-	Shape3D *rightForearm = new Shape3D(rightForearmObj);
+	rightForearm = new Shape3D(rightForearmObj);
 	Object *rightHandObj = Shapes::createSphere(sceneManager, 
 												HAND_SIZE, 100, 100,
 												1, robotColors, false);
 	rightHandObj->setTransformation(Matrix4::rotateZ(-PI*3/4)*
 									Matrix4::translate(0,-BICEPS_LENGTH,0));
-	Shape3D *rightHand = new Shape3D(rightHandObj);
+	rightHand = new Shape3D(rightHandObj);
 	
 	rightLowerArm->addChildNode(rightElbow);
 	rightLowerArm->addChildNode(rightForearm);
@@ -268,40 +268,40 @@ void RenderWidget0::setupRobot()
 	robot->addChildNode(rightArm);
 	 
     //left leg
-    TransformGroup *leftLeg = new TransformGroup(Matrix4::translate(TORSO_WIDTH/2,
+    leftLeg = new TransformGroup(Matrix4::translate(TORSO_WIDTH/2,
 																	-TORSO_HEIGHT/2,
 																	0));
     Object *leftHipObj = Shapes::createSphere(sceneManager, 
 											  HIP_SIZE, 100, 100,
 											  1, robotColors, false);
-    Shape3D *leftHip = new Shape3D(leftHipObj);
+    leftHip = new Shape3D(leftHipObj);
     Object *leftQuadObj = Shapes::createBox(sceneManager, 
 											LEG_LENGTH, BICEPS_SIZE, BICEPS_SIZE,
 											1, robotColors, false);
 	leftQuadObj->setTransformation(Matrix4::rotateZ(0.1)*
 								   Matrix4::translate(0,-LEG_LENGTH/2,0));
-    Shape3D *leftQuad = new Shape3D(leftQuadObj);
+    leftQuad = new Shape3D(leftQuadObj);
 	
     leftLeg->addChildNode(leftHip);
     leftLeg->addChildNode(leftQuad);
 	
-    TransformGroup *leftLowerLeg = new TransformGroup(Matrix4::translate(LEG_LENGTH*sin(0.1),
+    leftLowerLeg = new TransformGroup(Matrix4::translate(LEG_LENGTH*sin(0.1),
 																		 -LEG_LENGTH*cos(0.1),
 																		 0));
     Object *leftKneeObj = Shapes::createSphere(sceneManager, 
 												JOINT_SIZE, 100, 100,
 												1, robotColors, false);
-    Shape3D *leftKnee = new Shape3D(leftKneeObj);
+    leftKnee = new Shape3D(leftKneeObj);
     Object *leftShinObj = Shapes::createBox(sceneManager, 
 											LEG_LENGTH, 0.3, 0.3,
 											1, robotColors, false);
 	leftShinObj->setTransformation(Matrix4::translate(0,-LEG_LENGTH/2,0));
-    Shape3D *leftShin = new Shape3D(leftShinObj);
+    leftShin = new Shape3D(leftShinObj);
     Object *leftFootObj = Shapes::createSphere(sceneManager, 
 											   HAND_SIZE, 100, 100,
 											   1, robotColors, false);
 	leftFootObj->setTransformation(Matrix4::translate(0,-LEG_LENGTH,0));
-    Shape3D *leftFoot = new Shape3D(leftFootObj);
+    leftFoot = new Shape3D(leftFootObj);
 	
     leftLowerLeg->addChildNode(leftKnee);
     leftLowerLeg->addChildNode(leftShin);
@@ -313,40 +313,40 @@ void RenderWidget0::setupRobot()
 	
 	
     //right leg
-    TransformGroup *rightLeg = new TransformGroup(Matrix4::translate(-TORSO_WIDTH/2,
+    rightLeg = new TransformGroup(Matrix4::translate(-TORSO_WIDTH/2,
 																	 -TORSO_HEIGHT/2,
 																	 0));
     Object *rightHipObj = Shapes::createSphere(sceneManager, 
 											   HIP_SIZE, 100, 100,
 											   1, robotColors, false);
-    Shape3D *rightHip = new Shape3D(rightHipObj);
+    rightHip = new Shape3D(rightHipObj);
     Object *rightQuadObj = Shapes::createBox(sceneManager, 
 											 LEG_LENGTH, BICEPS_SIZE, BICEPS_SIZE,
 											 1, robotColors, false);
 	rightQuadObj->setTransformation(Matrix4::rotateZ(-0.1)*
 									Matrix4::translate(0,-LEG_LENGTH/2,0));
-    Shape3D *rightQuad = new Shape3D(rightQuadObj);
+    rightQuad = new Shape3D(rightQuadObj);
 	
     rightLeg->addChildNode(rightHip);
     rightLeg->addChildNode(rightQuad);
 	
-    TransformGroup *rightLowerLeg = new TransformGroup(Matrix4::translate(-LEG_LENGTH*sin(0.1),
+    rightLowerLeg = new TransformGroup(Matrix4::translate(-LEG_LENGTH*sin(0.1),
 																		  -LEG_LENGTH*cos(0.1),
 																		  0));
     Object *rightKneeObj = Shapes::createSphere(sceneManager, 
 												JOINT_SIZE, 100, 100,
 												1, robotColors, false);
-    Shape3D *rightKnee = new Shape3D(rightKneeObj);
+    rightKnee = new Shape3D(rightKneeObj);
     Object *rightShinObj = Shapes::createBox(sceneManager, 
 											 LEG_LENGTH, 0.3, 0.3,
 											 1, robotColors, false);
 	rightShinObj->setTransformation(Matrix4::translate(0,-LEG_LENGTH/2,0));
-    Shape3D *rightShin = new Shape3D(rightShinObj);
+    rightShin = new Shape3D(rightShinObj);
     Object *rightFootObj = Shapes::createSphere(sceneManager, 
 												HAND_SIZE, 100, 100,
 												1, robotColors, false);
 	rightFootObj->setTransformation(Matrix4::translate(0,-LEG_LENGTH,0));
-    Shape3D *rightFoot = new Shape3D(rightFootObj);
+    rightFoot = new Shape3D(rightFootObj);
 	
     rightLowerLeg->addChildNode(rightKnee);
     rightLowerLeg->addChildNode(rightShin);
@@ -478,8 +478,7 @@ void RenderWidget0::timerEvent(QTimerEvent *t)
 {
 	
 	Matrix4 m3 = Matrix4::rotateY(-0.01);
-	TransformGroup * root = sceneManager->getRootNode();
-	root->setLocalTransform(m3 * root->getLocalTransform());
+	robot->setLocalTransform(m3 * robot->getLocalTransform());
     updateScene();
 }
 

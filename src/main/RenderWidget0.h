@@ -5,6 +5,8 @@
 #include "GLRenderWidget.h"
 #include "SceneManager.h"
 #include "Object.h"
+#include "TransformGroup.h"
+#include "Shape3D.h"
 
 using namespace RE330;
 
@@ -71,6 +73,44 @@ private:
     bool sceneCreated;
 
     string HOUSE;
+	
+	//robot
+	TransformGroup * robot;
+	TransformGroup * headGroup;
+	TransformGroup * eyesGroup;
+	TransformGroup * leftArm;
+	TransformGroup * leftLowerArm;
+	TransformGroup * rightArm;
+	TransformGroup * rightLowerArm;
+	TransformGroup * leftLeg;
+	TransformGroup * leftLowerLeg;
+	TransformGroup * rightLeg;
+	TransformGroup * rightLowerLeg;
+	
+	Shape3D * torso;
+	Shape3D * head;
+	Shape3D * leftEye;
+	Shape3D * rightEye;
+	Shape3D * leftShoulder;
+	Shape3D * leftBicep;
+	Shape3D * leftElbow;
+	Shape3D * leftForearm;
+	Shape3D * leftHand;
+	Shape3D * rightShoulder;
+	Shape3D * rightBicep;
+	Shape3D * rightElbow;
+	Shape3D * rightForearm;
+	Shape3D * rightHand;
+	Shape3D * leftHip;
+	Shape3D * leftQuad;
+	Shape3D * leftKnee;
+	Shape3D * leftShin;
+	Shape3D * leftFoot;
+	Shape3D * rightHip;
+	Shape3D * rightQuad;
+	Shape3D * rightKnee;
+	Shape3D * rightShin;
+	Shape3D * rightFoot;
 };
 
 #endif // RenderWidget0_H
