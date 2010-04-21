@@ -113,10 +113,10 @@ void RenderWidget0::setupRobot()
     sceneManager->setRootNode(robot);
 
     //torso
-    objects["torso"] = Shapes::createBox(sceneManager,
+    Object * torsoObj = Shapes::createBox(sceneManager,
                                          TORSO_HEIGHT, TORSO_WIDTH, TORSO_DEPTH,
                                          1,robotColors, false);
-    Shape3D *torso = new Shape3D(objects["torso"]);
+    Shape3D *torso = new Shape3D(torsoObj);
 
     robot->addChildNode(torso);
 

@@ -83,7 +83,6 @@ void GLRenderContext::render(Object *object)
     // Set up vertex arrays
     for(int j=0; j<vertexDeclaration.getElementCount(); j++)
     {
-        std::cout << "print me" <<std::endl; 
         const VertexElement *element = vertexDeclaration.getElement(j);
 
         const VertexBuffer& vertexBuffer = vertexBufferBinding.getBuffer(element->getBufferIndex());
