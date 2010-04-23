@@ -48,6 +48,7 @@ protected:
     void setupObjects();
     void setupLights();
 	void setupRobot();
+    void setupBunnyParty();
 
 private:
     SceneManager *sceneManager;
@@ -73,7 +74,7 @@ private:
     bool sceneCreated;
 
     string HOUSE;
-	
+	TransformGroup * bunnyParty;
 	//robot
 	TransformGroup * robot;
 	TransformGroup * headGroup;

@@ -50,9 +50,11 @@ void RenderWidget0::initSceneEvent()
     //create and position and objects in scene
     //setupObjects();
     //create and position lights in scene
-    //setupLights();
+    setupLights();
     //create and position robot in scene
-    setupRobot();
+    //setupRobot();
+
+    setupBunnyParty();
 
 
     // Trigger timer event every 5ms.
@@ -96,6 +98,35 @@ void RenderWidget0::setupCamera()
         1, 100, 1, 60.0/180.0*M_PI);
 
     sceneCreated = true;
+}
+
+void RenderWidget0::setupBunnyParty()
+{
+    Object * baseBunny = Shapes::readObject(sceneManager, "bunny.obj");
+    bunnyParty = new TransformGroup(Matrix4::translate(-50,0,0));
+    sceneManager->setRootNode(bunnyParty);
+
+    //teapot
+    for (int i = 0; i <= 100; i++)
+    {
+        Object * bunnyClone = new Object(*baseBunny);
+
+        bunnyClone->setTransformation(Matrix4::translate(i,0,0));
+
+        Material *bunnyMaterial = new Material();
+        bunnyMaterial->setDiffuse(Vector3(0.2, 0.2, 0.2));
+        bunnyMaterial->setSpecular(Vector3(0.5, 0.5, 0.5));
+        bunnyMaterial->setAmbient(Vector3(0.3, 0.3, 0.3));
+        bunnyMaterial->setShininess(256.0);
+        bunnyClone->setMaterial(*bunnyMaterial);
+
+        Shader *bunnyShader = new Shader("src/Shaders/diffuse_shading.vert",
+                                       "src/Shaders/diffuse_shading.frag");
+        bunnyMaterial->setShader(bunnyShader);
+
+        bunnyParty->addChildNode(new Shape3D(bunnyClone));
+
+    }
 }
 
 void RenderWidget0::setupRobot()
@@ -445,9 +476,11 @@ void RenderWidget0::resizeRenderWidgetEvent(const QSize &s)
 
 void RenderWidget0::timerEvent(QTimerEvent *t)
 {
-
-    Matrix4 m3 = Matrix4::rotateY(-0.01);
-    robot->setLocalTransform(m3 * robot->getLocalTransform());
+    if (robot)
+    {
+        Matrix4 m3 = Matrix4::rotateY(-0.01);
+        robot->setLocalTransform(m3 * robot->getLocalTransform());
+    }
     updateScene();
 }
 
