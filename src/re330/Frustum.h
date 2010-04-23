@@ -56,6 +56,28 @@ namespace RE330
             updateProjectionMatrix();
         }
 
+        // geters for frustrum parameters
+        float getNearPlane()
+        {
+            return near;
+        }
+
+        float getFarPlane()
+        {
+            return far;
+        }
+
+        float getAspectRatio()
+        {
+            return aspect;
+        }
+
+        float getVerticalFOV()
+        {
+            return fov;
+        }
+
+
         // Change the projection matrix in one fell swoop
         void createProjectionMatrix(float n, float f, float r, float t)
         {

@@ -3,6 +3,7 @@
 
 #include "Leaf.h"
 #include "Matrix4.h"
+#include "Vector3.h"
 #include "Camera.h"
 #include "RenderContext.h"
 #include "Object.h"
@@ -17,19 +18,26 @@ namespace RE330
         Shape3D(Object * o)
             {
                 object = o;
+                initialBoundsComputed = false;
+                //lastObjectTransform = object->getTransformation();
             }
 
-        void draw(Matrix4 m, RenderContext &rc, Camera c)
-            {
-                rc.setModelViewMatrix(c.getViewMatrix() * m *
-                                      object->getTransformation());
-                //object->setMaterial(*(object->getMaterial()));
-                rc.render(object);
-            }
-
+        void draw(Matrix4 m, RenderContext &rc, Camera c);
 
     private:
+        int detectSphereIntersection(Camera c);
+        bool objectInView(Camera c);
+        void computeBoundingSphere();
+
+        // modifies Vector3 params to hold min/max xyz values
+        void findMinMaxVectors(int *vertices, int numVertices,
+                               Vector3 *minVector, Vector3 *maxVector);
+
         Object * object;
+        Vector3 boundingSphereCenter;
+        Matrix4 lastObjectTransform;
+        float boundingSphereRadius;
+        bool initialBoundsComputed;
     };
 }
 

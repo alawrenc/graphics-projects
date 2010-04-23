@@ -60,6 +60,7 @@ SOURCES += src/main/main.cpp \
            src/re330/Light.cpp \
            src/re330/Material.cpp \
            src/re330/Shader.cpp \
+           src/re330/Shape3D.cpp \
            src/re330/Texture.cpp \
            src/re330/Matrix4.cpp \
            src/re330/Camera.cpp \

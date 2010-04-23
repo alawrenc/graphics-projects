@@ -16,6 +16,7 @@ namespace RE330
     class RE330_EXPORT Object
     {
     public:
+
         inline void setTransformation(const Matrix4 &t) { mTransformation = t; }
 
         inline Matrix4 getTransformation() const { return mTransformation; }
