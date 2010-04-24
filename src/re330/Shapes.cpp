@@ -135,8 +135,7 @@ Object* Shapes::createBox(SceneManager* sm, float height, float width,
     int nVerts = 8 * num_colors;
     int nIndices = 3 * 12;
     float textCoords[] = {1,1, 0,1, 1,1, 0,1,
-			  1,0, 0,0, 1,0, 0,0,
-			 };
+                          1,0, 0,0, 1,0, 0,0,};
     //setupObject(box, nVerts, nIndices, box_v, box_c, NULL, box_i);
     setupObjectTexture(box, nVerts, nIndices, box_v, box_c, NULL, textCoords, box_i);
     return box;
@@ -461,9 +460,9 @@ void Shapes::setupObject(Object* obj, int nVerts, int nIndices,
     if (n != NULL)
     {
         vd.vertexDeclaration.addElement(1, 0, 3, 3*sizeof(float),
-                                                RE330::VES_NORMAL);
+                                        RE330::VES_NORMAL);
         vd.createVertexBuffer(1, nVerts*3*sizeof(float),
-                                      (unsigned char*)n);
+                              (unsigned char*)n);
     }
 
     // Create the buffers and load the data
@@ -475,7 +474,7 @@ void Shapes::setupObject(Object* obj, int nVerts, int nIndices,
 }
 
 void Shapes::setupObjectTexture(Object* obj, int nVerts, int nIndices,
-				float* v, float* c, float* n, float* t, int* i)
+                float* v, float* c, float* n, float* t, int* i)
 {
     VertexData& vd = obj->vertexData;
     // Specify the elements of the vertex data:
@@ -498,11 +497,11 @@ void Shapes::setupObjectTexture(Object* obj, int nVerts, int nIndices,
         vd.createVertexBuffer(1, nVerts*3*sizeof(float),
                                       (unsigned char*)n);
     }
-    
+
     vd.vertexDeclaration.addElement(2, 0, 2, 2*sizeof(float),
                                     RE330::VES_TEXTURE_COORDINATES);
     vd.createVertexBuffer(2, nVerts*2*sizeof(float), (unsigned char*)t);
-    
+
     // Create the buffers and load the data
     vd.createIndexBuffer(nIndices, i);
 }

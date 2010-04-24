@@ -28,7 +28,7 @@ void VertexData::createIndexBuffer(int indexCount, int *data)
 {
 	mIndexCount = indexCount;
 	mIndexBuffer = new int[indexCount];
-	for(int i=0; i<mIndexCount; i++) 
+	for(int i=0; i<mIndexCount; i++)
 	{
 		mIndexBuffer[i] = data[i];
 	}

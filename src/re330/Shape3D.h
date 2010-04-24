@@ -30,7 +30,7 @@ namespace RE330
         void computeBoundingSphere();
 
         // modifies Vector3 params to hold min/max xyz values
-        void findMinMaxVectors(int *vertices, int numVertices,
+        void findMinMaxVectors(unsigned char *vertices, int numVertices,
                                Vector3 *minVector, Vector3 *maxVector);
 
         Object * object;

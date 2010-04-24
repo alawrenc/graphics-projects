@@ -10,10 +10,14 @@ void Shape3D::draw(Matrix4 m, RenderContext &rc, Camera c)
     rc.setModelViewMatrix(c.getViewMatrix() * m *
                           object->getTransformation());
     //object->setMaterial(*(object->getMaterial()));
-    if (objectInView(c)) // and CULLING
-    {
+   if (objectInView(c)) // and CULLING
+   {
         rc.render(object);
-    }
+   }
+   else
+   {
+       std::cout << "object culled" <<std::endl;
+   }
 }
 
 bool Shape3D::objectInView(Camera c)
@@ -131,11 +135,33 @@ void Shape3D::computeBoundingSphere()
     // only run expensive min/max finding once
     if (!initialBoundsComputed)
     {
-        int * vertices = object->vertexData.getIndexBuffer();
-        int numVertices = object->vertexData.getIndexCount();
+        VertexData vd = object->vertexData;
+        const VertexElement * element = vd.vertexDeclaration.getElement(0);
+        int stride = element->getStride();
+        int vsize = element->getSize();
+        int offset = element->getOffset();
+
+        std::cout << "stride: " << stride <<std::endl;
+        std::cout << "vsize: " << vsize <<std::endl;
+        std::cout << "offset: " << offset <<std::endl;
+
+        unsigned char * vertices = vd.vertexBufferBinding.getBuffer(0).getBuffer();
+        vertices += offset;
+
+        //******NOT WORKING
+        int numVertices = vd.getIndexCount();
+        std::cout << "numVertices: " << numVertices << std::endl;
         Vector3 min;
         Vector3 max;
         findMinMaxVectors(vertices, numVertices, &min, &max);
+        std::cout << "maxX: " << max[0] << std::endl;
+        std::cout << "maxY: " << max[1] << std::endl;
+        std::cout << "maxZ: " << max[2] << std::endl;
+
+        std::cout << "minX: " << min[0] << std::endl;
+        std::cout << "minY: " << min[1] << std::endl;
+        std::cout << "minZ: " << min[2] << std::endl;
+
         int xDiff = max[0] - min[0];
         int yDiff = max[1] - min[1];
         int zDiff = max[2] - min[2];
@@ -147,7 +173,9 @@ void Shape3D::computeBoundingSphere()
         float zCenter = zDiff / 2.0f + min[2];
 
         boundingSphereCenter = Vector3(xCenter, yCenter, zCenter);
-        initialBoundsComputed = true;
+        // std::cout << boundingSphereCenter << std::endl;
+        // std::cout << boundingSphereRadius << std::endl;
+        //initialBoundsComputed = true;
     }
 
     // only update center and radius if the transformation changed
@@ -160,7 +188,7 @@ void Shape3D::computeBoundingSphere()
         //}
 }
 
-void Shape3D::findMinMaxVectors(int *vertices, int numVertices,
+void Shape3D::findMinMaxVectors(unsigned char *vertices, int numVertices,
                                 Vector3 *minVector, Vector3 *maxVector)
 {
     //initialize min/max values to limits
@@ -180,9 +208,9 @@ void Shape3D::findMinMaxVectors(int *vertices, int numVertices,
     {
         value = vertices[count];
         remainder = count % 3;
-
         if (remainder == 0)
         {
+            std::cout << value << std::endl;
             maxX = std::max(maxX, value);
             minX = std::min(minX, value);
         }
