@@ -76,6 +76,8 @@ private:
     static const bool USE_COMPOSITE = true;
 
     bool sceneCreated;
+	
+	int w;
 
     string HOUSE;
     TransformGroup * world;
