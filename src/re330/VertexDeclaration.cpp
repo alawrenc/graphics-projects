@@ -36,6 +36,7 @@ void VertexBuffer::loadBuffer(int bufferSize, unsigned char *data)
 {
     mBuffer = new unsigned char[bufferSize];
     memcpy(mBuffer, data, bufferSize);
+    size = bufferSize;
 }
 
 

@@ -27,11 +27,11 @@ namespace RE330
     private:
         int detectSphereIntersection(Camera c);
         bool objectInView(Camera c);
-        void computeBoundingSphere();
+        void computeBoundingSphere(Camera c);
 
         // modifies Vector3 params to hold min/max xyz values
         void findMinMaxVectors(unsigned char *vertices, int numVertices,
-                               Vector3 *minVector, Vector3 *maxVector);
+                               Vector4 *minVector, Vector4 *maxVector);
 
         Object * object;
         Vector3 boundingSphereCenter;

@@ -85,9 +85,11 @@ namespace RE330
         ~VertexBuffer();
         void loadBuffer(int bufferSize, unsigned char *data);
         unsigned char *getBuffer() const { return mBuffer; }
+        int getSize() const { return size; }
 
     private:
         unsigned char *mBuffer;
+        int size;
     };
 
     /** This class maps vertex buffer indices to pointers to vertex buffers.
