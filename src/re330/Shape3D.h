@@ -19,6 +19,8 @@ namespace RE330
             {
                 object = o;
                 initialBoundsComputed = false;
+                boundingSphereCenter = o->getCenter();
+                boundingSphereRadius = o->getRadius();
                 //lastObjectTransform = object->getTransformation();
             }
 
@@ -28,10 +30,6 @@ namespace RE330
         int detectSphereIntersection(Camera c);
         bool objectInView(Camera c);
         void computeBoundingSphere(Camera c);
-
-        // modifies Vector3 params to hold min/max xyz values
-        void findMinMaxVectors(unsigned char *vertices, int numVertices,
-                               Vector4 *minVector, Vector4 *maxVector);
 
         Object * object;
         Vector3 boundingSphereCenter;

@@ -1,5 +1,4 @@
 #include "Shapes.h"
-
 using namespace RE330;
 
 Object * Shapes::readObject(SceneManager* sm, std::string filename)
@@ -469,34 +468,7 @@ void Shapes::setupObject(Object* obj, int nVerts, int nIndices,
     // Create the buffers and load the data
     vd.createIndexBuffer(nIndices, i);
 
-    VertexDeclaration& vertexDeclaration = vd.vertexDeclaration;
-    VertexBufferBinding& vertexBufferBinding = vd.vertexBufferBinding;
-
-    for(int j=0; j<vertexDeclaration.getElementCount(); j++)
-    {
-        const VertexElement *element = vertexDeclaration.getElement(j);
-
-        if(element->getSemantic() == VES_POSITION)
-        {
-            const VertexBuffer& vertexBuffer =
-                vertexBufferBinding.getBuffer(element->getBufferIndex());
-            unsigned char* vertices = vertexBuffer.getBuffer();
-
-            int vertexStride = element->getStride();
-            int vertexSize = element->getSize();
-            int numVertElem = (vertexBuffer.getSize() /
-                               (vertexStride / vertexSize));
-            float value = NULL;
-
-            // iterate through all values to find min for each: xyz
-            for (int count = 0; count < numVertElem; count++)
-            {
-                value = (float)vertices[count];
-                std::cout <<"at setting: " << value << std::endl;
-            }
-
-        }
-    }
+    obj->computeBoundingSphere(nVerts*3, v);
 
     if(n) delete[] n;
     if(c) delete[] c;
@@ -505,7 +477,7 @@ void Shapes::setupObject(Object* obj, int nVerts, int nIndices,
 }
 
 void Shapes::setupObjectTexture(Object* obj, int nVerts, int nIndices,
-                float* v, float* c, float* n, float* t, int* i)
+                                float* v, float* c, float* n, float* t, int* i)
 {
     VertexData& vd = obj->vertexData;
     // Specify the elements of the vertex data:
@@ -524,9 +496,9 @@ void Shapes::setupObjectTexture(Object* obj, int nVerts, int nIndices,
     if (n != NULL)
     {
         vd.vertexDeclaration.addElement(1, 0, 3, 3*sizeof(float),
-                                                RE330::VES_NORMAL);
+                                        RE330::VES_NORMAL);
         vd.createVertexBuffer(1, nVerts*3*sizeof(float),
-                                      (unsigned char*)n);
+                              (unsigned char*)n);
     }
 
     vd.vertexDeclaration.addElement(2, 0, 2, 2*sizeof(float),
@@ -535,6 +507,8 @@ void Shapes::setupObjectTexture(Object* obj, int nVerts, int nIndices,
 
     // Create the buffers and load the data
     vd.createIndexBuffer(nIndices, i);
+
+    obj->computeBoundingSphere(nVerts*3, v);
 }
 
 

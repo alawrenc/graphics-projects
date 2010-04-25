@@ -1,9 +1,5 @@
 #include "Shape3D.h"
-#include <math.h>
 using namespace RE330;
-
-#include <limits>
-using namespace std;
 
 void Shape3D::draw(Matrix4 m, RenderContext &rc, Camera c)
 {
@@ -37,19 +33,26 @@ int Shape3D::detectSphereIntersection(Camera c)
 //  d = p.n   n = a x b
 // p is a point on plane, n is unit normal
 
-    float zNear = c.getNearPlane();
-    float zFar = c.getFarPlane();
+    float zNear = -c.getNearPlane();
+    float zFar = -c.getFarPlane();
     float theta = c.getVerticalFOV() / 2.0f;
 
+    //symmetrical view volume
     float yTopFar = zFar*tan(theta);
-    float yBotFar = -yTopFar;
-    float xLeftFar = yTopFar;
-    float xRightFar = -xLeftFar;
+    float yBotFar = 0.0f;//-yTopFar;
+    float xLeftFar = 0.0f;//yTopFar;
+    float xRightFar = yTopFar;
 
     float yTopNear = zNear*tan(theta);
-    float yBotNear = -yTopNear;
-    float xLeftNear = yTopNear;
-    float xRightNear = -xLeftNear;
+    float yBotNear = 0.0f;//-yTopNear;
+    float xLeftNear = 0.0f;//yTopNear;
+    float xRightNear = yTopNear;
+
+    std::cout << "z near: " << zNear << std::endl;
+    std::cout << "z far: " << zFar << std::endl;
+    std::cout << "theta: " << theta << std::endl;
+    std::cout << "yTopFar: " << yTopFar << std::endl;
+    std::cout << "yTopNear: " << yTopNear << std::endl;
 
     // every plane defined by two vectors. need to find normal
     // near plane
@@ -60,7 +63,7 @@ int Shape3D::detectSphereIntersection(Camera c)
     Vector3 topFrontLeftPoint(xLeftNear, yTopNear, zNear);
     float nearPlaneD = topFrontLeftPoint ^ nearPlaneNormal;
 
-    // top plane
+    //top plane
     Vector3 leftTopSide (xLeftNear - xLeftFar,
                          yTopNear - yTopFar,
                          zNear - zFar);
@@ -103,6 +106,12 @@ int Shape3D::detectSphereIntersection(Camera c)
     float distFarPlane = (boundingSphereCenter^farPlaneNormal) - farPlaneD;
     float distBotPlane = (boundingSphereCenter^botPlaneNormal) - botPlaneD;
     float distRightPlane = (boundingSphereCenter^rightPlaneNormal) - rightPlaneD;
+    std::cout << "dist near: " << distNearPlane << std::endl;
+    std::cout << "dist top: " << distTopPlane << std::endl;
+    std::cout << "dist left: " << distLeftPlane << std::endl;
+    std::cout << "dist far: " << distFarPlane << std::endl;
+    std::cout << "dist bot: " << distBotPlane << std::endl;
+    std::cout << "dist right: " << distRightPlane << std::endl;
 
     // if we are outside any plane completely we're outside all
     if (distNearPlane > boundingSphereRadius ||
@@ -136,115 +145,20 @@ int Shape3D::detectSphereIntersection(Camera c)
 
 void Shape3D::computeBoundingSphere(Camera c)
 {
-    // only run expensive min/max finding once
-    if (!initialBoundsComputed)
-    {
-        VertexData& vertexData = object->vertexData;
-        VertexDeclaration& vertexDeclaration = vertexData.vertexDeclaration;
-        VertexBufferBinding& vertexBufferBinding = vertexData.vertexBufferBinding;
 
-        for(int j=0; j<vertexDeclaration.getElementCount(); j++)
-        {
-            const VertexElement *element = vertexDeclaration.getElement(j);
+    Matrix4 viewTransform = (c.getViewMatrix() * localToWorldTransform *
+                               object->getTransformation());// * Vector4(1,1,1,1));
+    boundingSphereRadius = object->getRadius();
 
-            if(element->getSemantic() == VES_POSITION)
-            {
-                const VertexBuffer& vertexBuffer =
-                    vertexBufferBinding.getBuffer(element->getBufferIndex());
-                unsigned char* vertices = vertexBuffer.getBuffer();
+    // apply transform to center vector
+    Vector4 center4 = (viewTransform * Vector4(object->getCenter(), 1));
+    boundingSphereCenter = center4.asVector3();
 
-                int vertexStride = element->getStride();
-                int vertexSize = element->getSize();
-                int offset = element->getOffset();
+    std::cout << "center: " << boundingSphereCenter << std::endl;
+    std::cout << "radius: " << boundingSphereRadius << std::endl;
 
-                int numVertices = vertexBuffer.getSize() / vertexStride;
-
-                Vector4 min;
-                Vector4 max;
-                findMinMaxVectors(vertices, numVertices, &min, &max);
-                // after finding min/max apply transformations
-                min = (c.getViewMatrix() * localToWorldTransform *
-                       object->getTransformation()) * min;
-
-                max = (c.getViewMatrix() * localToWorldTransform *
-                       object->getTransformation()) * max;
-
-                std::cout << "maxX: " << max[0] << std::endl;
-                std::cout << "maxY: " << max[1] << std::endl;
-                std::cout << "maxZ: " << max[2] << std::endl;
-
-                std::cout << "minX: " << min[0] << std::endl;
-                std::cout << "minY: " << min[1] << std::endl;
-                std::cout << "minZ: " << min[2] << std::endl;
-
-                int xDiff = max[0] - min[0];
-                int yDiff = max[1] - min[1];
-                int zDiff = max[2] - min[2];
-
-                boundingSphereRadius = std::max(xDiff, std::max(yDiff, zDiff));
-
-                float xCenter = xDiff / 2.0f + min[0];
-                float yCenter = yDiff / 2.0f + min[1];
-                float zCenter = zDiff / 2.0f + min[2];
-
-                boundingSphereCenter = Vector3(xCenter, yCenter, zCenter);
-                // std::cout << boundingSphereCenter << std::endl;
-                // std::cout << boundingSphereRadius << std::endl;
-                //initialBoundsComputed = true;
-
-            }
-        }
-    }
-
-    // only update center and radius if the transformation changed
-    //else if (lastObjectTransform != object->getTransformation())
-    //{
-        // apply transform to center vector if it's changed
-    //boundingSphereCenter = boundingSphereCenterobject->getTransformation();
-        // apply transform to unit vectors, apply unit vectors to previous radius
+    // apply transform to unit vectors, apply unit vectors to previous radius
         // ???
         //}
 }
 
-void Shape3D::findMinMaxVectors(unsigned char *vertices, int numVertices,
-                                Vector4 *minVector, Vector4 *maxVector)
-{
-    //initialize min/max values to limits
-    int minX = numeric_limits<int>::max();
-    int minY = numeric_limits<int>::max();
-    int minZ = numeric_limits<int>::max();
-
-    int maxX = numeric_limits<int>::min();
-    int maxY = numeric_limits<int>::min();
-    int maxZ = numeric_limits<int>::min();
-
-    int remainder = NULL;
-    int value = NULL;
-
-    // iterate through all values to find min for each: xyz
-    for (int count = 0; count < numVertices; count++)
-    {
-        value = vertices[count];
-        remainder = count % 3;
-        if (remainder == 0)
-        {
-            maxX = std::max(maxX, value);
-            minX = std::min(minX, value);
-        }
-
-        else if (remainder == 1)
-        {
-            maxY = std::max(maxY, value);
-            minY = std::min(minY, value);
-        }
-
-        else if (remainder == 2)
-        {
-            maxZ = std::max(maxZ, value);
-            minZ = std::min(minZ, value);
-        }
-    }
-
-    *minVector = Vector4(minX, minY, minZ, 1);
-    *maxVector = Vector4(maxX, maxY, maxZ, 1);
-}

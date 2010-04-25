@@ -25,6 +25,10 @@ namespace RE330
 
         inline void setMaterial(const Material &m) { objectMaterial = m; }
 
+        inline int getRadius() { return radius; }
+
+        inline Vector3 getCenter() { return center; }
+
         void printTransformation()
         {
             printf("(%f %f %f %f)\n", mTransformation[0], mTransformation[1],
@@ -40,6 +44,12 @@ namespace RE330
 
         VertexData vertexData;
 
+        void computeBoundingSphere(int numVertElem, float* verts);
+
+        static void findMinMaxVectors(float *vertices, int numVertices,
+                                      Vector3 *minVector, Vector3 *maxVector);
+
+
     protected:
 
         Object()
@@ -51,6 +61,9 @@ namespace RE330
         Matrix4 mTransformation;
 
         Material objectMaterial;
+
+        int radius;
+        Vector3 center;
 
         friend class SceneManager;
     };
