@@ -444,6 +444,7 @@ void Shapes::setupObject(Object* obj, int nVerts, int nIndices,
                          float* v, float* c, float* n, int* i)
 {
     VertexData& vd = obj->vertexData;
+
     // Specify the elements of the vertex data:
     // - one element for vertex positions
     vd.vertexDeclaration.addElement(0, 0, 3, 3*sizeof(float),
@@ -467,6 +468,36 @@ void Shapes::setupObject(Object* obj, int nVerts, int nIndices,
 
     // Create the buffers and load the data
     vd.createIndexBuffer(nIndices, i);
+
+    VertexDeclaration& vertexDeclaration = vd.vertexDeclaration;
+    VertexBufferBinding& vertexBufferBinding = vd.vertexBufferBinding;
+
+    for(int j=0; j<vertexDeclaration.getElementCount(); j++)
+    {
+        const VertexElement *element = vertexDeclaration.getElement(j);
+
+        if(element->getSemantic() == VES_POSITION)
+        {
+            const VertexBuffer& vertexBuffer =
+                vertexBufferBinding.getBuffer(element->getBufferIndex());
+            unsigned char* vertices = vertexBuffer.getBuffer();
+
+            int vertexStride = element->getStride();
+            int vertexSize = element->getSize();
+            int numVertElem = (vertexBuffer.getSize() /
+                               (vertexStride / vertexSize));
+            float value = NULL;
+
+            // iterate through all values to find min for each: xyz
+            for (int count = 0; count < numVertElem; count++)
+            {
+                value = (float)vertices[count];
+                std::cout <<"at setting: " << value << std::endl;
+            }
+
+        }
+    }
+
     if(n) delete[] n;
     if(c) delete[] c;
     delete[] v;
