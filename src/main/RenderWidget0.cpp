@@ -591,8 +591,8 @@ void RenderWidget0::keyPressEvent( QKeyEvent * k )
         {
             sceneManager->setRootNode(bunnyParty);
         }
-    frames = 0;
-    time = 0.0f;
+        frames = 0;
+        time = 0.0f;
     }
 }
 
