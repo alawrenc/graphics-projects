@@ -39,6 +39,7 @@ protected:
     // Virtual methods of QWidget class. This is a subset. Re-implement any
     // that you would like to handle.
     void timerEvent(QTimerEvent *t);
+    void keyPressEvent ( QKeyEvent * k );
     void mousePressEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
@@ -47,12 +48,13 @@ protected:
     void setupCamera();
     void setupObjects();
     void setupLights();
-	void setupRobot();
+    void setupRobot();
     void setupBunnyParty();
 
 private:
     SceneManager *sceneManager;
     Camera *camera;
+    RenderContext *rs;
 
     // allows more managed storage of objects
     std::map <string, Object(*)> objects;
@@ -62,6 +64,8 @@ private:
 
     Object *object;
     int timerId;
+    int frames;
+    float time;
 
     // For the virtual trackball
     bool tracking;
@@ -74,44 +78,46 @@ private:
     bool sceneCreated;
 
     string HOUSE;
-	TransformGroup * bunnyParty;
-	//robot
-	TransformGroup * robot;
-	TransformGroup * headGroup;
-	TransformGroup * eyesGroup;
-	TransformGroup * leftArm;
-	TransformGroup * leftLowerArm;
-	TransformGroup * rightArm;
-	TransformGroup * rightLowerArm;
-	TransformGroup * leftLeg;
-	TransformGroup * leftLowerLeg;
-	TransformGroup * rightLeg;
-	TransformGroup * rightLowerLeg;
-	
-	Shape3D * torso;
-	Shape3D * head;
-	Shape3D * leftEye;
-	Shape3D * rightEye;
-	Shape3D * leftShoulder;
-	Shape3D * leftBicep;
-	Shape3D * leftElbow;
-	Shape3D * leftForearm;
-	Shape3D * leftHand;
-	Shape3D * rightShoulder;
-	Shape3D * rightBicep;
-	Shape3D * rightElbow;
-	Shape3D * rightForearm;
-	Shape3D * rightHand;
-	Shape3D * leftHip;
-	Shape3D * leftQuad;
-	Shape3D * leftKnee;
-	Shape3D * leftShin;
-	Shape3D * leftFoot;
-	Shape3D * rightHip;
-	Shape3D * rightQuad;
-	Shape3D * rightKnee;
-	Shape3D * rightShin;
-	Shape3D * rightFoot;
+    TransformGroup * world;
+
+    TransformGroup * bunnyParty;
+    //robot
+    TransformGroup * robot;
+    TransformGroup * headGroup;
+    TransformGroup * eyesGroup;
+    TransformGroup * leftArm;
+    TransformGroup * leftLowerArm;
+    TransformGroup * rightArm;
+    TransformGroup * rightLowerArm;
+    TransformGroup * leftLeg;
+    TransformGroup * leftLowerLeg;
+    TransformGroup * rightLeg;
+    TransformGroup * rightLowerLeg;
+
+    Shape3D * torso;
+    Shape3D * head;
+    Shape3D * leftEye;
+    Shape3D * rightEye;
+    Shape3D * leftShoulder;
+    Shape3D * leftBicep;
+    Shape3D * leftElbow;
+    Shape3D * leftForearm;
+    Shape3D * leftHand;
+    Shape3D * rightShoulder;
+    Shape3D * rightBicep;
+    Shape3D * rightElbow;
+    Shape3D * rightForearm;
+    Shape3D * rightHand;
+    Shape3D * leftHip;
+    Shape3D * leftQuad;
+    Shape3D * leftKnee;
+    Shape3D * leftShin;
+    Shape3D * leftFoot;
+    Shape3D * rightHip;
+    Shape3D * rightQuad;
+    Shape3D * rightKnee;
+    Shape3D * rightShin;
+    Shape3D * rightFoot;
 };
 
 #endif // RenderWidget0_H

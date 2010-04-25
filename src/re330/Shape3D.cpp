@@ -10,14 +10,17 @@ void Shape3D::draw(Matrix4 m, RenderContext &rc, Camera c)
     rc.setModelViewMatrix(c.getViewMatrix() * m *
                           object->getTransformation());
     //object->setMaterial(*(object->getMaterial()));
-   if (objectInView(c)) // and CULLING
-   {
+    if (rc.culling)
+    {
+        if (objectInView(c)) // and CULLING
+        {
+            rc.render(object);
+        }
+    }
+    else
+    {
         rc.render(object);
-   }
-   else
-   {
-       std::cout << "object culled" <<std::endl;
-   }
+    }
 }
 
 bool Shape3D::objectInView(Camera c)

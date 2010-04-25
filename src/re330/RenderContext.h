@@ -28,6 +28,7 @@ namespace RE330
         virtual void setProjectionMatrix(const Matrix4 &m) = 0;
         virtual void render(Object *object) = 0;
         virtual void setLights(const std::list<Light*> &lightList) = 0;
+        bool culling;
 
     private:
         virtual void setMaterial(Material *material) = 0;
