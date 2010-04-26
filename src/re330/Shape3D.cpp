@@ -4,8 +4,8 @@ using namespace RE330;
 void Shape3D::draw(Matrix4 m, RenderContext &rc, Camera c)
 {
     localToWorldTransform = m;
-    rc.setModelViewMatrix(c.getViewMatrix() * m *
-                          object->getTransformation());
+    viewTransform = c.getViewMatrix() * m * object->getTransformation();
+    rc.setModelViewMatrix(viewTransform);
     //object->setMaterial(*(object->getMaterial()));
     if (rc.culling)
     {
@@ -47,12 +47,6 @@ int Shape3D::detectSphereIntersection(Camera c)
     float yBotNear = -yTopNear;
     float xLeftNear = -yTopNear;
     float xRightNear = yTopNear;
-
-    // std::cout << "z near: " << zNear << std::endl;
-    // std::cout << "z far: " << zFar << std::endl;
-    // std::cout << "theta: " << theta << std::endl;
-    // std::cout << "yTopFar: " << yTopFar << std::endl;
-    // std::cout << "yTopNear: " << yTopNear << std::endl;
 
     // every plane defined by two vectors. need to find normal
     // near plane
@@ -106,12 +100,6 @@ int Shape3D::detectSphereIntersection(Camera c)
     float distFarPlane = (boundingSphereCenter^farPlaneNormal) - farPlaneD;
     float distBotPlane = (boundingSphereCenter^botPlaneNormal) - botPlaneD;
     float distRightPlane = (boundingSphereCenter^rightPlaneNormal) - rightPlaneD;
-    // std::cout << "dist near: " << distNearPlane << std::endl;
-    // std::cout << "dist top: " << distTopPlane << std::endl;
-    // std::cout << "dist left: " << distLeftPlane << std::endl;
-    // std::cout << "dist far: " << distFarPlane << std::endl;
-    // std::cout << "dist bot: " << distBotPlane << std::endl;
-    // std::cout << "dist right: " << distRightPlane << std::endl;
 
     // if we are outside any plane completely we're outside all
     if (distNearPlane > boundingSphereRadius ||
@@ -145,20 +133,14 @@ int Shape3D::detectSphereIntersection(Camera c)
 
 void Shape3D::computeBoundingSphere(Camera c)
 {
-
-    Matrix4 viewTransform = (c.getViewMatrix() * localToWorldTransform *
-                               object->getTransformation());// * Vector4(1,1,1,1));
-    boundingSphereRadius = object->getRadius();
-
     // apply transform to center vector
     Vector4 center4 = (viewTransform * Vector4(object->getCenter(), 1));
     boundingSphereCenter = center4.asVector3();
 
-    // std::cout << "center: " << boundingSphereCenter << std::endl;
-    // std::cout << "radius: " << boundingSphereRadius << std::endl;
-
-    // apply transform to unit vectors, apply unit vectors to previous radius
-        // ???
-        //}
+    // pull scaling factors from transform and apply to radius
+    boundingSphereRadius = (object->getRadius() *
+                            viewTransform[0] *
+                            viewTransform[5] *
+                            viewTransform[10]);
 }
 

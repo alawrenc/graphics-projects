@@ -11,15 +11,7 @@ namespace RE330
     {
     public:
         NodeGroup() {}
-        ~NodeGroup()
-            {
-                end = children.end();
-                for (it = children.begin(); it != end; it ++)
-                {
-                    delete *it;
-                }
-
-            }
+        ~NodeGroup() {}
 
         // return copy of list to prevent modification
         std::list<Node*> getChildren()

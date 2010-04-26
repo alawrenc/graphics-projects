@@ -112,7 +112,7 @@ void RenderWidget0::setupCamera()
 
 void RenderWidget0::setupBunnyParty()
 {
-    Object * baseBunny = Shapes::readObject(sceneManager, "buddha.obj");
+    Object * baseBunny = Shapes::readObject(sceneManager, "bunny.obj");
     bunnyParty = new TransformGroup(Matrix4::translate(-50,0,0));
     world->addChildNode(bunnyParty);
     sceneManager->setRootNode(bunnyParty);
@@ -509,7 +509,6 @@ void RenderWidget0::timerEvent(QTimerEvent *t)
 {
 	Matrix4 m3 = Matrix4::rotateY(-0.01);
 	robot->setLocalTransform(m3 * robot->getLocalTransform());
-	std::cout << "w =" << w << std::endl;
 	if (w == 0)
 	{
 		Matrix4 currentTranform = leftLeg->getLocalTransform();

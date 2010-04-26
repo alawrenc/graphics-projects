@@ -36,6 +36,7 @@ namespace RE330
         Matrix4 lastObjectTransform;
         float boundingSphereRadius;
         bool initialBoundsComputed;
+        Matrix4 viewTransform;
     };
 }
 
