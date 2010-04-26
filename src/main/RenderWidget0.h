@@ -7,6 +7,7 @@
 #include "Object.h"
 #include "TransformGroup.h"
 #include "Shape3D.h"
+#include <QTime>
 
 using namespace RE330;
 
@@ -65,7 +66,8 @@ private:
     Object *object;
     int timerId;
     int frames;
-    float time;
+    float timebase;
+    QTime *timer;
 
     // For the virtual trackball
     bool tracking;
@@ -76,7 +78,6 @@ private:
     static const bool USE_COMPOSITE = true;
 
     bool sceneCreated;
-	
 	int w;
 
     string HOUSE;

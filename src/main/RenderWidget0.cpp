@@ -33,7 +33,9 @@ RenderWidget0::RenderWidget0()
     camera = false;
     HOUSE = "house";
     frames = 0;
-    time = 0.0f;
+    timer = new QTime::QTime();
+    timer->start();
+    timebase = 0.0f;
 
     setFocus();
     grabKeyboard();
@@ -110,7 +112,7 @@ void RenderWidget0::setupCamera()
 
 void RenderWidget0::setupBunnyParty()
 {
-    Object * baseBunny = Shapes::readObject(sceneManager, "bunny.obj");
+    Object * baseBunny = Shapes::readObject(sceneManager, "buddha.obj");
     bunnyParty = new TransformGroup(Matrix4::translate(-50,0,0));
     world->addChildNode(bunnyParty);
     sceneManager->setRootNode(bunnyParty);
@@ -481,10 +483,18 @@ void RenderWidget0::setupLights()
 void RenderWidget0::renderSceneEvent()
 {
     sceneManager->renderScene();
+
     frames++;
+	float time = timer->elapsed();
     char title[10];
-    sprintf(title, "%f",frames / time);
-    this->parentWidget()->setWindowTitle(title);
+
+	if (time - timebase > 1000) {
+		sprintf(title, "FPS:%4.2f",
+			frames*1000.0/(time-timebase));
+		timebase = time;
+		frames = 0;
+        this->parentWidget()->setWindowTitle(title);
+	}
 }
 
 void RenderWidget0::resizeRenderWidgetEvent(const QSize &s)
@@ -568,7 +578,6 @@ void RenderWidget0::timerEvent(QTimerEvent *t)
 	else {
 		w = 0;
 	}
-
     updateScene();
 }
 
@@ -578,8 +587,8 @@ void RenderWidget0::keyPressEvent( QKeyEvent * k )
     {
     case Qt::Key_C:
         rs->culling = !(rs->culling);
-        frames = 0;
-        time = 0.0f;
+        // frames = 0;
+        // timer->restart();
         break;
 
     case Qt::Key_S:
@@ -591,8 +600,8 @@ void RenderWidget0::keyPressEvent( QKeyEvent * k )
         {
             sceneManager->setRootNode(bunnyParty);
         }
-        frames = 0;
-        time = 0.0f;
+        // frames = 0;
+        // timer->restart();
     }
 }
 

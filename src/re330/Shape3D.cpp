@@ -23,7 +23,7 @@ void Shape3D::draw(Matrix4 m, RenderContext &rc, Camera c)
 bool Shape3D::objectInView(Camera c)
 {
     computeBoundingSphere(c);
-    return (detectSphereIntersection(c) <= 0);
+    return (detectSphereIntersection(c) <= 0.0f);
 }
 
 //returns 1 if outside frustum, 0 if intersects, -1 if inside
