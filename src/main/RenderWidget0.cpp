@@ -142,10 +142,10 @@ void RenderWidget0::setupBunnyParty()
 
 void RenderWidget0::setupRobot()
 {
-	int const SPHERE_SLICES = 100;
-	int const SPHERE_POINTS = 100;
-	int const NUM_COLORS = 1;
-	
+    int const SPHERE_SLICES = 100;
+    int const SPHERE_POINTS = 100;
+    int const NUM_COLORS = 1;
+
     //robot dimensions
     float const TORSO_HEIGHT = 3;
     float const TORSO_WIDTH = 2;
@@ -160,13 +160,13 @@ void RenderWidget0::setupRobot()
     float const LEG_LENGTH = 1.5;
     float const HIP_SIZE = 0.4;
 
-	//blue
+    //blue
     float robotColors[1][3];
     robotColors[0][0] = 0;
     robotColors[0][1] = 0;
     robotColors[0][2] = 1;
 
-	//red
+    //red
     float eyeColor[1][3];
     eyeColor[0][0] = 1;
     eyeColor[0][1] = 0;
@@ -183,32 +183,32 @@ void RenderWidget0::setupRobot()
     torso = new Shape3D(torsoObj);
 
     robot->addChildNode(torso);
-	
-	Object *leftHipObj = Shapes::createSphere(sceneManager, 
-											  HIP_SIZE, SPHERE_SLICES, SPHERE_POINTS,
-											  NUM_COLORS, robotColors, false);
-	leftHipObj->setTransformation(Matrix4::translate(TORSO_WIDTH/2,
-													 -TORSO_HEIGHT/2,
-													 0));
+
+    Object *leftHipObj = Shapes::createSphere(sceneManager,
+                                              HIP_SIZE, SPHERE_SLICES, SPHERE_POINTS,
+                                              NUM_COLORS, robotColors, false);
+    leftHipObj->setTransformation(Matrix4::translate(TORSO_WIDTH/2,
+                                                     -TORSO_HEIGHT/2,
+                                                     0));
     leftHip = new Shape3D(leftHipObj);
-	Object *rightHipObj = Shapes::createSphere(sceneManager, 
-											   HIP_SIZE, SPHERE_SLICES, SPHERE_POINTS,
-											   NUM_COLORS, robotColors, false);
-	rightHipObj->setTransformation(Matrix4::translate(-TORSO_WIDTH/2,
-													  -TORSO_HEIGHT/2,
-													  0));
+    Object *rightHipObj = Shapes::createSphere(sceneManager,
+                                               HIP_SIZE, SPHERE_SLICES, SPHERE_POINTS,
+                                               NUM_COLORS, robotColors, false);
+    rightHipObj->setTransformation(Matrix4::translate(-TORSO_WIDTH/2,
+                                                      -TORSO_HEIGHT/2,
+                                                      0));
     rightHip = new Shape3D(rightHipObj);
-	
-	robot->addChildNode(leftHip);
-	robot->addChildNode(rightHip);
+
+    robot->addChildNode(leftHip);
+    robot->addChildNode(rightHip);
     //head group
 
     headGroup = new TransformGroup(Matrix4::translate(0,2.0,0));
 
     //head
-    Object *headObj = Shapes::createSphere(sceneManager, 
-										   HEAD_DIAMETER, SPHERE_SLICES, SPHERE_POINTS,
-										   NUM_COLORS, robotColors, false);
+    Object *headObj = Shapes::createSphere(sceneManager,
+                                           HEAD_DIAMETER, SPHERE_SLICES, SPHERE_POINTS,
+                                           NUM_COLORS, robotColors, false);
     head = new Shape3D(headObj);
 
     headGroup->addChildNode(head);
@@ -217,14 +217,14 @@ void RenderWidget0::setupRobot()
 
     //eyes
     eyesGroup = new TransformGroup(Matrix4::translate(0,0.25,0.75));
-	//left eye from robot prespective
-    Object *leftEyeObj = Shapes::createSphere(sceneManager, 
-											  EYE_DIAMETER, SPHERE_SLICES, SPHERE_POINTS,
-											  NUM_COLORS, eyeColor, false);
+    //left eye from robot prespective
+    Object *leftEyeObj = Shapes::createSphere(sceneManager,
+                                              EYE_DIAMETER, SPHERE_SLICES, SPHERE_POINTS,
+                                              NUM_COLORS, eyeColor, false);
     leftEyeObj->setTransformation(Matrix4::translate(EYE_OFFSET,0,0));
-    Object *rightEyeObj = Shapes::createSphere(sceneManager, 
-											   EYE_DIAMETER, SPHERE_SLICES, SPHERE_POINTS,
-											   NUM_COLORS, eyeColor, false);
+    Object *rightEyeObj = Shapes::createSphere(sceneManager,
+                                               EYE_DIAMETER, SPHERE_SLICES, SPHERE_POINTS,
+                                               NUM_COLORS, eyeColor, false);
     rightEyeObj->setTransformation(Matrix4::translate(-EYE_OFFSET,0,0));
     leftEye = new Shape3D(leftEyeObj);
     rightEye = new Shape3D(rightEyeObj);
@@ -234,210 +234,210 @@ void RenderWidget0::setupRobot()
     headGroup->addChildNode(eyesGroup);
 
     robot->addChildNode(headGroup);
-	
+
     //left arm
     leftArm = new TransformGroup(Matrix4::translate(TORSO_WIDTH/2,
-                                                                   TORSO_HEIGHT/2,
-                                                                   0));
-	leftArm2 = new TransformGroup(Matrix4::IDENTITY);
-	
-    Object *leftShoulderObj = Shapes::createSphere(sceneManager, 
-												   JOINT_SIZE, SPHERE_SLICES, SPHERE_POINTS,
-												   NUM_COLORS, robotColors, false);
+                                                    TORSO_HEIGHT/2,
+                                                    0));
+    leftArm2 = new TransformGroup(Matrix4::IDENTITY);
+
+    Object *leftShoulderObj = Shapes::createSphere(sceneManager,
+                                                   JOINT_SIZE, SPHERE_SLICES, SPHERE_POINTS,
+                                                   NUM_COLORS, robotColors, false);
     leftShoulder = new Shape3D(leftShoulderObj);
-	
-    Object *leftBicepObj = Shapes::createBox(sceneManager, 
-											 BICEPS_LENGTH, BICEPS_SIZE, BICEPS_SIZE,
-											 NUM_COLORS, robotColors, false);
-	leftBicepObj->setTransformation(Matrix4::rotateZ(PI/4)*
-								   Matrix4::translate(0,-BICEPS_LENGTH/2,0));
+
+    Object *leftBicepObj = Shapes::createBox(sceneManager,
+                                             BICEPS_LENGTH, BICEPS_SIZE, BICEPS_SIZE,
+                                             NUM_COLORS, robotColors, false);
+    leftBicepObj->setTransformation(Matrix4::rotateZ(PI/4)*
+                                    Matrix4::translate(0,-BICEPS_LENGTH/2,0));
     leftBicep = new Shape3D(leftBicepObj);
-	
+
     leftArm2->addChildNode(leftShoulder);
     leftArm2->addChildNode(leftBicep);
-	
+
     leftLowerArm = new TransformGroup(Matrix4::translate(BICEPS_LENGTH*cos(PI/4),
-																		 -BICEPS_LENGTH*sin(PI/4),
-																		 0));
-	leftLowerArm2 = new TransformGroup(Matrix4::IDENTITY);
-	
-    Object *leftElbowObj = Shapes::createSphere(sceneManager, 
-												JOINT_SIZE, SPHERE_SLICES, SPHERE_POINTS,
-												NUM_COLORS, robotColors, false);
+                                                         -BICEPS_LENGTH*sin(PI/4),
+                                                         0));
+    leftLowerArm2 = new TransformGroup(Matrix4::IDENTITY);
+
+    Object *leftElbowObj = Shapes::createSphere(sceneManager,
+                                                JOINT_SIZE, SPHERE_SLICES, SPHERE_POINTS,
+                                                NUM_COLORS, robotColors, false);
     leftElbow = new Shape3D(leftElbowObj);
-    Object *leftForearmObj = Shapes::createBox(sceneManager, 
-											   BICEPS_LENGTH, 0.3, 0.3,
-											   NUM_COLORS, robotColors, false);
-	leftForearmObj->setTransformation(Matrix4::rotateX(PI*-3/4)*
-									  Matrix4::translate(0,-BICEPS_LENGTH/2,0));
+    Object *leftForearmObj = Shapes::createBox(sceneManager,
+                                               BICEPS_LENGTH, 0.3, 0.3,
+                                               NUM_COLORS, robotColors, false);
+    leftForearmObj->setTransformation(Matrix4::rotateX(PI*-3/4)*
+                                      Matrix4::translate(0,-BICEPS_LENGTH/2,0));
     leftForearm = new Shape3D(leftForearmObj);
-    Object *leftHandObj = Shapes::createSphere(sceneManager, 
-											   HAND_SIZE, SPHERE_SLICES, SPHERE_POINTS,
-											   NUM_COLORS, robotColors, false);
-	leftHandObj->setTransformation(Matrix4::rotateX(PI*-3/4)*
-								   Matrix4::translate(0,-BICEPS_LENGTH,0));
+    Object *leftHandObj = Shapes::createSphere(sceneManager,
+                                               HAND_SIZE, SPHERE_SLICES, SPHERE_POINTS,
+                                               NUM_COLORS, robotColors, false);
+    leftHandObj->setTransformation(Matrix4::rotateX(PI*-3/4)*
+                                   Matrix4::translate(0,-BICEPS_LENGTH,0));
     leftHand = new Shape3D(leftHandObj);
 
     leftLowerArm2->addChildNode(leftElbow);
     leftLowerArm2->addChildNode(leftForearm);
     leftLowerArm2->addChildNode(leftHand);
-	
-	leftLowerArm->addChildNode(leftLowerArm2);
+
+    leftLowerArm->addChildNode(leftLowerArm2);
 
     leftArm2->addChildNode(leftLowerArm);
-	
-	leftArm->addChildNode(leftArm2);
-	
+
+    leftArm->addChildNode(leftArm2);
+
     robot->addChildNode(leftArm);
-	
-	//right arm
-	rightArm = new TransformGroup(Matrix4::translate(-TORSO_WIDTH/2,
-													 TORSO_HEIGHT/2,
-													 0));
-	
-	rightArm2 = new TransformGroup(Matrix4::IDENTITY);
-	
-	
-	Object *rightShoulderObj = Shapes::createSphere(sceneManager, 
-												   JOINT_SIZE, SPHERE_SLICES, SPHERE_POINTS,
-												   NUM_COLORS, robotColors, false);
-	rightShoulder = new Shape3D(rightShoulderObj);
-	
-	Object *rightBicepObj = Shapes::createBox(sceneManager, 
-											 BICEPS_LENGTH, BICEPS_SIZE, BICEPS_SIZE,
-											 NUM_COLORS, robotColors, false);
-	rightBicepObj->setTransformation(Matrix4::rotateZ(-PI/4)*
-									Matrix4::translate(0,-BICEPS_LENGTH/2,0));
-	rightBicep = new Shape3D(rightBicepObj);
-	
-	rightArm2->addChildNode(rightShoulder);
-	rightArm2->addChildNode(rightBicep);
-	
-	rightLowerArm = new TransformGroup(Matrix4::translate(-BICEPS_LENGTH*cos(PI/4),
-																		  -BICEPS_LENGTH*sin(PI/4),
-																		  0));
-	rightLowerArm2 = new TransformGroup(Matrix4::IDENTITY);
 
-	
-	Object *rightElbowObj = Shapes::createSphere(sceneManager, 
-												JOINT_SIZE, SPHERE_SLICES, SPHERE_POINTS,
-												NUM_COLORS, robotColors, false);
-	rightElbow = new Shape3D(rightElbowObj);
-	Object *rightForearmObj = Shapes::createBox(sceneManager, 
-												BICEPS_LENGTH, 0.3, 0.3,
-												NUM_COLORS, robotColors, false);
-	rightForearmObj->setTransformation(Matrix4::rotateX(-PI*3/4)*
-									   Matrix4::translate(0,-BICEPS_LENGTH/2,0));
-	rightForearm = new Shape3D(rightForearmObj);
-	Object *rightHandObj = Shapes::createSphere(sceneManager, 
-												HAND_SIZE, SPHERE_SLICES, SPHERE_POINTS,
-												NUM_COLORS, robotColors, false);
-	rightHandObj->setTransformation(Matrix4::rotateX(-PI*3/4)*
-									Matrix4::translate(0,-BICEPS_LENGTH,0));
-	rightHand = new Shape3D(rightHandObj);
-	
-	rightLowerArm2->addChildNode(rightElbow);
-	rightLowerArm2->addChildNode(rightForearm);
-	rightLowerArm2->addChildNode(rightHand);
-	
-	rightLowerArm->addChildNode(rightLowerArm2);
+    //right arm
+    rightArm = new TransformGroup(Matrix4::translate(-TORSO_WIDTH/2,
+                                                     TORSO_HEIGHT/2,
+                                                     0));
 
-	
-	rightArm2->addChildNode(rightLowerArm);
-	rightArm->addChildNode(rightArm2);
-	
-	robot->addChildNode(rightArm);
-	 
+    rightArm2 = new TransformGroup(Matrix4::IDENTITY);
+
+
+    Object *rightShoulderObj = Shapes::createSphere(sceneManager,
+                                                    JOINT_SIZE, SPHERE_SLICES, SPHERE_POINTS,
+                                                    NUM_COLORS, robotColors, false);
+    rightShoulder = new Shape3D(rightShoulderObj);
+
+    Object *rightBicepObj = Shapes::createBox(sceneManager,
+                                              BICEPS_LENGTH, BICEPS_SIZE, BICEPS_SIZE,
+                                              NUM_COLORS, robotColors, false);
+    rightBicepObj->setTransformation(Matrix4::rotateZ(-PI/4)*
+                                     Matrix4::translate(0,-BICEPS_LENGTH/2,0));
+    rightBicep = new Shape3D(rightBicepObj);
+
+    rightArm2->addChildNode(rightShoulder);
+    rightArm2->addChildNode(rightBicep);
+
+    rightLowerArm = new TransformGroup(Matrix4::translate(-BICEPS_LENGTH*cos(PI/4),
+                                                          -BICEPS_LENGTH*sin(PI/4),
+                                                          0));
+    rightLowerArm2 = new TransformGroup(Matrix4::IDENTITY);
+
+
+    Object *rightElbowObj = Shapes::createSphere(sceneManager,
+                                                 JOINT_SIZE, SPHERE_SLICES, SPHERE_POINTS,
+                                                 NUM_COLORS, robotColors, false);
+    rightElbow = new Shape3D(rightElbowObj);
+    Object *rightForearmObj = Shapes::createBox(sceneManager,
+                                                BICEPS_LENGTH, 0.3, 0.3,
+                                                NUM_COLORS, robotColors, false);
+    rightForearmObj->setTransformation(Matrix4::rotateX(-PI*3/4)*
+                                       Matrix4::translate(0,-BICEPS_LENGTH/2,0));
+    rightForearm = new Shape3D(rightForearmObj);
+    Object *rightHandObj = Shapes::createSphere(sceneManager,
+                                                HAND_SIZE, SPHERE_SLICES, SPHERE_POINTS,
+                                                NUM_COLORS, robotColors, false);
+    rightHandObj->setTransformation(Matrix4::rotateX(-PI*3/4)*
+                                    Matrix4::translate(0,-BICEPS_LENGTH,0));
+    rightHand = new Shape3D(rightHandObj);
+
+    rightLowerArm2->addChildNode(rightElbow);
+    rightLowerArm2->addChildNode(rightForearm);
+    rightLowerArm2->addChildNode(rightHand);
+
+    rightLowerArm->addChildNode(rightLowerArm2);
+
+
+    rightArm2->addChildNode(rightLowerArm);
+    rightArm->addChildNode(rightArm2);
+
+    robot->addChildNode(rightArm);
+
     //left leg
     leftLeg = new TransformGroup(Matrix4::translate(TORSO_WIDTH/2,
-													-TORSO_HEIGHT/2,
-													0));
-	leftLeg2 = new TransformGroup(Matrix4::IDENTITY);
-	
-    Object *leftQuadObj = Shapes::createBox(sceneManager, 
-											LEG_LENGTH, BICEPS_SIZE, BICEPS_SIZE,
-											NUM_COLORS, robotColors, false);
-	leftQuadObj->setTransformation(Matrix4::rotateZ(0.1)*
-								   Matrix4::translate(0,-LEG_LENGTH/2,0));
+                                                    -TORSO_HEIGHT/2,
+                                                    0));
+    leftLeg2 = new TransformGroup(Matrix4::IDENTITY);
+
+    Object *leftQuadObj = Shapes::createBox(sceneManager,
+                                            LEG_LENGTH, BICEPS_SIZE, BICEPS_SIZE,
+                                            NUM_COLORS, robotColors, false);
+    leftQuadObj->setTransformation(Matrix4::rotateZ(0.1)*
+                                   Matrix4::translate(0,-LEG_LENGTH/2,0));
     leftQuad = new Shape3D(leftQuadObj);
-	
+
     leftLeg2->addChildNode(leftQuad);
-	
-	leftLeg->addChildNode(leftLeg2);
-	
+
+    leftLeg->addChildNode(leftLeg2);
+
     leftLowerLeg = new TransformGroup(Matrix4::translate(LEG_LENGTH*sin(0.1),
-														-LEG_LENGTH*cos(0.1),
-														0));
-	leftLowerLeg2 = new TransformGroup(Matrix4::IDENTITY);
-    Object *leftKneeObj = Shapes::createSphere(sceneManager, 
-												JOINT_SIZE, SPHERE_SLICES, SPHERE_POINTS,
-												NUM_COLORS, robotColors, false);
+                                                         -LEG_LENGTH*cos(0.1),
+                                                         0));
+    leftLowerLeg2 = new TransformGroup(Matrix4::IDENTITY);
+    Object *leftKneeObj = Shapes::createSphere(sceneManager,
+                                               JOINT_SIZE, SPHERE_SLICES, SPHERE_POINTS,
+                                               NUM_COLORS, robotColors, false);
     leftKnee = new Shape3D(leftKneeObj);
-    Object *leftShinObj = Shapes::createBox(sceneManager, 
-											LEG_LENGTH, 0.3, 0.3,
-											NUM_COLORS, robotColors, false);
-	leftShinObj->setTransformation(Matrix4::translate(0,-LEG_LENGTH/2,0));
+    Object *leftShinObj = Shapes::createBox(sceneManager,
+                                            LEG_LENGTH, 0.3, 0.3,
+                                            NUM_COLORS, robotColors, false);
+    leftShinObj->setTransformation(Matrix4::translate(0,-LEG_LENGTH/2,0));
     leftShin = new Shape3D(leftShinObj);
-    Object *leftFootObj = Shapes::createSphere(sceneManager, 
-											   HAND_SIZE, SPHERE_SLICES, SPHERE_POINTS,
-											   NUM_COLORS, robotColors, false);
-	leftFootObj->setTransformation(Matrix4::translate(0,-LEG_LENGTH,0));
+    Object *leftFootObj = Shapes::createSphere(sceneManager,
+                                               HAND_SIZE, SPHERE_SLICES, SPHERE_POINTS,
+                                               NUM_COLORS, robotColors, false);
+    leftFootObj->setTransformation(Matrix4::translate(0,-LEG_LENGTH,0));
     leftFoot = new Shape3D(leftFootObj);
-	
+
     leftLowerLeg2->addChildNode(leftKnee);
     leftLowerLeg2->addChildNode(leftShin);
     leftLowerLeg2->addChildNode(leftFoot);
-	
-	leftLowerLeg->addChildNode(leftLowerLeg2);
-	
+
+    leftLowerLeg->addChildNode(leftLowerLeg2);
+
     leftLeg2->addChildNode(leftLowerLeg);
-	
+
     robot->addChildNode(leftLeg);
-	
+
     //right leg
     rightLeg = new TransformGroup(Matrix4::translate(-TORSO_WIDTH/2,
-													 -TORSO_HEIGHT/2,
-													 0));
+                                                     -TORSO_HEIGHT/2,
+                                                     0));
     rightLeg2 = new TransformGroup(Matrix4::IDENTITY);
-	
-    Object *rightQuadObj = Shapes::createBox(sceneManager, 
-											 LEG_LENGTH, BICEPS_SIZE, BICEPS_SIZE,
-											 1, robotColors, false);
-	rightQuadObj->setTransformation(Matrix4::rotateZ(-0.1)*
-									Matrix4::translate(0,-LEG_LENGTH/2,0));
+
+    Object *rightQuadObj = Shapes::createBox(sceneManager,
+                                             LEG_LENGTH, BICEPS_SIZE, BICEPS_SIZE,
+                                             1, robotColors, false);
+    rightQuadObj->setTransformation(Matrix4::rotateZ(-0.1)*
+                                    Matrix4::translate(0,-LEG_LENGTH/2,0));
     rightQuad = new Shape3D(rightQuadObj);
-	
+
     rightLeg2->addChildNode(rightQuad);
-	
-	rightLeg->addChildNode(rightLeg2);
-	
+
+    rightLeg->addChildNode(rightLeg2);
+
     rightLowerLeg = new TransformGroup(Matrix4::translate(-LEG_LENGTH*sin(0.1),
-														  -LEG_LENGTH*cos(0.1),
-														  0));
-	rightLowerLeg2 = new TransformGroup(Matrix4::IDENTITY);
-    Object *rightKneeObj = Shapes::createSphere(sceneManager, 
-												JOINT_SIZE, SPHERE_SLICES, SPHERE_POINTS,
-												1, robotColors, false);
+                                                          -LEG_LENGTH*cos(0.1),
+                                                          0));
+    rightLowerLeg2 = new TransformGroup(Matrix4::IDENTITY);
+    Object *rightKneeObj = Shapes::createSphere(sceneManager,
+                                                JOINT_SIZE, SPHERE_SLICES, SPHERE_POINTS,
+                                                1, robotColors, false);
     rightKnee = new Shape3D(rightKneeObj);
-    Object *rightShinObj = Shapes::createBox(sceneManager, 
-											 LEG_LENGTH, 0.3, 0.3,
-											 1, robotColors, false);
-	rightShinObj->setTransformation(Matrix4::translate(0,-LEG_LENGTH/2,0));
+    Object *rightShinObj = Shapes::createBox(sceneManager,
+                                             LEG_LENGTH, 0.3, 0.3,
+                                             1, robotColors, false);
+    rightShinObj->setTransformation(Matrix4::translate(0,-LEG_LENGTH/2,0));
     rightShin = new Shape3D(rightShinObj);
-    Object *rightFootObj = Shapes::createSphere(sceneManager, 
-												HAND_SIZE, SPHERE_SLICES, SPHERE_POINTS,
-												1, robotColors, false);
-	rightFootObj->setTransformation(Matrix4::translate(0,-LEG_LENGTH,0));
+    Object *rightFootObj = Shapes::createSphere(sceneManager,
+                                                HAND_SIZE, SPHERE_SLICES, SPHERE_POINTS,
+                                                1, robotColors, false);
+    rightFootObj->setTransformation(Matrix4::translate(0,-LEG_LENGTH,0));
     rightFoot = new Shape3D(rightFootObj);
-	
+
     rightLowerLeg2->addChildNode(rightKnee);
     rightLowerLeg2->addChildNode(rightShin);
     rightLowerLeg2->addChildNode(rightFoot);
-	
-	rightLowerLeg->addChildNode(rightLowerLeg2);
-	
+
+    rightLowerLeg->addChildNode(rightLowerLeg2);
+
     rightLeg2->addChildNode(rightLowerLeg);
-	
+
     robot->addChildNode(rightLeg);
 }
 
@@ -519,16 +519,16 @@ void RenderWidget0::renderSceneEvent()
     sceneManager->renderScene();
 
     frames++;
-	float time = timer->elapsed();
+    float time = timer->elapsed();
     char title[10];
 
-	if (time - timebase > 1000) {
-		sprintf(title, "FPS:%4.2f",
-			frames*1000.0/(time-timebase));
-		timebase = time;
-		frames = 0;
+    if (time - timebase > 1000) {
+        sprintf(title, "FPS:%4.2f",
+                frames*1000.0/(time-timebase));
+        timebase = time;
+        frames = 0;
         this->parentWidget()->setWindowTitle(title);
-	}
+    }
 }
 
 void RenderWidget0::resizeRenderWidgetEvent(const QSize &s)
@@ -541,132 +541,132 @@ void RenderWidget0::resizeRenderWidgetEvent(const QSize &s)
 
 void RenderWidget0::timerEvent(QTimerEvent *t)
 {
-	float const ROBOT_ROTATION = -0.01;
-	float const KNEE_BEND = 0.3;
-	float const HIP_ROTATION = 0.5;
-	float const SHOULDER_ROTATION = 0.7;
-	float const HEAD_ROTATION = 0.1;
-	float const ELBOW_BEND = 0.7;
-	
-	if (sceneManager->getRootNode() == robot){
-	
-		//robot rotates around Y axis
-		//simulates movement
-		robot->setLocalTransform(Matrix4::rotateY(ROBOT_ROTATION)*
-								 robot->getLocalTransform());
-		
-		//four different steps to walking
-		if (w == 0)
-		{
-			//hip rotation
-			leftLeg2->setLocalTransform(Matrix4::rotateX(-HIP_ROTATION)*
-										leftLeg2->getLocalTransform());
-			rightLeg2->setLocalTransform(Matrix4::rotateX(HIP_ROTATION)*
-										 rightLeg2->getLocalTransform());
-			//knee bend
-			leftLowerLeg2->setLocalTransform(Matrix4::rotateX(KNEE_BEND)*
-											 leftLowerLeg2->getLocalTransform());
-			rightLowerLeg2->setLocalTransform(Matrix4::rotateX(KNEE_BEND)*
-											  rightLowerLeg2->getLocalTransform());
-			//shoulder rotation
-			rightArm2->setLocalTransform(Matrix4::rotateX(-SHOULDER_ROTATION)*
-										 rightArm2->getLocalTransform());
-			leftArm2->setLocalTransform(Matrix4::rotateX(SHOULDER_ROTATION)*
-										leftArm2->getLocalTransform());
-			//elbow bend
-			rightLowerArm2->setLocalTransform(Matrix4::rotateX(ELBOW_BEND)*
-											  rightLowerArm2->getLocalTransform());
-			leftLowerArm2->setLocalTransform(Matrix4::rotateX(ELBOW_BEND)*
-											 leftLowerArm2->getLocalTransform());
-			//head rotation
-			headGroup->setLocalTransform(Matrix4::rotateY(HEAD_ROTATION)*
-										 headGroup->getLocalTransform());
-		}
-		else if (w == 4)
-		{
-			//hip rotation
-			leftLeg2->setLocalTransform(Matrix4::rotateX(HIP_ROTATION)*
-										leftLeg2->getLocalTransform());
-			rightLeg2->setLocalTransform(Matrix4::rotateX(-HIP_ROTATION)*
-										 rightLeg2->getLocalTransform());
-			//knee bend
-			leftLowerLeg2->setLocalTransform(Matrix4::rotateX(-KNEE_BEND)*
-											 leftLowerLeg2->getLocalTransform());
-			rightLowerLeg2->setLocalTransform(Matrix4::rotateX(-KNEE_BEND)*
-											  rightLowerLeg2->getLocalTransform());
-			//shoulder rotation
-			rightArm2->setLocalTransform(Matrix4::rotateX(SHOULDER_ROTATION)*
-										 rightArm2->getLocalTransform());
-			leftArm2->setLocalTransform(Matrix4::rotateX(-SHOULDER_ROTATION)*
-										leftArm2->getLocalTransform());
-			//elbow bend
-			rightLowerArm2->setLocalTransform(Matrix4::rotateX(-ELBOW_BEND)*
-											  rightLowerArm2->getLocalTransform());
-			leftLowerArm2->setLocalTransform(Matrix4::rotateX(-ELBOW_BEND)*
-											 leftLowerArm2->getLocalTransform());
-			//head rotation
-			headGroup->setLocalTransform(Matrix4::rotateY(-HEAD_ROTATION)*
-										 headGroup->getLocalTransform());
-		}
-		else if (w == 8) 
-		{
-			//hip rotation
-			leftLeg2->setLocalTransform(Matrix4::rotateX(HIP_ROTATION)*
-										leftLeg2->getLocalTransform());
-			rightLeg2->setLocalTransform(Matrix4::rotateX(-HIP_ROTATION)*
-										 rightLeg2->getLocalTransform());	
-			//knee bend
-			leftLowerLeg2->setLocalTransform(Matrix4::rotateX(KNEE_BEND)*
-											 leftLowerLeg2->getLocalTransform());
-			rightLowerLeg2->setLocalTransform(Matrix4::rotateX(KNEE_BEND)*
-											  rightLowerLeg2->getLocalTransform());
-			//shoulder rotation
-			rightArm2->setLocalTransform(Matrix4::rotateX(SHOULDER_ROTATION)*
-										 rightArm2->getLocalTransform());
-			leftArm2->setLocalTransform(Matrix4::rotateX(-SHOULDER_ROTATION)*
-										leftArm2->getLocalTransform());
-			//elbow bend
-			rightLowerArm2->setLocalTransform(Matrix4::rotateX(ELBOW_BEND)*
-											  rightLowerArm2->getLocalTransform());
-			leftLowerArm2->setLocalTransform(Matrix4::rotateX(ELBOW_BEND)*
-											 leftLowerArm2->getLocalTransform());
-			
-			headGroup->setLocalTransform(Matrix4::rotateY(-HEAD_ROTATION)*
-										 headGroup->getLocalTransform());
-		}
-		else if (w == 12)
-		{
-			//hip rotatioj
-			leftLeg2->setLocalTransform(Matrix4::rotateX(-HIP_ROTATION)*
-										leftLeg2->getLocalTransform());
-			rightLeg2->setLocalTransform(Matrix4::rotateX(HIP_ROTATION)*
-										 rightLeg2->getLocalTransform());	
-			//knee bend
-			leftLowerLeg2->setLocalTransform(Matrix4::rotateX(-KNEE_BEND)*
-											 leftLowerLeg2->getLocalTransform());
-			rightLowerLeg2->setLocalTransform(Matrix4::rotateX(-KNEE_BEND)*
-											  rightLowerLeg2->getLocalTransform());	
-			//shoulder rotation
-			rightArm2->setLocalTransform(Matrix4::rotateX(-SHOULDER_ROTATION)*
-										 rightArm2->getLocalTransform());
-			leftArm2->setLocalTransform(Matrix4::rotateX(SHOULDER_ROTATION)*
-										leftArm2->getLocalTransform());
-			//elbow bend
-			rightLowerArm2->setLocalTransform(Matrix4::rotateX(-ELBOW_BEND)*
-											  rightLowerArm2->getLocalTransform());
-			leftLowerArm2->setLocalTransform(Matrix4::rotateX(-ELBOW_BEND)*
-											 leftLowerArm2->getLocalTransform());
-			//head rotation
-			headGroup->setLocalTransform(Matrix4::rotateY(HEAD_ROTATION)*
-										 headGroup->getLocalTransform());
-		}
-		if (w < 15) {
-			w++;
-		}
-		else {
-			w = 0;
-		}
-	}
+    float const ROBOT_ROTATION = -0.01;
+    float const KNEE_BEND = 0.3;
+    float const HIP_ROTATION = 0.5;
+    float const SHOULDER_ROTATION = 0.7;
+    float const HEAD_ROTATION = 0.1;
+    float const ELBOW_BEND = 0.7;
+
+    if (sceneManager->getRootNode() == robot){
+
+        //robot rotates around Y axis
+        //simulates movement
+        robot->setLocalTransform(Matrix4::rotateY(ROBOT_ROTATION)*
+                                 robot->getLocalTransform());
+
+        //four different steps to walking
+        if (w == 0)
+        {
+            //hip rotation
+            leftLeg2->setLocalTransform(Matrix4::rotateX(-HIP_ROTATION)*
+                                        leftLeg2->getLocalTransform());
+            rightLeg2->setLocalTransform(Matrix4::rotateX(HIP_ROTATION)*
+                                         rightLeg2->getLocalTransform());
+            //knee bend
+            leftLowerLeg2->setLocalTransform(Matrix4::rotateX(KNEE_BEND)*
+                                             leftLowerLeg2->getLocalTransform());
+            rightLowerLeg2->setLocalTransform(Matrix4::rotateX(KNEE_BEND)*
+                                              rightLowerLeg2->getLocalTransform());
+            //shoulder rotation
+            rightArm2->setLocalTransform(Matrix4::rotateX(-SHOULDER_ROTATION)*
+                                         rightArm2->getLocalTransform());
+            leftArm2->setLocalTransform(Matrix4::rotateX(SHOULDER_ROTATION)*
+                                        leftArm2->getLocalTransform());
+            //elbow bend
+            rightLowerArm2->setLocalTransform(Matrix4::rotateX(ELBOW_BEND)*
+                                              rightLowerArm2->getLocalTransform());
+            leftLowerArm2->setLocalTransform(Matrix4::rotateX(ELBOW_BEND)*
+                                             leftLowerArm2->getLocalTransform());
+            //head rotation
+            headGroup->setLocalTransform(Matrix4::rotateY(HEAD_ROTATION)*
+                                         headGroup->getLocalTransform());
+        }
+        else if (w == 4)
+        {
+            //hip rotation
+            leftLeg2->setLocalTransform(Matrix4::rotateX(HIP_ROTATION)*
+                                        leftLeg2->getLocalTransform());
+            rightLeg2->setLocalTransform(Matrix4::rotateX(-HIP_ROTATION)*
+                                         rightLeg2->getLocalTransform());
+            //knee bend
+            leftLowerLeg2->setLocalTransform(Matrix4::rotateX(-KNEE_BEND)*
+                                             leftLowerLeg2->getLocalTransform());
+            rightLowerLeg2->setLocalTransform(Matrix4::rotateX(-KNEE_BEND)*
+                                              rightLowerLeg2->getLocalTransform());
+            //shoulder rotation
+            rightArm2->setLocalTransform(Matrix4::rotateX(SHOULDER_ROTATION)*
+                                         rightArm2->getLocalTransform());
+            leftArm2->setLocalTransform(Matrix4::rotateX(-SHOULDER_ROTATION)*
+                                        leftArm2->getLocalTransform());
+            //elbow bend
+            rightLowerArm2->setLocalTransform(Matrix4::rotateX(-ELBOW_BEND)*
+                                              rightLowerArm2->getLocalTransform());
+            leftLowerArm2->setLocalTransform(Matrix4::rotateX(-ELBOW_BEND)*
+                                             leftLowerArm2->getLocalTransform());
+            //head rotation
+            headGroup->setLocalTransform(Matrix4::rotateY(-HEAD_ROTATION)*
+                                         headGroup->getLocalTransform());
+        }
+        else if (w == 8)
+        {
+            //hip rotation
+            leftLeg2->setLocalTransform(Matrix4::rotateX(HIP_ROTATION)*
+                                        leftLeg2->getLocalTransform());
+            rightLeg2->setLocalTransform(Matrix4::rotateX(-HIP_ROTATION)*
+                                         rightLeg2->getLocalTransform());
+            //knee bend
+            leftLowerLeg2->setLocalTransform(Matrix4::rotateX(KNEE_BEND)*
+                                             leftLowerLeg2->getLocalTransform());
+            rightLowerLeg2->setLocalTransform(Matrix4::rotateX(KNEE_BEND)*
+                                              rightLowerLeg2->getLocalTransform());
+            //shoulder rotation
+            rightArm2->setLocalTransform(Matrix4::rotateX(SHOULDER_ROTATION)*
+                                         rightArm2->getLocalTransform());
+            leftArm2->setLocalTransform(Matrix4::rotateX(-SHOULDER_ROTATION)*
+                                        leftArm2->getLocalTransform());
+            //elbow bend
+            rightLowerArm2->setLocalTransform(Matrix4::rotateX(ELBOW_BEND)*
+                                              rightLowerArm2->getLocalTransform());
+            leftLowerArm2->setLocalTransform(Matrix4::rotateX(ELBOW_BEND)*
+                                             leftLowerArm2->getLocalTransform());
+
+            headGroup->setLocalTransform(Matrix4::rotateY(-HEAD_ROTATION)*
+                                         headGroup->getLocalTransform());
+        }
+        else if (w == 12)
+        {
+            //hip rotatioj
+            leftLeg2->setLocalTransform(Matrix4::rotateX(-HIP_ROTATION)*
+                                        leftLeg2->getLocalTransform());
+            rightLeg2->setLocalTransform(Matrix4::rotateX(HIP_ROTATION)*
+                                         rightLeg2->getLocalTransform());
+            //knee bend
+            leftLowerLeg2->setLocalTransform(Matrix4::rotateX(-KNEE_BEND)*
+                                             leftLowerLeg2->getLocalTransform());
+            rightLowerLeg2->setLocalTransform(Matrix4::rotateX(-KNEE_BEND)*
+                                              rightLowerLeg2->getLocalTransform());
+            //shoulder rotation
+            rightArm2->setLocalTransform(Matrix4::rotateX(-SHOULDER_ROTATION)*
+                                         rightArm2->getLocalTransform());
+            leftArm2->setLocalTransform(Matrix4::rotateX(SHOULDER_ROTATION)*
+                                        leftArm2->getLocalTransform());
+            //elbow bend
+            rightLowerArm2->setLocalTransform(Matrix4::rotateX(-ELBOW_BEND)*
+                                              rightLowerArm2->getLocalTransform());
+            leftLowerArm2->setLocalTransform(Matrix4::rotateX(-ELBOW_BEND)*
+                                             leftLowerArm2->getLocalTransform());
+            //head rotation
+            headGroup->setLocalTransform(Matrix4::rotateY(HEAD_ROTATION)*
+                                         headGroup->getLocalTransform());
+        }
+        if (w < 15) {
+            w++;
+        }
+        else {
+            w = 0;
+        }
+    }
     updateScene();
 }
 
@@ -807,7 +807,7 @@ void RenderWidget0::mouseReleaseEvent(QMouseEvent *e)
 
 void RenderWidget0::startAnimation()
 {
-	w = 0;
+    w = 0;
     if(!timerId)
     {
         timerId = startTimer(5);

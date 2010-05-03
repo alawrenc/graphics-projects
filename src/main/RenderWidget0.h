@@ -78,7 +78,7 @@ private:
     static const bool USE_COMPOSITE = true;
 
     bool sceneCreated;
-	int w;
+    int w;
 
     string HOUSE;
     TransformGroup * world;
@@ -89,21 +89,21 @@ private:
     TransformGroup * headGroup;
     TransformGroup * eyesGroup;
     TransformGroup * leftArm;
-	TransformGroup * leftArm2;
+    TransformGroup * leftArm2;
     TransformGroup * leftLowerArm;
-	TransformGroup * leftLowerArm2;
+    TransformGroup * leftLowerArm2;
     TransformGroup * rightArm;
-	TransformGroup * rightArm2;
+    TransformGroup * rightArm2;
     TransformGroup * rightLowerArm;
-	TransformGroup * rightLowerArm2;
+    TransformGroup * rightLowerArm2;
     TransformGroup * leftLeg;
-	TransformGroup * leftLeg2;
+    TransformGroup * leftLeg2;
     TransformGroup * leftLowerLeg;
-	TransformGroup * leftLowerLeg2;
+    TransformGroup * leftLowerLeg2;
     TransformGroup * rightLeg;
-	TransformGroup * rightLeg2;
+    TransformGroup * rightLeg2;
     TransformGroup * rightLowerLeg;
-	TransformGroup * rightLowerLeg2;
+    TransformGroup * rightLowerLeg2;
 
     Shape3D * torso;
     Shape3D * head;
