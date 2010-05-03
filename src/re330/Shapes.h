@@ -16,6 +16,11 @@ namespace RE330
     public:
         /** These methods create basic shapes.
          */
+        static Object *createBezierShape(int numSegments,
+                                         float cp[][3],
+                                         int numEvalPoints,
+                                         int numAnglesRotation);
+
         static Object *readObject(SceneManager* sm, std::string filename);
 
         static Object *createSheet(SceneManager* sm);

@@ -1,4 +1,5 @@
 #include "Shapes.h"
+#include <cmath>
 using namespace RE330;
 
 Object * Shapes::readObject(SceneManager* sm, std::string filename)
@@ -23,6 +24,64 @@ Object * Shapes::readObject(SceneManager* sm, std::string filename)
     setupObject(objIn, nVerts, nIndices, vertices, NULL, normals, indices);
 
     return objIn;
+}
+
+// creates 3D shape from 2D bezier curve
+// preconditions:  numEvalPoints >= 2
+Object * Shapes::createBezierShape(int numSegments,
+                                   float cp [][3],
+                                   int numEvalPoints,
+                                   int numAnglesRotation)
+{
+    // precompute and store abcd for all segments
+    float cubicFactors[numSegments][4][2];
+    for (int s = 0; s < numSegments; s++)
+    {
+        // indices in cp: p0 = 3*s ... p3 = 3*s + 3
+        int p0 = 3*s; int p1 = 3*s + 1;
+        int p2 = 3*s + 2; int p3 = 3*s + 3;
+
+        cubicFactors[s][0][0] = (-cp[p0][0] + 3*cp[p1][0] -
+                                 3 * cp[p2][0] + cp[p3][0]);
+
+        cubicFactors[s][0][1] = (-cp[p0][1] + 3*cp[p1][1] -
+                                 3 * cp[p2][1] + cp[p3][1]);
+
+        cubicFactors[s][1][0] = (3*cp[p0][0] - 6*cp[p1][0] + 3*cp[p2][0]);
+        cubicFactors[s][1][1] = (3*cp[p0][1] - 6*cp[p1][1] + 3*cp[p2][1]);
+
+        cubicFactors[s][2][0] = -3*cp[p0][0] + 3*cp[p1][0];
+        cubicFactors[s][2][1] = -3*cp[p0][1] + 3*cp[p1][1];
+
+        cubicFactors[s][3][0] = cp[p0][0];
+        cubicFactors[s][3][1] = cp[p0][1];
+    }
+
+    // generate sample points with cubic polynomial form
+    float curvePoints [numEvalPoints][3];
+    float evalIncrement = 1 / numEvalPoints;
+
+    for(int i = 0; i < numEvalPoints; i++)
+    {
+        // gives numEvalPoints equally spaced t value in [0,1]
+        float t = i * evalIncrement;
+
+        // gives int index in range from 0 to numSegments
+        int s = std::floor(t * numSegments);
+
+        // point = a*t^3 + b*t^2 + c*t + d
+        curvePoints[i][0] = (cubicFactors[s][0][0]*t*t*t +
+                             cubicFactors[s][1][0]*t*t +
+                             cubicFactors[s][2][0]*t +
+                             cubicFactors[s][3][0]);
+
+        curvePoints[i][1] = (cubicFactors[s][0][1]*t*t*t +
+                             cubicFactors[s][1][1]*t*t +
+                             cubicFactors[s][2][1]*t +
+                             cubicFactors[s][3][1]);
+
+        curvePoints[i][2] = 0;
+    }
 }
 
 Object * Shapes::createSheet(SceneManager* sm)
