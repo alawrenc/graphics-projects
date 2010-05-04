@@ -1,6 +1,7 @@
 #include "Shapes.h"
 #include <cmath>
 using namespace RE330;
+#define PI 3.14159265
 
 Object * Shapes::readObject(SceneManager* sm, std::string filename)
 {
@@ -29,7 +30,7 @@ Object * Shapes::readObject(SceneManager* sm, std::string filename)
 // creates 3D shape from 2D bezier curve
 // preconditions:  numEvalPoints >= 2
 Object * Shapes::createBezierShape(int numSegments,
-                                   float cp [][3],
+                                   Vector3 cp [],
                                    int numEvalPoints,
                                    int numAnglesRotation)
 {
@@ -43,7 +44,6 @@ Object * Shapes::createBezierShape(int numSegments,
 
         cubicFactors[s][0][0] = (-cp[p0][0] + 3*cp[p1][0] -
                                  3 * cp[p2][0] + cp[p3][0]);
-
         cubicFactors[s][0][1] = (-cp[p0][1] + 3*cp[p1][1] -
                                  3 * cp[p2][1] + cp[p3][1]);
 
@@ -58,7 +58,7 @@ Object * Shapes::createBezierShape(int numSegments,
     }
 
     // generate sample points with cubic polynomial form
-    float curvePoints [numEvalPoints][3];
+    Vector4 curvePoints [numEvalPoints];
     float evalIncrement = 1 / numEvalPoints;
 
     for(int i = 0; i < numEvalPoints; i++)
@@ -70,17 +70,66 @@ Object * Shapes::createBezierShape(int numSegments,
         int s = std::floor(t * numSegments);
 
         // point = a*t^3 + b*t^2 + c*t + d
-        curvePoints[i][0] = (cubicFactors[s][0][0]*t*t*t +
-                             cubicFactors[s][1][0]*t*t +
-                             cubicFactors[s][2][0]*t +
-                             cubicFactors[s][3][0]);
+        float x = (cubicFactors[s][0][0]*t*t*t +
+                   cubicFactors[s][1][0]*t*t +
+                   cubicFactors[s][2][0]*t +
+                   cubicFactors[s][3][0]);
 
-        curvePoints[i][1] = (cubicFactors[s][0][1]*t*t*t +
-                             cubicFactors[s][1][1]*t*t +
-                             cubicFactors[s][2][1]*t +
-                             cubicFactors[s][3][1]);
+        float y = (cubicFactors[s][0][1]*t*t*t +
+                   cubicFactors[s][1][1]*t*t +
+                   cubicFactors[s][2][1]*t +
+                   cubicFactors[s][3][1]);
 
-        curvePoints[i][2] = 0;
+        float z = 0;
+        curvePoints[i] = Vector4(x,y,z,0);
+    }
+
+    // precalc and store rotation matrices
+    Matrix4 rotations [numAnglesRotation];
+    // rotate by 2*PI rad divided by numAnglesRotation each time
+    float angleOfRotation = 2*PI / numAnglesRotation;
+    for (int r = 0; r < numAnglesRotation; r++)
+    {
+        rotations[r] = Matrix4::rotateY(r * angleOfRotation);
+    }
+
+    int numVertices = 3 * numEvalPoints * numAnglesRotation;
+    float bezier_vertices [numVertices];
+    // for all curvePoints
+    // rotate point around y-axis
+    for (int point = 0; point < numEvalPoints; point++)
+    {
+        for (int rot = 0; rot < numAnglesRotation; rot++)
+        {
+            Vector4 rotatedPoint = rotations[rot] * curvePoints[point];
+            bezier_vertices[point*3] = rotatedPoint[0];
+            bezier_vertices[point*3 + 1] = rotatedPoint[1];
+            bezier_vertices[point*3 + 2] = rotatedPoint[2];
+        }
+    }
+
+    // generate indices
+    // each point is responsible for two triangles extending away from it that
+    // form a square together
+    int numIndices = 6 * numEvalPoints * angleOfRotation;
+    int bezierIndices[numIndices];
+    for (int point = 0; point < numEvalPoints; point++)
+    {
+        int pointIndex = 6 * numAnglesRotation * point;
+        for (int rot = 0; rot < numAnglesRotation; rot++)
+        {
+            int startIndex = 6*rot + pointIndex;
+            bezierIndices[startIndex] = startIndex / 6;
+            bezierIndices[startIndex + 1] = (startIndex / 6) + 1;
+            bezierIndices[startIndex + 2] = ((startIndex / 6) +
+                                             numAnglesRotation + 1);
+
+            bezierIndices[startIndex + 3] = startIndex / 6;
+            bezierIndices[startIndex + 4] = ((startIndex / 6) +
+                                             numAnglesRotation);
+            bezierIndices[startIndex + 5] = ((startIndex / 6) +
+                                             numAnglesRotation + 1);
+        }
     }
 }
 

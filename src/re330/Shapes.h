@@ -17,7 +17,7 @@ namespace RE330
         /** These methods create basic shapes.
          */
         static Object *createBezierShape(int numSegments,
-                                         float cp[][3],
+                                         Vector3 cp[],
                                          int numEvalPoints,
                                          int numAnglesRotation);
 
