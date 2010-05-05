@@ -35,26 +35,30 @@ Object * Shapes::createBezierShape(int numSegments,
                                    int numAnglesRotation)
 {
     // precompute and store abcd for all segments
-    float cubicFactors[numSegments][4][2];
+    float cubicCoefficient[numSegments][4][2];
     for (int s = 0; s < numSegments; s++)
     {
         // indices in cp: p0 = 3*s ... p3 = 3*s + 3
         int p0 = 3*s; int p1 = 3*s + 1;
         int p2 = 3*s + 2; int p3 = 3*s + 3;
 
-        cubicFactors[s][0][0] = (-cp[p0][0] + 3*cp[p1][0] -
+        // a, 0=x, 1=y
+        cubicCoefficient[s][0][0] = (-cp[p0][0] + 3*cp[p1][0] -
                                  3 * cp[p2][0] + cp[p3][0]);
-        cubicFactors[s][0][1] = (-cp[p0][1] + 3*cp[p1][1] -
+        cubicCoefficient[s][0][1] = (-cp[p0][1] + 3*cp[p1][1] -
                                  3 * cp[p2][1] + cp[p3][1]);
 
-        cubicFactors[s][1][0] = (3*cp[p0][0] - 6*cp[p1][0] + 3*cp[p2][0]);
-        cubicFactors[s][1][1] = (3*cp[p0][1] - 6*cp[p1][1] + 3*cp[p2][1]);
+        // b
+        cubicCoefficient[s][1][0] = (3*cp[p0][0] - 6*cp[p1][0] + 3*cp[p2][0]);
+        cubicCoefficient[s][1][1] = (3*cp[p0][1] - 6*cp[p1][1] + 3*cp[p2][1]);
 
-        cubicFactors[s][2][0] = -3*cp[p0][0] + 3*cp[p1][0];
-        cubicFactors[s][2][1] = -3*cp[p0][1] + 3*cp[p1][1];
+        // c
+        cubicCoefficient[s][2][0] = -3*cp[p0][0] + 3*cp[p1][0];
+        cubicCoefficient[s][2][1] = -3*cp[p0][1] + 3*cp[p1][1];
 
-        cubicFactors[s][3][0] = cp[p0][0];
-        cubicFactors[s][3][1] = cp[p0][1];
+        // d
+        cubicCoefficient[s][3][0] = cp[p0][0];
+        cubicCoefficient[s][3][1] = cp[p0][1];
     }
 
     // generate sample points with cubic polynomial form
@@ -70,15 +74,15 @@ Object * Shapes::createBezierShape(int numSegments,
         int s = std::floor(t * numSegments);
 
         // point = a*t^3 + b*t^2 + c*t + d
-        float x = (cubicFactors[s][0][0]*t*t*t +
-                   cubicFactors[s][1][0]*t*t +
-                   cubicFactors[s][2][0]*t +
-                   cubicFactors[s][3][0]);
+        float x = (cubicCoefficient[s][0][0]*t*t*t +
+                   cubicCoefficient[s][1][0]*t*t +
+                   cubicCoefficient[s][2][0]*t +
+                   cubicCoefficient[s][3][0]);
 
-        float y = (cubicFactors[s][0][1]*t*t*t +
-                   cubicFactors[s][1][1]*t*t +
-                   cubicFactors[s][2][1]*t +
-                   cubicFactors[s][3][1]);
+        float y = (cubicCoefficient[s][0][1]*t*t*t +
+                   cubicCoefficient[s][1][1]*t*t +
+                   cubicCoefficient[s][2][1]*t +
+                   cubicCoefficient[s][3][1]);
 
         float z = 0;
         curvePoints[i] = Vector4(x,y,z,0);
