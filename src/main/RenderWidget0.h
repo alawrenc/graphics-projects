@@ -47,10 +47,8 @@ protected:
 
     void toDecimal(int num_colors, float color_list[][3]);
     void setupCamera();
-    void setupObjects();
     void setupLights();
-    void setupRobot();
-    void setupBunnyParty();
+    void setupStillLife();
 
 private:
     SceneManager *sceneManager;
@@ -78,57 +76,8 @@ private:
     static const bool USE_COMPOSITE = true;
 
     bool sceneCreated;
-    int w;
 
-    string HOUSE;
     TransformGroup * world;
 
-    TransformGroup * bunnyParty;
-    //robot
-    TransformGroup * robot;
-    TransformGroup * headGroup;
-    TransformGroup * eyesGroup;
-    TransformGroup * leftArm;
-    TransformGroup * leftArm2;
-    TransformGroup * leftLowerArm;
-    TransformGroup * leftLowerArm2;
-    TransformGroup * rightArm;
-    TransformGroup * rightArm2;
-    TransformGroup * rightLowerArm;
-    TransformGroup * rightLowerArm2;
-    TransformGroup * leftLeg;
-    TransformGroup * leftLeg2;
-    TransformGroup * leftLowerLeg;
-    TransformGroup * leftLowerLeg2;
-    TransformGroup * rightLeg;
-    TransformGroup * rightLeg2;
-    TransformGroup * rightLowerLeg;
-    TransformGroup * rightLowerLeg2;
-
-    Shape3D * torso;
-    Shape3D * head;
-    Shape3D * leftEye;
-    Shape3D * rightEye;
-    Shape3D * leftShoulder;
-    Shape3D * leftBicep;
-    Shape3D * leftElbow;
-    Shape3D * leftForearm;
-    Shape3D * leftHand;
-    Shape3D * rightShoulder;
-    Shape3D * rightBicep;
-    Shape3D * rightElbow;
-    Shape3D * rightForearm;
-    Shape3D * rightHand;
-    Shape3D * leftHip;
-    Shape3D * leftQuad;
-    Shape3D * leftKnee;
-    Shape3D * leftShin;
-    Shape3D * leftFoot;
-    Shape3D * rightHip;
-    Shape3D * rightQuad;
-    Shape3D * rightKnee;
-    Shape3D * rightShin;
-    Shape3D * rightFoot;
 };
-
 #endif // RenderWidget0_H
