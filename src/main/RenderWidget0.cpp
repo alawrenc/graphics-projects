@@ -141,13 +141,13 @@ void RenderWidget0::setupLights()
 void RenderWidget0::setupStillLife()
 {
     //
-    Vector3 cp1 = Vector3(0, 0, 0);
-    Vector3 cp2 = Vector3(-1, 1, 0);
-    Vector3 cp3 = Vector3(1, 1, 0);
-    Vector3 cp4 = Vector3(5, 5, 0);
+    Vector3 cp1 = Vector3(2, 2, 0);
+    Vector3 cp2 = Vector3(1, 1, 0);
+    Vector3 cp3 = Vector3(0, 0, 0);
+    Vector3 cp4 = Vector3(2, -1, 0);
     Vector3 controlPoints[] = { cp1, cp2, cp3, cp3 };
     Object * vase = Shapes::createBezierShape(sceneManager,
-                                              1, controlPoints, 10, 5);
+                                              1, controlPoints, 4, 4);
 }
 
 void RenderWidget0::renderSceneEvent()
