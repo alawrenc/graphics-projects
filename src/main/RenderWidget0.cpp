@@ -148,6 +148,9 @@ void RenderWidget0::setupStillLife()
     Vector3 controlPoints[] = { cp1, cp2, cp3, cp3 };
     Object * vase = Shapes::createBezierShape(sceneManager,
                                               1, controlPoints, 4, 4);
+    Shape3D * shape_vase = new Shape3D(vase);
+    world->addChildNode(shape_vase);
+    sceneManager->setRootNode(world);
 }
 
 void RenderWidget0::renderSceneEvent()
