@@ -189,6 +189,29 @@ Object * Shapes::createBezierShape(SceneManager* sm,
     }
 	
 	//texture coordinates
+	int numTextureCoords = 2 * numEvalPoints * numAnglesRotation;
+	float bezierTextureCoords[numTextureCoords];
+	for (int point = 0; point < numEvalPoints; point++)
+    {
+		int pointIndex = 2 * numAnglesRotation * point;
+        for (int rot = 0; rot < numAnglesRotation; rot++)
+        {
+			int startIndex = pointIndex + rot*2;
+			if (rot%2 == 0) {
+				bezierTextureCoords[startIndex] = 1;
+			}
+			else{
+				bezierTextureCoords[startIndex] = 0;
+			}
+			if (point%2 == 0) {
+				bezierTextureCoords[startIndex + 1] = 1;
+			}
+			else {
+				bezierTextureCoords[startIndex + 1] = 0;
+			}
+		}
+	}
+			
 
 
     // generate indices
@@ -257,7 +280,7 @@ Object * Shapes::createBezierShape(SceneManager* sm,
 
     Object * bezier = sm->createObject();
     setupObject(bezier, numVertices/3, numIndices/3, bezier_vertices,
-                NULL, bezier_normals, bezierIndices);
+                bezierTextureCoords, bezier_normals, bezierIndices);
 	//std::cout << "test" << std::endl;
     return bezier;
 }
