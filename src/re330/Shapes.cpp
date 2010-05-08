@@ -1,7 +1,7 @@
 #include "Shapes.h"
 #include <cmath>
 using namespace RE330;
-#define PI 3.14159265
+#define PI 3.1415926535897932384626433
 
 Object * Shapes::readObject(SceneManager* sm, std::string filename)
 {
@@ -48,10 +48,11 @@ Object * Shapes::createBezierShape(SceneManager* sm,
                                     3*cp[p2][0] + cp[p3][0]);
         cubicCoefficient[s][0][1] = (-cp[p0][1] + 3*cp[p1][1] -
                                     3*cp[p2][1] + cp[p3][1]);
-
+		
         // b
         cubicCoefficient[s][1][0] = (3*cp[p0][0] - 6*cp[p1][0] + 3*cp[p2][0]);
         cubicCoefficient[s][1][1] = (3*cp[p0][1] - 6*cp[p1][1] + 3*cp[p2][1]);
+		
 
         // c
         cubicCoefficient[s][2][0] = -3*cp[p0][0] + 3*cp[p1][0];
@@ -61,18 +62,27 @@ Object * Shapes::createBezierShape(SceneManager* sm,
         cubicCoefficient[s][3][0] = cp[p0][0];
         cubicCoefficient[s][3][1] = cp[p0][1];
     }
-
+	//EVERYTHING OK
     // generate sample points with cubic polynomial form
     Vector4 curvePoints [numEvalPoints];
-    float evalIncrement = 1.f / numEvalPoints;
+    float evalIncrement = 1.f / (numEvalPoints - 1);
 
     for(int i = 0; i < numEvalPoints; i++)
     {
         // gives numEvalPoints equally spaced t value in [0,1]
         float t = i * evalIncrement;
+		std::cout << "t:" << t << std::endl;
 
         // gives int index in range from 0 to numSegments
-        int s = std::floor(t * numSegments);
+		int s = 0;
+		if (t == 1) {
+			s = numSegments - 1;
+		}
+		else {
+			s = std::floor(t * numSegments);
+		}
+
+		std::cout << "s:" << s << std::endl;
 
         // point = a*t^3 + b*t^2 + c*t + d
         float x = (cubicCoefficient[s][0][0]*t*t*t +
@@ -87,13 +97,15 @@ Object * Shapes::createBezierShape(SceneManager* sm,
 
         float z = 0;
         curvePoints[i] = Vector4(x,y,z,0);
-		//std::cout << curvePoints[i] << std::endl;
+		std::cout << curvePoints[i] << std::endl;
     }
 
     // precalc and store rotation matrices
     Matrix4 rotations [numAnglesRotation];
     // rotate by 2*PI rad divided by numAnglesRotation each time
-    float angleOfRotation = 2*PI / numAnglesRotation;
+    double angleOfRotation = 2*PI / numAnglesRotation;
+	//std::cout << "pi:" << pi << std::endl;
+	//std::cout << "rotation:" << angleOfRotation << std::endl;
     for (int r = 0; r < numAnglesRotation; r++)
     {
         rotations[r] = Matrix4::rotateY(-r * angleOfRotation);
@@ -121,6 +133,7 @@ Object * Shapes::createBezierShape(SceneManager* sm,
 								bezier_vertices[startIndex + 2] << ")" << std::endl;
 
         }
+		std::cout << std::endl;
     }
 
     int numNormals = 6 * (numEvalPoints - 1) * numAnglesRotation;
@@ -174,43 +187,69 @@ Object * Shapes::createBezierShape(SceneManager* sm,
 
         }
     }
+	
+	//texture coordinates
 
 
     // generate indices
     // each point is responsible for two triangles extending away from it that
     // form a square together
-    int numIndices = 6 * (numEvalPoints - 1) * numAnglesRotation;
+    int numIndices = 12 * (numEvalPoints - 1) * numAnglesRotation;
     int bezierIndices[numIndices];
     for (int point = 0; point < (numEvalPoints - 1); point++)
     {
-        int pointIndex = 6 * numAnglesRotation * point;
+        int pointIndex = 12 * numAnglesRotation * point;
         for (int rot = 0; rot < numAnglesRotation; rot++)
         {
-            int startIndex = 6*rot + pointIndex;
+            int startIndex = 12 * rot + pointIndex;
 			if (rot < (numAnglesRotation - 1)) {
-				bezierIndices[startIndex] = startIndex / 6;
-				bezierIndices[startIndex + 1] = (startIndex / 6) + 1;
-				bezierIndices[startIndex + 2] = ((startIndex / 6) +
+				//front face
+				bezierIndices[startIndex] = startIndex / 12;
+				bezierIndices[startIndex + 1] = (startIndex / 12) + 1;
+				bezierIndices[startIndex + 2] = ((startIndex / 12) +
 												 numAnglesRotation + 1);
 				
-				bezierIndices[startIndex + 3] = startIndex / 6;
-				bezierIndices[startIndex + 4] = ((startIndex / 6) +
+				bezierIndices[startIndex + 3] = startIndex / 12;
+				bezierIndices[startIndex + 4] = ((startIndex / 12) +
 												 numAnglesRotation + 1);
-				bezierIndices[startIndex + 5] = ((startIndex / 6) +
+				bezierIndices[startIndex + 5] = ((startIndex / 12) +
 												 numAnglesRotation);
+				//back face
+				bezierIndices[startIndex + 6] = startIndex / 12;
+				bezierIndices[startIndex + 7] = ((startIndex / 12) +
+												 numAnglesRotation + 1);
+				bezierIndices[startIndex + 8] = (startIndex / 12) + 1;
+				
+				bezierIndices[startIndex + 9] = startIndex / 12;
+				bezierIndices[startIndex + 10] = ((startIndex / 12) +
+												  numAnglesRotation);
+				bezierIndices[startIndex + 11] = ((startIndex / 12) +
+												  numAnglesRotation + 1);
+				
 			}
 			else {
-				bezierIndices[startIndex] = startIndex / 6;
-				bezierIndices[startIndex + 1] = (pointIndex / 6);
-				bezierIndices[startIndex + 2] = ((pointIndex / 6) +
+				//front face
+				bezierIndices[startIndex] = startIndex / 12;
+				bezierIndices[startIndex + 1] = (pointIndex / 12);
+				bezierIndices[startIndex + 2] = ((pointIndex / 12) +
 												 numAnglesRotation);
 				
-				bezierIndices[startIndex + 3] = startIndex / 6;
-				bezierIndices[startIndex + 4] = ((pointIndex / 6) +
+				bezierIndices[startIndex + 3] = startIndex / 12;
+				bezierIndices[startIndex + 4] = ((pointIndex / 12) +
 												 numAnglesRotation);
-				bezierIndices[startIndex + 5] = ((startIndex / 6) +
+				bezierIndices[startIndex + 5] = ((startIndex / 12) +
 												 numAnglesRotation);
+				//back face
+				bezierIndices[startIndex + 6] = startIndex / 12;
+				bezierIndices[startIndex + 7] = ((pointIndex / 12) +
+												 numAnglesRotation);
+				bezierIndices[startIndex + 8] = (pointIndex / 12);
 				
+				bezierIndices[startIndex + 9] = startIndex / 12;
+				bezierIndices[startIndex + 10] = ((startIndex / 12) +
+												  numAnglesRotation);
+				bezierIndices[startIndex + 11] = ((pointIndex / 12) +
+												  numAnglesRotation);				
 				
 			}
 		}

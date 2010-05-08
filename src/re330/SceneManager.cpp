@@ -78,7 +78,6 @@ void SceneManager::renderScene()
         renderContext->setLights(mLightList);
 		
 		rootNode->draw(Matrix4::IDENTITY, *renderContext, *mCamera);
-		std::cout << "test" << std::endl;
         renderContext->endFrame();
     }
 }
