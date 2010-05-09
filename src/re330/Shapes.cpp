@@ -165,7 +165,8 @@ Object * Shapes::createBezierShape(SceneManager* sm,
             //calculating normals
             Vector4 tangent1 = rotations[rot] * tangent;
             Vector4 tangent2 = rotations[rot] * tangent;
-            Vector4 average = (tangent1 + tangent2)/2;
+            Vector4 average = tangent1 + tangent2;
+			average.normalize();
             //setting normals
             bezier_normals[startIndex] = average[0];
             bezier_normals[startIndex + 1] = average[1];
