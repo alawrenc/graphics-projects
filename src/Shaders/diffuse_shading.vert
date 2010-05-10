@@ -56,6 +56,6 @@ void main()
             clSpotSpec = gl_LightSource[2].specular * powD;
             clSpotDiff = gl_LightSource[2].diffuse * powD;
           }
-
+        gl_TexCoord[0] = gl_MultiTexCoord0;
         gl_Position = ftransform();
 }

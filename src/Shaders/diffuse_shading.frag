@@ -9,7 +9,7 @@
 /* // accessed through a pre-defined varying variable. */
 
 varying vec3 normal, eyeDir, LDirect, reflectDirDirect, LPoint, reflectDirPoint, reflectDirSpot, LSpot;
-
+uniform sampler2D tex;
 varying vec4 globalAmbientColor, ambientColorDirect, clPointSpec, clPointDiff, ambientColorPoint, ambientColorSpot, clSpotSpec, clSpotDiff;
 
 void main()
@@ -56,8 +56,9 @@ void main()
         vec4 spotDiffuse = clSpotDiff * gl_FrontMaterial.diffuse ;
         vec4 diffuseColorSpot = spotDiffuse * max(dot(LSpotN, normalN), 0.0);
 
-        gl_FragColor = (specColorDirect + diffuseColorDirect + ambientColorDirect +
-                        specColorPoint + diffuseColorPoint + ambientColorPoint +
-                        specColorSpot + diffuseColorSpot + ambientColorSpot +
-                        globalAmbientColor);
+        gl_FragColor = gl_FragColor = (texture2D(tex, gl_TexCoord[0].st) +
+                                       specColorDirect + diffuseColorDirect + ambientColorDirect +
+                                       specColorPoint + diffuseColorPoint + ambientColorPoint +
+                                       specColorSpot + diffuseColorSpot + ambientColorSpot +
+                                       globalAmbientColor);
 }
