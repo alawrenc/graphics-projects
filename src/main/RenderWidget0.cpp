@@ -145,23 +145,24 @@ void RenderWidget0::setupStillLife()
     Vector3 cp2 = Vector3(2, 2, 0);
     Vector3 cp3 = Vector3(5, 0, 0);
     Vector3 cp4 = Vector3(4, -2, 0);
-	Vector3 cp5 = Vector3(7, -3, 0);
-	Vector3 cp6 = Vector3(2, -4, 0);
-    Vector3 controlPoints[] = { cp1, cp2, cp3, cp4, cp5, cp6 };
+    Vector3 cp5 = Vector3(5, -3, 0);
+    Vector3 cp6 = Vector3(2, -4, 0);
+    Vector3 cp7 = Vector3(0., -6, 0);
+    Vector3 controlPoints[] = { cp1, cp2, cp3, cp4, cp5, cp6, cp7 };
     Object * vase = Shapes::createBezierShape(sceneManager,
-                                              3, controlPoints, 10, 10);
-    
+                                              2, controlPoints, 100, 7);
+
     Material *vaseMaterial = new Material();
     QImage *vaseTexImg = new QImage("wood_pole_texture.png", "PNG");
     Texture *vaseTexture = new Texture(vaseTexImg);
     vaseMaterial->setTexture(vaseTexture);
-	
-    Shader *vaseShader = new Shader("src/Shaders/texture2D.vert",
-                                     "src/Shaders/texture2D.frag");
+
+    Shader *vaseShader = new Shader("src/Shaders/diffuse_shading.vert",
+                                     "src/Shaders/diffuse_shading.frag");
     vaseMaterial->setShader(vaseShader);
-	
-	vase->setMaterial(*vaseMaterial);
-	Shape3D * shape_vase = new Shape3D(vase);
+
+    vase->setMaterial(*vaseMaterial);
+    Shape3D * shape_vase = new Shape3D(vase);
     world->addChildNode(shape_vase);
     sceneManager->setRootNode(world);
 }
