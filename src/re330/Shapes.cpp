@@ -22,7 +22,15 @@ Object * Shapes::readObject(SceneManager* sm, std::string filename)
     Object* objIn = sm->createObject();
 
     // display read in object
-    setupObject(objIn, nVerts, nIndices, vertices, NULL, normals, indices);
+    if (texcoords)
+    {
+        setupObjectTexture(objIn, nVerts, nIndices, vertices, NULL, normals,
+                           texcoords, indices);
+    }
+    else
+    {
+        setupObject(objIn, nVerts, nIndices, vertices, NULL, normals, indices);
+    }
 
     return objIn;
 }

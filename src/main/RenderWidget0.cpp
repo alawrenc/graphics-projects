@@ -112,20 +112,20 @@ void RenderWidget0::setupLights()
 {
     //faint, overhead, yellow light
     Light *l1 = sceneManager->createLight();
-    l1->setPosition(Vector3(0,-10,0));
-    l1->setDirection(Vector3(0,1,0));
+    l1->setPosition(Vector3(0,10,0));
+    l1->setDirection(Vector3(0,-1,0));
     l1->setType(Light::DIRECTIONAL);
-    l1->setDiffuseColor(Vector3(.5,.5,0));
+    l1->setDiffuseColor(Vector3(0,0,0));
     l1->setSpecularColor(Vector3(0,0,0));
-    l1->setAmbientColor(Vector3(.1,.1,.1));
+    l1->setAmbientColor(Vector3(0,0,0));
 
     //blue point left from the left
     Light *l2 = sceneManager->createLight();
     l2->setPosition(Vector3(-10,0,0));
     l2->setDirection(Vector3(1,0,0));
     l2->setType(Light::POINT);
-    l2->setDiffuseColor(Vector3(0,0,0));
-    l2->setSpecularColor(Vector3(0,0,5));
+    l2->setDiffuseColor(Vector3(0,0,5));
+    l2->setSpecularColor(Vector3(0,255,0));
 
     //green spot from lower right
     Light *l3 = sceneManager->createLight();
@@ -135,35 +135,75 @@ void RenderWidget0::setupLights()
     l3->setSpotExponent(24.0);
     l3->setSpotCutoff(40.0);
     l3->setDiffuseColor(Vector3(0,0,0));
-    l3->setSpecularColor(Vector3(0,10,0));
+    l3->setSpecularColor(Vector3(0,0,0));
 }
 
 void RenderWidget0::setupStillLife()
 {
-    //
-    Vector3 cp1 = Vector3(4, 4, 0);
-    Vector3 cp2 = Vector3(2, 2, 0);
-    Vector3 cp3 = Vector3(5, 0, 0);
-    Vector3 cp4 = Vector3(4, -2, 0);
-    Vector3 cp5 = Vector3(5, -3, 0);
-    Vector3 cp6 = Vector3(2, -4, 0);
-    Vector3 cp7 = Vector3(0., -6, 0);
-    Vector3 controlPoints[] = { cp1, cp2, cp3, cp4 };
-    Object * vase = Shapes::createBezierShape(sceneManager,
-                                              1, controlPoints, 10, 4);
-
-    Material *vaseMaterial = new Material();
-    QImage *vaseTexImg = new QImage("wood_pole_texture.png", "PNG");
-    Texture *vaseTexture = new Texture(vaseTexImg);
-    vaseMaterial->setTexture(vaseTexture);
-
-    Shader *vaseShader = new Shader("src/Shaders/diffuse_shading.vert",
+    Shader *basicShader = new Shader("src/Shaders/diffuse_shading.vert",
                                      "src/Shaders/diffuse_shading.frag");
-    vaseMaterial->setShader(vaseShader);
 
-    vase->setMaterial(*vaseMaterial);
-    Shape3D * shape_vase = new Shape3D(vase);
-    world->addChildNode(shape_vase);
+
+    //wood bowl
+    Vector3 cp1 = Vector3(2, 2, 0);
+    Vector3 cp2 = Vector3(1, 1, 0);
+    Vector3 cp3 = Vector3(2.5, 0, 0);
+    Vector3 cp4 = Vector3(0, 0, 0);
+    Vector3 controlPointsBowl[] = { cp1, cp2, cp3, cp4};
+    Object * bowl = Shapes::createBezierShape(sceneManager,
+                                              1, controlPointsBowl, 100, 100);
+    Material *bowlMaterial = new Material();
+    QImage *bowlTexImg = new QImage("wood_pole_texture.png", "PNG");
+    Texture *bowlTexture = new Texture(bowlTexImg);
+    bowlMaterial->setTexture(bowlTexture);
+    bowlMaterial->setShader(basicShader);
+    bowl->setMaterial(*bowlMaterial);
+    Shape3D * shape_bowl = new Shape3D(bowl);
+    world->addChildNode(shape_bowl);
+
+    cp1 = Vector3(0, 0, 0);
+    cp2 = Vector3(7, 0, 0);
+    cp3 = Vector3(7, -.25, 0);
+    cp4 = Vector3(.25, -.25, 0);
+    Vector3 cp5 = Vector3(.25, -2, 0);
+    Vector3 cp6 = Vector3(.25, -4, 0);
+    Vector3 cp7 = Vector3(4, -5, 0);
+    Vector3 controlPointsTable[] = { cp1, cp2, cp3, cp4, cp5, cp6, cp7};
+    Object * table = Shapes::createBezierShape(sceneManager,
+                                              2, controlPointsTable, 100, 100);
+    Material *tableMaterial = new Material();
+    QImage *tableTexImg = new QImage("dgrey034.jpg", "JPG");
+    Texture *tableTexture = new Texture(tableTexImg);
+    tableMaterial->setTexture(tableTexture);
+    tableMaterial->setShader(basicShader);
+    tableMaterial->setTexture(tableTexture);
+    tableMaterial->setDiffuse(Vector3(1, 1, 1));
+    tableMaterial->setSpecular(Vector3(1, 1, 1));
+    tableMaterial->setAmbient(Vector3(1, 1, 1));
+    tableMaterial->setShininess(0);
+
+    table->setMaterial(*tableMaterial);
+    Shape3D * shape_table = new Shape3D(table);
+    world->addChildNode(shape_table);
+
+    Object * teapot = Shapes::readObject(sceneManager, "teapot_tex.obj");
+    teapot->setTransformation(Matrix4::translate(-3, .25, 0));
+
+
+    QImage *teapotTexImg = new QImage("spots.jpg", "JPG");
+    Texture *teapotTexture = new Texture(teapotTexImg);
+    Material *teapotMaterial = new Material();
+    teapotMaterial->setTexture(teapotTexture);
+    teapotMaterial->setDiffuse(Vector3(1, 1, 1));
+    teapotMaterial->setSpecular(Vector3(1, 1, 1));
+    teapotMaterial->setAmbient(Vector3(1, 1, 1));
+    teapotMaterial->setShininess(256.0);
+    teapot->setMaterial(*teapotMaterial);
+
+
+    teapotMaterial->setShader(basicShader);
+    world->addChildNode(new Shape3D(teapot));
+
     sceneManager->setRootNode(world);
 }
 
