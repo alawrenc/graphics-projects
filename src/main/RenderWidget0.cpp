@@ -148,9 +148,9 @@ void RenderWidget0::setupStillLife()
     Vector3 cp5 = Vector3(5, -3, 0);
     Vector3 cp6 = Vector3(2, -4, 0);
     Vector3 cp7 = Vector3(0., -6, 0);
-    Vector3 controlPoints[] = { cp1, cp2, cp3, cp4, cp5, cp6, cp7 };
+    Vector3 controlPoints[] = { cp1, cp2, cp3, cp4 };
     Object * vase = Shapes::createBezierShape(sceneManager,
-                                              2, controlPoints, 100, 7);
+                                              1, controlPoints, 10, 4);
 
     Material *vaseMaterial = new Material();
     QImage *vaseTexImg = new QImage("wood_pole_texture.png", "PNG");
