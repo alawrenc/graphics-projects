@@ -143,33 +143,12 @@ void RenderWidget0::setupStillLife()
     Shader *basicShader = new Shader("src/Shaders/diffuse_shading.vert",
                                      "src/Shaders/diffuse_shading.frag");
 
-    //wood bowl
-    Vector3 cp1 = Vector3(2, 2, 0);
-    Vector3 cp2 = Vector3(1, 1, 0);
-    Vector3 cp3 = Vector3(2.5, 0, 0);
-    Vector3 cp4 = Vector3(0, 0, 0);
-    Vector3 controlPointsBowl[] = { cp1, cp2, cp3, cp4};
-    Object * bowl = Shapes::createBezierShape(sceneManager,
-                                              1, controlPointsBowl, 100, 100);
-    Material *bowlMaterial = new Material();
-    QImage *bowlTexImg = new QImage("wood_pole_texture.png", "PNG");
-    Texture *bowlTexture = new Texture(bowlTexImg);
-    bowlMaterial->setTexture(bowlTexture);
-
-    bowlMaterial->setDiffuse(Vector3(.1, .1, .1));
-    bowlMaterial->setSpecular(Vector3(.1, .1, .1));
-    bowlMaterial->setAmbient(Vector3(.1, .1, .1));
-    bowlMaterial->setShininess(.1);
-
-    bowlMaterial->setShader(basicShader);
-    bowl->setMaterial(*bowlMaterial);
-    Shape3D * shape_bowl = new Shape3D(bowl);
-    world->addChildNode(shape_bowl);
-
-    cp1 = Vector3(0, 0, 0);
-    cp2 = Vector3(7, 0, 0);
-    cp3 = Vector3(7, -.25, 0);
-    cp4 = Vector3(.25, -.25, 0);
+    
+	//table
+    Vector3 cp1 = Vector3(0, 0, 0);
+    Vector3 cp2 = Vector3(7, 0, 0);
+    Vector3 cp3 = Vector3(7, -.25, 0);
+    Vector3 cp4 = Vector3(.25, -.25, 0);
     Vector3 cp5 = Vector3(.25, -2, 0);
     Vector3 cp6 = Vector3(.25, -4, 0);
     Vector3 cp7 = Vector3(4, -5, 0);
@@ -186,11 +165,12 @@ void RenderWidget0::setupStillLife()
     tableMaterial->setAmbient(Vector3(1, 1, 1));
     tableMaterial->setShininess(.1);
     tableMaterial->setShader(basicShader);
-
+	
     table->setMaterial(*tableMaterial);
     Shape3D * shape_table = new Shape3D(table);
     world->addChildNode(shape_table);
 
+	//teapot
     Object * teapot = Shapes::readObject(sceneManager, "teapot_tex.obj");
     teapot->setTransformation(Matrix4::translate(-3, .25, 0));
 
@@ -208,6 +188,7 @@ void RenderWidget0::setupStillLife()
 
     world->addChildNode(new Shape3D(teapot));
 
+	//goblet
     cp1 = Vector3(0, .005, 0);
     cp2 = Vector3(1, .005, 0);
     cp3 = Vector3(1, .025, 0);
@@ -238,7 +219,30 @@ void RenderWidget0::setupStillLife()
     goblet->setMaterial(*gobletMaterial);
     Shape3D * shape_goblet = new Shape3D(goblet);
     world->addChildNode(shape_goblet);
-    
+	
+	//wood bowl
+    cp1 = Vector3(2, 2, 0);
+    cp2 = Vector3(1, 1, 0);
+    cp3 = Vector3(2.5, 0, 0);
+    cp4 = Vector3(0, 0, 0);
+    Vector3 controlPointsBowl[] = { cp1, cp2, cp3, cp4};
+    Object * bowl = Shapes::createBezierShape(sceneManager,
+                                              1, controlPointsBowl, 10, 4);
+    Material *bowlMaterial = new Material();
+    QImage *bowlTexImg = new QImage("wood_pole_texture.png", "PNG");
+    Texture *bowlTexture = new Texture(bowlTexImg);
+    bowlMaterial->setTexture(bowlTexture);
+	
+    bowlMaterial->setDiffuse(Vector3(.1, .1, .1));
+    bowlMaterial->setSpecular(Vector3(.1, .1, .1));
+    bowlMaterial->setAmbient(Vector3(.1, .1, .1));
+    bowlMaterial->setShininess(.1);
+	
+    bowlMaterial->setShader(basicShader);
+    bowl->setMaterial(*bowlMaterial);
+    Shape3D * shape_bowl = new Shape3D(bowl);
+    world->addChildNode(shape_bowl);
+	
 
     sceneManager->setRootNode(world);
 }

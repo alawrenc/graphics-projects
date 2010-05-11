@@ -70,7 +70,6 @@ Object * Shapes::createBezierShape(SceneManager* sm,
         cubicCoefficient[s][3][0] = cp[p0][0];
         cubicCoefficient[s][3][1] = cp[p0][1];
     }
-    //EVERYTHING OK
     // generate sample points with cubic polynomial form
     Vector4 curvePoints [numEvalPoints];
     float evalIncrement = 1.f / (numEvalPoints - 1);
@@ -147,43 +146,54 @@ Object * Shapes::createBezierShape(SceneManager* sm,
     //int w = 0;
     for (int point = 0; point < (numEvalPoints - 1); point++)
     {
-        int pointIndex = 3 * numAnglesRotation * point;
-		int nextPointIndex = 3 * numAnglesRotation * (point + 1);
-        Vector4 intP0 = Vector4(bezier_vertices[pointIndex],
-                                bezier_vertices[pointIndex + 1],
-                                bezier_vertices[pointIndex + 2],
+		int vertexPointIndex = 3 * numAnglesRotation * point;
+		int nextVertexPointIndex = 3 * numAnglesRotation * (point + 1);
+        
+		std::cout << "pointIndex:" << vertexPointIndex << std::endl;
+		std::cout << "nextpointIndex:" << nextVertexPointIndex << std::endl;
+		
+        Vector4 intP0 = Vector4(bezier_vertices[vertexPointIndex],
+                                bezier_vertices[vertexPointIndex + 1],
+                                bezier_vertices[vertexPointIndex + 2],
                                 1);
 		
-        Vector4 intP1 = Vector4(bezier_vertices[nextPointIndex],
-                                bezier_vertices[nextPointIndex + 1],
-                                bezier_vertices[nextPointIndex + 2],
+        Vector4 intP1 = Vector4(bezier_vertices[nextVertexPointIndex],
+                                bezier_vertices[nextVertexPointIndex + 1],
+                                bezier_vertices[nextVertexPointIndex + 2],
                                 1);
-		std::cout << "intP0:" << intP0 << std::endl;
-		std::cout << "intP1:" << intP1 << std::endl;
+		//std::cout << "intP0:" << intP0 << std::endl;
+		//std::cout << "intP1:" << intP1 << std::endl;
 
-        Vector4 normal = intP1 - intP0;
-		std::cout << "normal:" << normal << std::endl;
+        Vector4 tangent = intP1 - intP0;
+		//std::cout << "tangent:" << tangent << std::endl;
 		std::cout << std::endl;
         //std::cout << "normal:" << normal << std::endl;
-        Vector4 tangent = Vector4(-normal[1],
-                                  normal[0],
+        Vector4 normal = Vector4(-tangent[1],
+                                  tangent[0],
                                   0,
                                   1);
-        pointIndex = 2 * pointIndex;
-        for (int rot = 0; rot < numAnglesRotation; rot++)
+		int pointIndex = 6 * numAnglesRotation * point;
+		for (int rot = 0; rot < numAnglesRotation; rot++)
         {
-            int startIndex = 6*rot + pointIndex;
+            int startIndex = pointIndex + 6*rot;
             //calculating normals
-			Vector4 tangent1 = rotations[rot] * tangent;
-			Vector4 tangent2 = rotations[rot + 1] * tangent;
-
-			if (rot == numAnglesRotation - 1) {
-				tangent2 = rotations[0] * tangent;
+			Vector4 tempNormal1 = rotations[rot] * normal;
+			Vector3 normal1 = Vector3(tempNormal1[0],
+									  tempNormal1[1],
+									  tempNormal1[2]);
+			Vector4 tempNormal2 = rotations[rot + 1] * normal;
+			if (rot == (numAnglesRotation - 1)) {
+				tempNormal2 = rotations[0] * normal;
 			}
-
-            
-            Vector4 average = tangent1 + tangent2;
+			
+			Vector3 normal2 = Vector3(tempNormal2[0],
+									  tempNormal2[1],
+									  tempNormal2[2]);
+			
+            Vector3 average = normal1 + normal2;
+			std::cout << "average:" << average << std::endl;
             average.normalize();
+			std::cout << "normaverage:" << average << std::endl;
             //setting normals
             bezier_normals[startIndex] = average[0];
             bezier_normals[startIndex + 1] = average[1];
