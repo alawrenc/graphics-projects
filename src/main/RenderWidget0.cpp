@@ -116,7 +116,7 @@ void RenderWidget0::setupLights()
     l1->setDirection(Vector3(0,-1,0));
     l1->setType(Light::DIRECTIONAL);
     l1->setDiffuseColor(Vector3(0,0,0));
-    l1->setSpecularColor(Vector3(0,0,0));
+    l1->setSpecularColor(Vector3(0,1,0));
     l1->setAmbientColor(Vector3(0,0,0));
 
     //blue point left from the left
@@ -124,14 +124,14 @@ void RenderWidget0::setupLights()
     l2->setPosition(Vector3(-10,0,0));
     l2->setDirection(Vector3(1,0,0));
     l2->setType(Light::POINT);
-    l2->setDiffuseColor(Vector3(0,0,5));
-    l2->setSpecularColor(Vector3(0,255,0));
+    l2->setDiffuseColor(Vector3(0,0,0));
+    l2->setSpecularColor(Vector3(0,0,0));
 
-    //green spot from lower right
+    //blue spot from top
     Light *l3 = sceneManager->createLight();
     l3->setType(Light::SPOT);
-    l3->setPosition(Vector3(5,-10,0));
-    l3->setSpotDirection(Vector3(0, 1, 0));
+    l3->setPosition(Vector3(0,10,0));
+    l3->setSpotDirection(Vector3(0, -1, 0));
     l3->setSpotExponent(24.0);
     l3->setSpotCutoff(40.0);
     l3->setDiffuseColor(Vector3(0,0,0));
@@ -142,7 +142,6 @@ void RenderWidget0::setupStillLife()
 {
     Shader *basicShader = new Shader("src/Shaders/diffuse_shading.vert",
                                      "src/Shaders/diffuse_shading.frag");
-
 
     //wood bowl
     Vector3 cp1 = Vector3(2, 2, 0);
@@ -156,6 +155,12 @@ void RenderWidget0::setupStillLife()
     QImage *bowlTexImg = new QImage("wood_pole_texture.png", "PNG");
     Texture *bowlTexture = new Texture(bowlTexImg);
     bowlMaterial->setTexture(bowlTexture);
+
+    bowlMaterial->setDiffuse(Vector3(.1, .1, .1));
+    bowlMaterial->setSpecular(Vector3(.1, .1, .1));
+    bowlMaterial->setAmbient(Vector3(.1, .1, .1));
+    bowlMaterial->setShininess(.1);
+
     bowlMaterial->setShader(basicShader);
     bowl->setMaterial(*bowlMaterial);
     Shape3D * shape_bowl = new Shape3D(bowl);
@@ -171,16 +176,16 @@ void RenderWidget0::setupStillLife()
     Vector3 controlPointsTable[] = { cp1, cp2, cp3, cp4, cp5, cp6, cp7};
     Object * table = Shapes::createBezierShape(sceneManager,
                                               2, controlPointsTable, 100, 100);
-    Material *tableMaterial = new Material();
-    QImage *tableTexImg = new QImage("dgrey034.jpg", "JPG");
+    QImage *tableTexImg = new QImage("cross_metal.jpg", "JPG");
     Texture *tableTexture = new Texture(tableTexImg);
+    Material *tableMaterial = new Material();
     tableMaterial->setTexture(tableTexture);
-    tableMaterial->setShader(basicShader);
-    tableMaterial->setTexture(tableTexture);
+
     tableMaterial->setDiffuse(Vector3(1, 1, 1));
     tableMaterial->setSpecular(Vector3(1, 1, 1));
     tableMaterial->setAmbient(Vector3(1, 1, 1));
-    tableMaterial->setShininess(0);
+    tableMaterial->setShininess(.1);
+    tableMaterial->setShader(basicShader);
 
     table->setMaterial(*tableMaterial);
     Shape3D * shape_table = new Shape3D(table);
@@ -199,10 +204,41 @@ void RenderWidget0::setupStillLife()
     teapotMaterial->setAmbient(Vector3(1, 1, 1));
     teapotMaterial->setShininess(256.0);
     teapot->setMaterial(*teapotMaterial);
-
-
     teapotMaterial->setShader(basicShader);
+
     world->addChildNode(new Shape3D(teapot));
+
+    cp1 = Vector3(0, .005, 0);
+    cp2 = Vector3(1, .005, 0);
+    cp3 = Vector3(1, .025, 0);
+    cp4 = Vector3(.1, .025, 0);
+    cp5 = Vector3(0, .3, 0);
+    cp6 = Vector3(0, .6, 0);
+    cp7 = Vector3(.5, .7, 0);
+    Vector3 cp8 = Vector3(1, 1, 0);
+    Vector3 cp9 = Vector3(1, 1.2, 0);
+    Vector3 cp10 = Vector3(.8, 1.7, 0);
+    Vector3 controlPointsGoblet[] = { cp1, cp2, cp3, cp4,
+                                      cp5, cp6, cp7,
+                                      cp8, cp9, cp10 };
+    Object * goblet = Shapes::createBezierShape(sceneManager,
+                                              3, controlPointsGoblet, 200, 100);
+    goblet->setTransformation(Matrix4::translate(3, 0, 0));
+    QImage *gobletTexImg = new QImage("green_metal.jpg", "JPG");
+    Texture *gobletTexture = new Texture(gobletTexImg);
+    Material *gobletMaterial = new Material();
+    gobletMaterial->setTexture(gobletTexture);
+
+    gobletMaterial->setDiffuse(Vector3(1, 1, 1));
+    gobletMaterial->setSpecular(Vector3(1, 1, 1));
+    gobletMaterial->setAmbient(Vector3(1, 1, 1));
+    gobletMaterial->setShininess(.1);
+    gobletMaterial->setShader(basicShader);
+
+    goblet->setMaterial(*gobletMaterial);
+    Shape3D * shape_goblet = new Shape3D(goblet);
+    world->addChildNode(shape_goblet);
+    
 
     sceneManager->setRootNode(world);
 }
