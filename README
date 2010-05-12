@@ -1,24 +1,10 @@
-Computer Graphics (C SCI 330) Project 5 code
+Computer Graphics (C SCI 330) Project 6 code
 
 Changed files:
-project.pro
+src/Shaders/diffuse_shading.frag
+src/Shaders/diffuse_shading.vert
 src/main/RenderWidget0.cpp
 src/main/RenderWidget0.h
-src/re330/Frustum.h
-src/re330/Leaf.h
-src/re330/LightLeaf.h
-src/re330/Node.h
-src/re330/NodeGroup.h
-src/re330/Object.h
-src/re330/RenderContext.h
 src/re330/SceneManager.cpp
-src/re330/SceneManager.h
-src/re330/Shape3D.cpp
-src/re330/Shape3D.h
 src/re330/Shapes.cpp
 src/re330/Shapes.h
-src/re330/TransformGroup.h
-src/re330/VertexData.cpp
-src/re330/VertexData.h
-src/re330/VertexDeclaration.cpp
-src/re330/VertexDeclaration.h
