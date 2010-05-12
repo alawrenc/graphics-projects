@@ -110,15 +110,16 @@ void RenderWidget0::setupCamera()
 // always called after setupcamera so it can get info from it
 void RenderWidget0::setupLights()
 {
-    //faint, overhead, yellow light
+    // green overhead light
     Light *l1 = sceneManager->createLight();
-    l1->setPosition(Vector3(0,-10,0));
+    l1->setPosition(Vector3(0,-5,0));
     l1->setDirection(Vector3(0,1,0));
     l1->setType(Light::DIRECTIONAL);
     l1->setDiffuseColor(Vector3(0,0,0));
     l1->setSpecularColor(Vector3(0,1,0));
     l1->setAmbientColor(Vector3(0,0,0));
 
+    // not in use
     //blue point left from the left
     Light *l2 = sceneManager->createLight();
     l2->setPosition(Vector3(-10,0,0));
@@ -127,6 +128,7 @@ void RenderWidget0::setupLights()
     l2->setDiffuseColor(Vector3(0,0,0));
     l2->setSpecularColor(Vector3(0,0,0));
 
+    // not in use
     //blue spot from top
     Light *l3 = sceneManager->createLight();
     l3->setType(Light::SPOT);
@@ -159,7 +161,7 @@ void RenderWidget0::setupStillLife()
     Material *tableMaterial = new Material();
     tableMaterial->setTexture(tableTexture);
 
-    tableMaterial->setDiffuse(Vector3(1, 1, 1));
+    tableMaterial->setDiffuse(Vector3(0, 0, 0));
     tableMaterial->setSpecular(Vector3(1, 1, 1));
     tableMaterial->setAmbient(Vector3(1, 1, 1));
     tableMaterial->setShininess(20);
@@ -173,15 +175,14 @@ void RenderWidget0::setupStillLife()
     Object * teapot = Shapes::readObject(sceneManager, "teapot_tex.obj");
     teapot->setTransformation(Matrix4::translate(-3, .5, 0));
 
-
-    QImage *teapotTexImg = new QImage("spots.jpg", "JPG");
+    QImage *teapotTexImg = new QImage("dgrey034.jpg", "JPG");
     Texture *teapotTexture = new Texture(teapotTexImg);
     Material *teapotMaterial = new Material();
     teapotMaterial->setTexture(teapotTexture);
-    teapotMaterial->setDiffuse(Vector3(.1, .1, .1));
-    teapotMaterial->setSpecular(Vector3(.1, .1, .1));
-    teapotMaterial->setAmbient(Vector3(.1, .1, .1));
-    teapotMaterial->setShininess(256.0);
+    teapotMaterial->setDiffuse(Vector3(1, 1, 1));
+    teapotMaterial->setSpecular(Vector3(1, 1, 1));
+    teapotMaterial->setAmbient(Vector3(1, 1, 1));
+    teapotMaterial->setShininess(64.0);
     teapot->setMaterial(*teapotMaterial);
     teapotMaterial->setShader(basicShader);
 
@@ -232,10 +233,10 @@ void RenderWidget0::setupStillLife()
     Texture *bowlTexture = new Texture(bowlTexImg);
     bowlMaterial->setTexture(bowlTexture);
 
-    bowlMaterial->setDiffuse(Vector3(.1, .1, .1));
-    bowlMaterial->setSpecular(Vector3(.1, .1, .1));
-    bowlMaterial->setAmbient(Vector3(.1, .1, .1));
-    bowlMaterial->setShininess(5);
+    bowlMaterial->setDiffuse(Vector3(20, 20, 20));
+    bowlMaterial->setSpecular(Vector3(1, 1, 1));
+    bowlMaterial->setAmbient(Vector3(1, 1, 1));
+    bowlMaterial->setShininess(25);
 
     bowlMaterial->setShader(basicShader);
     bowl->setMaterial(*bowlMaterial);

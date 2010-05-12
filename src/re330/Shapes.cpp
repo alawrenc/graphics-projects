@@ -87,7 +87,7 @@ Object * Shapes::createBezierShape(SceneManager* sm,
         else {
             s = std::floor(t * numSegments);
         }
-        std::cout << "t1: " << segIncrement << std::endl;
+
         t=(t - s*segIncrement) * numSegments;
         // point = a*t^3 + b*t^2 + c*t + d
 
@@ -116,11 +116,10 @@ Object * Shapes::createBezierShape(SceneManager* sm,
     }
 
     int numVertices = 3 * numEvalPoints * numAnglesRotation;
-    //std::cout << "Vertices:" << numVertices << std::endl;
     float bezier_vertices [numVertices];
+
     // for all curvePoints
     // rotate point around y-axis
-
     for (int point = 0; point < numEvalPoints; point++)
     {
         int pointIndex = 3 * numAnglesRotation * point;
@@ -132,25 +131,16 @@ Object * Shapes::createBezierShape(SceneManager* sm,
             bezier_vertices[startIndex] = rotatedPoint[0];
             bezier_vertices[startIndex + 1] = rotatedPoint[1];
             bezier_vertices[startIndex + 2] = rotatedPoint[2];
-            //std::cout << "(" << bezier_vertices[startIndex] << ", " <<
-            //    bezier_vertices[startIndex + 1] << ", " <<
-            //    bezier_vertices[startIndex + 2] << ")" << std::endl;
-
         }
-        //std::cout << std::endl;
     }
 
     int numNormals = 6 * (numEvalPoints - 1) * numAnglesRotation;
-    //std::cout << "Normals:" << numNormals << std::endl;
     float bezier_normals [numNormals];
-    //int w = 0;
+
     for (int point = 0; point < (numEvalPoints - 1); point++)
     {
         int vertexPointIndex = 3 * numAnglesRotation * point;
         int nextVertexPointIndex = 3 * numAnglesRotation * (point + 1);
-
-        // std::cout << "pointIndex:" << vertexPointIndex << std::endl;
-        // std::cout << "nextpointIndex:" << nextVertexPointIndex << std::endl;
 
         Vector4 intP0 = Vector4(bezier_vertices[vertexPointIndex],
                                 bezier_vertices[vertexPointIndex + 1],
@@ -161,13 +151,9 @@ Object * Shapes::createBezierShape(SceneManager* sm,
                                 bezier_vertices[nextVertexPointIndex + 1],
                                 bezier_vertices[nextVertexPointIndex + 2],
                                 1);
-        //std::cout << "intP0:" << intP0 << std::endl;
-        //std::cout << "intP1:" << intP1 << std::endl;
 
         Vector4 tangent = intP1 - intP0;
-        //std::cout << "tangent:" << tangent << std::endl;
-        // std::cout << std::endl;
-        //std::cout << "normal:" << normal << std::endl;
+
         Vector4 normal = Vector4(-tangent[1],
                                   tangent[0],
                                   0,
@@ -191,9 +177,8 @@ Object * Shapes::createBezierShape(SceneManager* sm,
                                       tempNormal2[2]);
 
             Vector3 average = normal1 + normal2;
-            // std::cout << "average:" << average << std::endl;
             average.normalize();
-            // std::cout << "normaverage:" << average << std::endl;
+
             //setting normals
             bezier_normals[startIndex] = average[0];
             bezier_normals[startIndex + 1] = average[1];
@@ -202,17 +187,6 @@ Object * Shapes::createBezierShape(SceneManager* sm,
             bezier_normals[startIndex + 3] = average[0];
             bezier_normals[startIndex + 4] = average[1];
             bezier_normals[startIndex + 5] = average[2];
-
-            //std::cout << "(" << bezier_normals[startIndex] << ", " <<
-            //	bezier_normals[startIndex + 1] << ", " <<
-            //bezier_normals[startIndex + 2] << ")" << std::endl;
-            //std::cout << "(" << bezier_normals[startIndex + 3] << ", " <<
-            //	bezier_normals[startIndex + 4] << ", " <<
-            //	bezier_normals[startIndex + 5] << ")" << std::endl;
-            //w = w + 6;
-            //std::cout << w << std::endl;
-
-
         }
     }
 
@@ -233,8 +207,6 @@ Object * Shapes::createBezierShape(SceneManager* sm,
             bezierTextureCoords[startIndex + 1] = yCoordInt;
         }
     }
-
-
 
     // generate indices
     // each point is responsible for two triangles extending away from it that
@@ -303,7 +275,6 @@ Object * Shapes::createBezierShape(SceneManager* sm,
     Object * bezier = sm->createObject();
     setupObjectTexture(bezier, numVertices/3, numIndices, bezier_vertices,
                        NULL, bezier_normals, bezierTextureCoords, bezierIndices);
-    //std::cout << "test" << std::endl;
     return bezier;
 }
 
