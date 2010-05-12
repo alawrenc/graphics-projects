@@ -61,7 +61,6 @@ Object * Shapes::createBezierShape(SceneManager* sm,
         cubicCoefficient[s][1][0] = (3*cp[p0][0] - 6*cp[p1][0] + 3*cp[p2][0]);
         cubicCoefficient[s][1][1] = (3*cp[p0][1] - 6*cp[p1][1] + 3*cp[p2][1]);
 
-
         // c
         cubicCoefficient[s][2][0] = -3*cp[p0][0] + 3*cp[p1][0];
         cubicCoefficient[s][2][1] = -3*cp[p0][1] + 3*cp[p1][1];
@@ -70,15 +69,16 @@ Object * Shapes::createBezierShape(SceneManager* sm,
         cubicCoefficient[s][3][0] = cp[p0][0];
         cubicCoefficient[s][3][1] = cp[p0][1];
     }
+
     // generate sample points with cubic polynomial form
     Vector4 curvePoints [numEvalPoints];
     float evalIncrement = 1.f / (numEvalPoints - 1);
-
+    float segIncrement = 1.f / numSegments;
     for(int i = 0; i < numEvalPoints; i++)
     {
         // gives numEvalPoints equally spaced t value in [0,1]
         float t = i * evalIncrement;
-		
+
         // gives int index in range from 0 to numSegments
         int s = 0;
         if (t == 1) {
@@ -87,8 +87,10 @@ Object * Shapes::createBezierShape(SceneManager* sm,
         else {
             s = std::floor(t * numSegments);
         }
-
+        std::cout << "t1: " << segIncrement << std::endl;
+        t=(t - s*segIncrement) * numSegments;
         // point = a*t^3 + b*t^2 + c*t + d
+
         float x = (cubicCoefficient[s][0][0]*t*t*t +
                    cubicCoefficient[s][1][0]*t*t +
                    cubicCoefficient[s][2][0]*t +
@@ -101,15 +103,13 @@ Object * Shapes::createBezierShape(SceneManager* sm,
 
         float z = 0;
         curvePoints[i] = Vector4(x,y,z,0);
-        std::cout << "Curve Point:" << curvePoints[i] << std::endl;
     }
 
     // precalc and store rotation matrices
     Matrix4 rotations [numAnglesRotation];
     // rotate by 2*PI rad divided by numAnglesRotation each time
     double angleOfRotation = 2*PI / numAnglesRotation;
-    //std::cout << "pi:" << pi << std::endl;
-    //std::cout << "rotation:" << angleOfRotation << std::endl;
+
     for (int r = 0; r < numAnglesRotation; r++)
     {
         rotations[r] = Matrix4::rotateY(-r * angleOfRotation);
@@ -146,54 +146,54 @@ Object * Shapes::createBezierShape(SceneManager* sm,
     //int w = 0;
     for (int point = 0; point < (numEvalPoints - 1); point++)
     {
-		int vertexPointIndex = 3 * numAnglesRotation * point;
-		int nextVertexPointIndex = 3 * numAnglesRotation * (point + 1);
-        
-		std::cout << "pointIndex:" << vertexPointIndex << std::endl;
-		std::cout << "nextpointIndex:" << nextVertexPointIndex << std::endl;
-		
+        int vertexPointIndex = 3 * numAnglesRotation * point;
+        int nextVertexPointIndex = 3 * numAnglesRotation * (point + 1);
+
+        // std::cout << "pointIndex:" << vertexPointIndex << std::endl;
+        // std::cout << "nextpointIndex:" << nextVertexPointIndex << std::endl;
+
         Vector4 intP0 = Vector4(bezier_vertices[vertexPointIndex],
                                 bezier_vertices[vertexPointIndex + 1],
                                 bezier_vertices[vertexPointIndex + 2],
                                 1);
-		
+
         Vector4 intP1 = Vector4(bezier_vertices[nextVertexPointIndex],
                                 bezier_vertices[nextVertexPointIndex + 1],
                                 bezier_vertices[nextVertexPointIndex + 2],
                                 1);
-		//std::cout << "intP0:" << intP0 << std::endl;
-		//std::cout << "intP1:" << intP1 << std::endl;
+        //std::cout << "intP0:" << intP0 << std::endl;
+        //std::cout << "intP1:" << intP1 << std::endl;
 
         Vector4 tangent = intP1 - intP0;
-		//std::cout << "tangent:" << tangent << std::endl;
-		std::cout << std::endl;
+        //std::cout << "tangent:" << tangent << std::endl;
+        // std::cout << std::endl;
         //std::cout << "normal:" << normal << std::endl;
         Vector4 normal = Vector4(-tangent[1],
                                   tangent[0],
                                   0,
                                   1);
-		int pointIndex = 6 * numAnglesRotation * point;
-		for (int rot = 0; rot < numAnglesRotation; rot++)
+        int pointIndex = 6 * numAnglesRotation * point;
+        for (int rot = 0; rot < numAnglesRotation; rot++)
         {
             int startIndex = pointIndex + 6*rot;
             //calculating normals
-			Vector4 tempNormal1 = rotations[rot] * normal;
-			Vector3 normal1 = Vector3(tempNormal1[0],
-									  tempNormal1[1],
-									  tempNormal1[2]);
-			Vector4 tempNormal2 = rotations[rot + 1] * normal;
-			if (rot == (numAnglesRotation - 1)) {
-				tempNormal2 = rotations[0] * normal;
-			}
-			
-			Vector3 normal2 = Vector3(tempNormal2[0],
-									  tempNormal2[1],
-									  tempNormal2[2]);
-			
+            Vector4 tempNormal1 = rotations[rot] * normal;
+            Vector3 normal1 = Vector3(tempNormal1[0],
+                                      tempNormal1[1],
+                                      tempNormal1[2]);
+            Vector4 tempNormal2 = rotations[rot + 1] * normal;
+            if (rot == (numAnglesRotation - 1)) {
+                tempNormal2 = rotations[0] * normal;
+            }
+
+            Vector3 normal2 = Vector3(tempNormal2[0],
+                                      tempNormal2[1],
+                                      tempNormal2[2]);
+
             Vector3 average = normal1 + normal2;
-			std::cout << "average:" << average << std::endl;
+            // std::cout << "average:" << average << std::endl;
             average.normalize();
-			std::cout << "normaverage:" << average << std::endl;
+            // std::cout << "normaverage:" << average << std::endl;
             //setting normals
             bezier_normals[startIndex] = average[0];
             bezier_normals[startIndex + 1] = average[1];
@@ -219,18 +219,18 @@ Object * Shapes::createBezierShape(SceneManager* sm,
     //texture coordinates
     int numTextureCoords = 2 * numEvalPoints * numAnglesRotation;
     float bezierTextureCoords[numTextureCoords];
-	float rotIncrement = 1.f / (numAnglesRotation - 1);
+    float rotIncrement = 1.f / (numAnglesRotation - 1);
     for (int point = 0; point < numEvalPoints; point++)
     {
         int pointIndex = 2 * numAnglesRotation * point;
-		float yCoordInt = point * evalIncrement;
-		yCoordInt = 1 - yCoordInt;
+        float yCoordInt = point * evalIncrement;
+        yCoordInt = 1 - yCoordInt;
         for (int rot = 0; rot < numAnglesRotation; rot++)
         {
             int startIndex = pointIndex + rot*2;
-			float xCoordInt = rot * rotIncrement;
-			bezierTextureCoords[startIndex] = xCoordInt;
-			bezierTextureCoords[startIndex + 1] = yCoordInt;
+            float xCoordInt = rot * rotIncrement;
+            bezierTextureCoords[startIndex] = xCoordInt;
+            bezierTextureCoords[startIndex + 1] = yCoordInt;
         }
     }
 
